@@ -129,7 +129,11 @@ body::before {
   background-size: 165% 165%;
   background-position: 0% 0%;
   filter: saturate(118%);
-  animation: auroraDrift 40s ease-in-out infinite alternate;
+  transform: scale(1);
+  will-change: background-position, transform, filter;
+  animation:
+    auroraDrift 40s ease-in-out infinite alternate,
+    auroraBreathe 14s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -152,6 +156,19 @@ body::after {
   }
   100% {
     background-position: 50% 100%;
+  }
+}
+
+/* a slow inhale/exhale: the aurora swells and softly brightens, then settles */
+@keyframes auroraBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: saturate(118%) brightness(1);
+  }
+  50% {
+    transform: scale(1.06);
+    filter: saturate(126%) brightness(1.06);
   }
 }
 
