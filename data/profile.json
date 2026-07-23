@@ -1,0 +1,80 @@
+{
+  "name": "Finn Jones",
+  "headline": "Associate Software Engineer at Lendi Group",
+  "subheadline": "Building modern web and software solutions — currently pursuing a Bachelor of Computer Science & Commerce (Finance) at UNSW.",
+  "location": "Sydney, Australia",
+  "email": "finnwjones@gmail.com",
+  "linkedin": "https://www.linkedin.com/in/finn-jones/",
+  "socials": [
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/finn-jones/" },
+    { "label": "GitHub", "url": "https://github.com/finnjones" }
+  ],
+  "about": [
+    "I'm a well-rounded engineer with a dual degree in Computer Science and Commerce (Finance) from UNSW. I combine deep technical knowledge with financial insight, building innovative software solutions and contributing to open-source projects on GitHub.",
+    "With experience spanning IT support, freelance development, and enterprise software engineering, I bring a unique perspective to every project — from low-level infrastructure to polished user experiences."
+  ],
+  "experience": [
+    {
+      "role": "Associate Software Engineer",
+      "company": "Lendi Group",
+      "start": "",
+      "end": "Present",
+      "highlights": [
+        "Building and maintaining software products in the mortgage and lending space",
+        "Working with modern web technologies and agile workflows"
+      ]
+    },
+    {
+      "role": "ICT Service Desk Technician",
+      "company": "The Scots College",
+      "start": "",
+      "end": "",
+      "highlights": [
+        "Automated device management, reducing manual work and boosting efficiency",
+        "Managed 2,000+ devices with JAMF, ensuring performance, security, and minimal downtime",
+        "Resolved tech support tickets promptly, minimizing impact on productivity",
+        "Strong stakeholder management with students, teachers, and parents"
+      ]
+    },
+    {
+      "role": "Freelance Software & IT Solutions",
+      "company": "Self-employed",
+      "start": "",
+      "end": "",
+      "highlights": [
+        "Client training and support, project management, and custom web design for small businesses"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Computer Science & Commerce (Finance)",
+      "institution": "University of New South Wales (UNSW)",
+      "start": "",
+      "end": "Present"
+    }
+  ],
+  "projects": [
+    {
+      "title": "Votencrypt",
+      "description": "A voting platform using blockchain technology.",
+      "tech": ["Blockchain", "Web App"],
+      "image": "images/screenshot-202024-07-17-20at-209.05.58-e2-80-afam.png",
+      "link": "https://votencrypt.com"
+    },
+    {
+      "title": "AchieveIt Bookings",
+      "description": "Booking system for AchieveIt tutoring company.",
+      "tech": ["Web App", "Bookings"],
+      "image": "images/screenshot-202024-07-17-20at-208.59.09-e2-80-afam.png",
+      "link": "https://www.achieveittutor.com/book-online"
+    },
+    {
+      "title": "Trigger Outlaws",
+      "description": "A top-down run-and-gun game.",
+      "tech": ["Game Dev"],
+      "image": "images/screenshot-202024-07-17-20at-209.25.58-e2-80-afam.png",
+      "link": "https://github.com/finnjones/TriggerOutlaws"
+    }
+  ]
+}

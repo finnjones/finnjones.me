@@ -5,100 +5,71 @@
     <meta charset="utf-8" />
     <title>Finn Jones — Software Engineer</title>
     <meta name="description" content="Portfolio of Finn Jones — Associate Software Engineer at Lendi Group, building modern web and software solutions." />
+    <meta content="Finn Jones — Software Engineer" property="og:title" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <link href="css/webflow-style.css" rel="stylesheet" type="text/css" />
-    <link href="css/custom.css" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="css/main.css?v=7" rel="stylesheet" type="text/css" />
     <link href="images/favicon.png" rel="shortcut icon" type="image/x-icon" />
     <link href="images/app-icon.png" rel="apple-touch-icon" />
 </head>
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar-custom" id="navbar">
-        <a href="/" class="nav-brand" aria-label="Home">
-            <span class="brand-text">finnjones.me</span>
-        </a>
-        <div class="nav-links">
-            <a href="/" class="nav-link active">Home</a>
-            <a href="/about" class="nav-link">About</a>
-            <a href="/contact" class="nav-link">Contact</a>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="nav-brand" aria-label="Home">finnjones.me</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section" id="hero">
-        <div class="hero-bg-gradient"></div>
-        <div class="hero-content">
-            <div class="hero-text-wrapper">
-                <h1 class="hero-greeting anim-slide-up">Hi,</h1>
-                <h1 class="hero-name anim-slide-up anim-delay-1">I'm Finn.</h1>
-            </div>
-            <p class="hero-subtitle anim-fade-in anim-delay-2">
-                Associate Software Engineer at <strong>Lendi Group</strong>, pursuing a Bachelor of Computer Science & Commerce (Finance) at UNSW.
-            </p>
-            <div class="hero-scroll-indicator anim-fade-in anim-delay-3">
-                <span class="scroll-text">Scroll to explore</span>
-                <div class="scroll-line"></div>
+    <!-- Hero -->
+    <header class="hero">
+        <div class="hero-inner">
+            <span class="mono-label hero-eyebrow anim-fade-up">Software Engineer — Sydney</span>
+            <h1 class="hero-name anim-fade-up anim-delay-1">Finn Jones</h1>
+            <p class="hero-sub anim-fade-up anim-delay-2" data-slot="headline"></p>
+            <div class="hero-ctas anim-fade-up anim-delay-3">
+                <a href="#work" class="btn btn-solid">View work</a>
+                <a href="contact.html" class="btn">Get in touch</a>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- Projects Section -->
-    <section class="projects-section" id="projects">
-        <div class="section-header reveal">
-            <span class="section-label">Selected Work</span>
+    <!-- Selected work -->
+    <section class="section" id="work">
+        <div class="section-head reveal">
+            <span class="mono-label section-index">01 / selected work</span>
             <h2 class="section-title">Projects</h2>
         </div>
-        <div class="projects-grid">
-            <div class="project-card reveal">
-                <div class="project-image" style="background-image:url('images/screenshot-202024-07-17-20at-209.05.58-e2-80-afam.png')">
-                    <div class="project-overlay">
-                        <span class="project-number">01</span>
-                        <h3 class="project-name">Votencrypt</h3>
-                        <p class="project-desc">A voting platform using blockchain technology.</p>
-                        <a href="https://votencrypt.com" class="project-cta" target="_blank" rel="noopener">View Project →</a>
-                    </div>
+        <div class="projects" data-slot="projects"></div>
+    </section>
+
+    <!-- Currently -->
+    <section class="section">
+        <div class="currently reveal">
+            <div class="currently-panel">
+                <div>
+                    <span class="mono-label section-index">02 / currently</span>
+                    <p class="currently-text" data-slot="currently"></p>
                 </div>
-            </div>
-            <div class="project-card reveal">
-                <div class="project-image" style="background-image:url('images/screenshot-202024-07-17-20at-208.59.09-e2-80-afam.png')">
-                    <div class="project-overlay">
-                        <span class="project-number">02</span>
-                        <h3 class="project-name">AchieveIt Bookings</h3>
-                        <p class="project-desc">Booking system for AchieveIt tutoring company.</p>
-                        <a href="https://www.achieveittutor.com/book-online" class="project-cta" target="_blank" rel="noopener">View Project →</a>
-                    </div>
-                </div>
-            </div>
-            <div class="project-card reveal">
-                <div class="project-image" style="background-image:url('images/screenshot-202024-07-17-20at-209.25.58-e2-80-afam.png')">
-                    <div class="project-overlay">
-                        <span class="project-number">03</span>
-                        <h3 class="project-name">Trigger Outlaws</h3>
-                        <p class="project-desc">A top down run and gun game.</p>
-                        <a href="https://github.com/finnjones/TriggerOutlaws" class="project-cta" target="_blank" rel="noopener">View Project →</a>
-                    </div>
-                </div>
+                <a href="about.html" class="currently-link">More about me →</a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer-section">
-        <div class="footer-content">
-            <span class="brand-text">finnjones.me</span>
-            <div class="footer-links-row">
-                <a href="https://www.linkedin.com/in/finn-jones/" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
-                <a href="https://github.com/finnjones" class="footer-link" target="_blank" rel="noopener">GitHub</a>
-            </div>
+    <footer class="footer">
+        <div class="footer-inner">
+            <span class="footer-brand">finnjones.me</span>
+            <div class="footer-links" data-slot="socials"></div>
             <p class="footer-copy">© 2026 Finn Jones. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="js/animations.js"></script>
+    <script src="js/render.js?v=7" defer></script>
 </body>
 
 </html>
