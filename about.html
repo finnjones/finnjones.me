@@ -7,98 +7,75 @@
     <meta name="description" content="About Finn Jones — Associate Software Engineer at Lendi Group, UNSW graduate in Computer Science & Commerce." />
     <meta content="About Finn Jones" property="og:title" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    <link href="css/webflow-style.css" rel="stylesheet" type="text/css" />
-    <link href="css/custom.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet" type="text/css" />
     <link href="images/favicon.png" rel="shortcut icon" type="image/x-icon" />
     <link href="images/app-icon.png" rel="apple-touch-icon" />
 </head>
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar-custom" id="navbar">
-        <a href="/" class="nav-brand" aria-label="Home">
-            <span class="brand-text">finnjones.me</span>
-        </a>
-        <div class="nav-links">
-            <a href="/" class="nav-link">Home</a>
-            <a href="/about" class="nav-link active">About</a>
-            <a href="/contact" class="nav-link">Contact</a>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="index.html" class="nav-brand" aria-label="Home">finnjones.me</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link active">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
         </div>
     </nav>
 
-    <!-- Page Hero -->
-    <section class="page-hero">
-        <h1 class="page-hero-title anim-slide-up">About.</h1>
-    </section>
+    <!-- Page hero -->
+    <header class="page-hero">
+        <div class="container">
+            <h1 class="page-hero-title anim-fade-up">About<span class="accent">.</span></h1>
+        </div>
+    </header>
 
-    <!-- About Header with Background Image -->
-    <section class="about-header-section">
-        <div class="about-header-bg" style="background-image: url('images/dscf6142.jpg');">
-            <div class="about-header-overlay">
-                <div class="about-header-content reveal">
-                    <h2 class="about-name">Finn Jones</h2>
-                    <p class="about-tagline">Associate Software Engineer at Lendi Group — building modern digital experiences with a background in IT infrastructure, project management, and full-stack development.</p>
-                </div>
+    <!-- Intro -->
+    <section class="section">
+        <div class="about-intro">
+            <div class="about-portrait reveal">
+                <img src="images/dscf6142.jpg" alt="Portrait of Finn Jones" loading="lazy" />
+            </div>
+            <div class="reveal">
+                <span class="mono-label section-index">01 / about me</span>
+                <div data-slot="about"></div>
             </div>
         </div>
     </section>
 
-    <!-- About Content -->
-    <section class="about-content-section">
-        <div class="about-block reveal">
-            <h2 class="about-section-title">About me.</h2>
-            <div class="about-text">
-                <p>I'm a well-rounded engineer with a dual degree in Computer Science and Commerce (Finance) from UNSW. I combine deep technical knowledge with financial insight, building innovative software solutions and contributing to open-source projects on <a href="https://github.com/finnjones" target="_blank" rel="noopener">GitHub</a>.</p>
-                <p>With experience spanning IT support, freelance development, and enterprise software engineering, I bring a unique perspective to every project — from low-level infrastructure to polished user experiences.</p>
-            </div>
+    <!-- Experience -->
+    <section class="section">
+        <div class="section-head reveal">
+            <span class="mono-label section-index">02 / experience</span>
+            <h2 class="section-title">Where I've worked<span class="accent">.</span></h2>
         </div>
+        <div class="timeline" data-slot="experience"></div>
+    </section>
 
-        <div class="about-block reveal">
-            <h2 class="about-section-title">Experience</h2>
-
-            <div class="experience-item">
-                <h4 class="experience-role">Associate Software Engineer @ Lendi Group</h4>
-                <p class="experience-details">Building and maintaining software products in the mortgage and lending space, working with modern web technologies and agile workflows.</p>
-            </div>
-
-            <div class="experience-item">
-                <h4 class="experience-role">ICT Service Desk Technician @ The Scots College</h4>
-                <p class="experience-details">
-                    Automated device management, reducing manual work and boosting efficiency.
-                    Managed 2,000+ devices with JAMF, ensuring performance, security, and minimal downtime.
-                    Resolved tech support tickets promptly, minimizing impact on productivity.
-                    Strong stakeholder management with students, teachers, and parents.
-                </p>
-            </div>
-
-            <div class="experience-item">
-                <h4 class="experience-role">Freelance Software & IT Solutions</h4>
-                <p class="experience-details">Client training & support, project management, and custom web design for small businesses.</p>
-            </div>
-
-            <div class="experience-item">
-                <h4 class="experience-role">Bachelor of Computer Science & Commerce (Finance)</h4>
-                <p class="experience-details">University of New South Wales (UNSW)</p>
-            </div>
+    <!-- Education -->
+    <section class="section">
+        <div class="section-head reveal">
+            <span class="mono-label section-index">03 / education</span>
+            <h2 class="section-title">Where I've studied<span class="accent">.</span></h2>
         </div>
+        <div class="timeline" data-slot="education"></div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer-section">
-        <div class="footer-content">
-            <span class="brand-text">finnjones.me</span>
-            <div class="footer-links-row">
-                <a href="https://www.linkedin.com/in/finn-jones/" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
-                <a href="https://github.com/finnjones" class="footer-link" target="_blank" rel="noopener">GitHub</a>
-            </div>
+    <footer class="footer">
+        <div class="footer-inner">
+            <span class="footer-brand">finnjones.me</span>
+            <div class="footer-links" data-slot="socials"></div>
             <p class="footer-copy">© 2026 Finn Jones. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="js/animations.js"></script>
+    <script src="js/render.js" defer></script>
 </body>
 
 </html>
