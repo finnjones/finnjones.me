@@ -1,0 +1,208 @@
+---
+import { profile } from '../lib/profile';
+
+function range(start: string, end: string) {
+  if (!start && !end) return '';
+  return `${start || '—'} → ${end || 'Present'}`;
+}
+---
+
+<section class="section experience" id="experience">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-idx">03</span>
+      <h2 class="section-title" data-split>Experience &amp; Education</h2>
+    </div>
+
+    <div class="exp-cols">
+      <div class="exp-block">
+        <h3 class="exp-label mono-sm muted">// WHERE I'VE WORKED</h3>
+        <ol class="exp-list" data-stagger>
+          {
+            profile.experience.map((e) => (
+              <li class="exp-row" tabindex="0">
+                <div class="exp-row-main">
+                  <span class="exp-years mono tabular">{range(e.start, e.end)}</span>
+                  <div class="exp-role-wrap">
+                    <span class="exp-role">{e.role}</span>
+                    <span class="exp-co muted">
+                      {e.company}
+                      {e.location ? ` · ${e.location}` : ''}
+                    </span>
+                  </div>
+                  <span class="exp-plus" aria-hidden="true">+</span>
+                </div>
+                <ul class="exp-highlights">
+                  {e.highlights.map((h) => (
+                    <li>{h}</li>
+                  ))}
+                </ul>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <div class="exp-block">
+        <h3 class="exp-label mono-sm muted">// WHERE I'VE STUDIED</h3>
+        <ol class="exp-list" data-stagger>
+          {
+            profile.education.map((e) => (
+              <li class="exp-row exp-row--edu">
+                <div class="exp-row-main">
+                  <span class="exp-years mono tabular">{range(e.start, e.end)}</span>
+                  <div class="exp-role-wrap">
+                    <span class="exp-role">{e.degree}</span>
+                    <span class="exp-co muted">{e.institution}</span>
+                  </div>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="exp-now" data-reveal>
+          <span class="mono-sm muted">// CURRENTLY</span>
+          <p>
+            <span class="accent">●</span> {profile.status.detail}, Sydney. <span class="serif">Open</span> to
+            new opportunities and interesting problems.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .exp-cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+  .exp-label {
+    letter-spacing: 0.12em;
+    margin-bottom: 1.25rem;
+  }
+  .exp-list {
+    list-style: none;
+  }
+  .exp-row {
+    border-top: 1px solid var(--rule);
+    padding: 1.25rem 0;
+    transition: padding 0.3s var(--ease-out);
+  }
+  .exp-row:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .exp-row-main {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .exp-years {
+    color: var(--accent);
+    font-size: 0.72rem;
+  }
+  :root[data-theme='paper'] .exp-years {
+    color: var(--accent-text);
+  }
+  .exp-role-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+  .exp-role {
+    font-size: var(--fs-h3);
+    font-weight: 540;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .exp-co {
+    font-size: 0.9rem;
+  }
+  .exp-plus {
+    color: var(--muted);
+    transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
+    font-family: var(--font-mono);
+  }
+  .exp-row:hover .exp-plus,
+  .exp-row:focus-visible .exp-plus {
+    color: var(--accent);
+    transform: rotate(45deg);
+  }
+
+  /* Expandable highlights */
+  .exp-highlights {
+    list-style: none;
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 0.45s var(--ease-out), opacity 0.45s var(--ease-out),
+      margin 0.45s var(--ease-out);
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .exp-highlights > * {
+    min-height: 0;
+  }
+  .exp-row:hover .exp-highlights,
+  .exp-row:focus-within .exp-highlights {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    margin-top: 1rem;
+  }
+  .exp-highlights li {
+    padding: 0.35rem 0 0.35rem 1.2rem;
+    position: relative;
+  }
+  .exp-highlights li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+  :root[data-theme='paper'] .exp-highlights li::before {
+    color: var(--accent-text);
+  }
+
+  .exp-row--edu .exp-row-main {
+    grid-template-columns: 130px 1fr;
+  }
+
+  .exp-now {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--panel);
+  }
+  .exp-now p {
+    margin-top: 0.75rem;
+    font-size: var(--fs-body-lg);
+    letter-spacing: -0.01em;
+  }
+
+  @media (max-width: 880px) {
+    .exp-cols {
+      grid-template-columns: 1fr;
+    }
+    /* Always show highlights on touch where hover is unreliable */
+    .exp-highlights {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 1rem;
+    }
+  }
+  @media (max-width: 520px) {
+    .exp-row-main,
+    .exp-row--edu .exp-row-main {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+    .exp-plus {
+      display: none;
+    }
+  }
+</style>

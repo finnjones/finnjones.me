@@ -1,0 +1,88 @@
+---
+import { profile } from '../lib/profile';
+const items = profile.skills;
+// Duplicate the list so the marquee loops seamlessly.
+const track = [...items, ...items];
+---
+
+<div class="ticker" role="marquee" aria-label="Skills and stack">
+  <div class="ticker-track" data-ticker-track>
+    {
+      track.map((s, i) => (
+        <span class="ticker-item mono" aria-hidden={i >= items.length ? 'true' : undefined}>
+          <span class="ticker-sym">{s.symbol}</span>
+          <span class="ticker-name">{s.name}</span>
+          <span class={`ticker-trend trend-${s.trend}`}>
+            {s.trend === 'up' ? '▲' : s.trend === 'down' ? '▼' : '◆'}
+          </span>
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ticker {
+    position: relative;
+    overflow: hidden;
+    border-block: 1px solid var(--rule);
+    background: var(--panel);
+    padding-block: 0.85rem;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .ticker-track {
+    display: inline-flex;
+    gap: 2.75rem;
+    white-space: nowrap;
+    will-change: transform;
+    animation: marquee 32s linear infinite;
+  }
+  .ticker:hover .ticker-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--muted);
+  }
+  .ticker-sym {
+    color: var(--fg);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+  .ticker-name {
+    color: var(--muted);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.72rem;
+  }
+  .ticker-trend {
+    font-size: 0.7rem;
+  }
+  .trend-up {
+    color: var(--accent);
+  }
+  :root[data-theme='paper'] .trend-up {
+    color: var(--accent-text);
+  }
+  .trend-down {
+    color: var(--loss);
+  }
+  .trend-flat {
+    color: var(--muted);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+      flex-wrap: wrap;
+      white-space: normal;
+      padding-inline: var(--gutter);
+    }
+  }
+</style>

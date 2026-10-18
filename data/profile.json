@@ -1,48 +1,84 @@
 {
   "name": "Finn Jones",
   "headline": "Associate Software Engineer at Lendi Group",
-  "subheadline": "Building modern web and software solutions — currently pursuing a Bachelor of Computer Science & Commerce (Finance) at UNSW.",
+  "positioning": "A software engineer who speaks finance.",
+  "subheadline": "Building modern web and software products — currently reading Computer Science & Commerce (Finance) at UNSW.",
   "location": "Sydney, Australia",
+  "timezone": "Australia/Sydney",
   "email": "finnwjones@gmail.com",
   "linkedin": "https://www.linkedin.com/in/finn-jones/",
+  "github": "https://github.com/finnjones",
+  "status": {
+    "available": true,
+    "label": "Open to opportunities",
+    "detail": "Engineering @ Lendi Group"
+  },
   "socials": [
-    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/finn-jones/" },
-    { "label": "GitHub", "url": "https://github.com/finnjones" }
+    { "label": "LinkedIn", "handle": "finn-jones", "url": "https://www.linkedin.com/in/finn-jones/" },
+    { "label": "GitHub", "handle": "finnjones", "url": "https://github.com/finnjones" },
+    { "label": "Email", "handle": "finnwjones@gmail.com", "url": "mailto:finnwjones@gmail.com" }
   ],
   "about": [
-    "I'm a well-rounded engineer with a dual degree in Computer Science and Commerce (Finance) from UNSW. I combine deep technical knowledge with financial insight, building innovative software solutions and contributing to open-source projects on GitHub.",
-    "With experience spanning IT support, freelance development, and enterprise software engineering, I bring a unique perspective to every project — from low-level infrastructure to polished user experiences."
+    "I'm an engineer with a dual degree in Computer Science and Commerce (Finance) from UNSW. I pair technical depth with a working understanding of markets and money — which is how I ended up building software in the mortgage and lending space at Lendi Group.",
+    "My path runs from IT support managing thousands of devices, through freelance development for small businesses, to enterprise software engineering. That range means I'm comfortable from low-level infrastructure up to the polished edge users actually touch."
+  ],
+  "metrics": [
+    { "value": 2000, "prefix": "", "suffix": "+", "label": "Devices managed", "mono": "DEV" },
+    { "value": 6, "prefix": "", "suffix": "", "label": "Projects shipped", "mono": "SHIP" },
+    { "value": 0, "text": "CS + Finance", "label": "Dual degree, UNSW", "mono": "EDU" }
+  ],
+  "skills": [
+    { "symbol": "TS", "name": "TypeScript", "trend": "up" },
+    { "symbol": "REACT", "name": "React", "trend": "up" },
+    { "symbol": "NODE", "name": "Node.js", "trend": "up" },
+    { "symbol": "PY", "name": "Python", "trend": "up" },
+    { "symbol": "AWS", "name": "AWS", "trend": "up" },
+    { "symbol": "SQL", "name": "SQL", "trend": "up" },
+    { "symbol": "GIT", "name": "Git", "trend": "up" },
+    { "symbol": "DAML", "name": "DAML / Smart Contracts", "trend": "up" }
+  ],
+  "capabilities": [
+    { "label": "Frontend", "items": ["React", "TypeScript", "Astro", "HTML/CSS", "Accessibility"] },
+    { "label": "Backend", "items": ["Node.js", "Python", "REST APIs", "SQL"] },
+    { "label": "Platform", "items": ["AWS", "CI/CD", "Git", "Agile delivery"] },
+    { "label": "Domain", "items": ["Lending & mortgages", "Fintech", "Markets & finance"] }
   ],
   "experience": [
     {
       "role": "Associate Software Engineer",
       "company": "Lendi Group",
-      "start": "",
+      "location": "Sydney, Australia",
+      "start": "2025",
       "end": "Present",
+      "datesPlaceholder": true,
       "highlights": [
-        "Building and maintaining software products in the mortgage and lending space",
-        "Working with modern web technologies and agile workflows"
+        "Building and maintaining software products across the mortgage and lending space",
+        "Shipping with modern web technologies inside agile, cross-functional teams"
       ]
     },
     {
       "role": "ICT Service Desk Technician",
       "company": "The Scots College",
-      "start": "",
-      "end": "",
+      "location": "Sydney, Australia",
+      "start": "2022",
+      "end": "2024",
+      "datesPlaceholder": true,
       "highlights": [
-        "Automated device management, reducing manual work and boosting efficiency",
-        "Managed 2,000+ devices with JAMF, ensuring performance, security, and minimal downtime",
-        "Resolved tech support tickets promptly, minimizing impact on productivity",
-        "Strong stakeholder management with students, teachers, and parents"
+        "Managed 2,000+ devices with JAMF — performance, security, and minimal downtime",
+        "Automated device management, cutting manual work and lifting team efficiency",
+        "Resolved support tickets fast, keeping staff and students productive",
+        "Strong stakeholder management across students, teachers, and parents"
       ]
     },
     {
       "role": "Freelance Software & IT Solutions",
       "company": "Self-employed",
-      "start": "",
-      "end": "",
+      "location": "Sydney, Australia",
+      "start": "2020",
+      "end": "2022",
+      "datesPlaceholder": true,
       "highlights": [
-        "Client training and support, project management, and custom web design for small businesses"
+        "Custom web design, client training, and project delivery for small businesses"
       ]
     }
   ],
@@ -50,31 +86,137 @@
     {
       "degree": "Bachelor of Computer Science & Commerce (Finance)",
       "institution": "University of New South Wales (UNSW)",
-      "start": "",
-      "end": "Present"
+      "start": "2022",
+      "end": "Present",
+      "datesPlaceholder": true
     }
   ],
   "projects": [
     {
+      "slug": "aglc4-citation-tool",
+      "symbol": "AGLC",
+      "title": "AGLC4 Citation Tool",
+      "year": "2026",
+      "role": "Creator",
+      "summary": "A formatter that rewrites legal citations in Word essays to the AGLC4 standard.",
+      "tech": ["Python", "python-docx", "Regex", "CLI"],
+      "problem": "The Australian Guide to Legal Citation runs to hundreds of rules, and law students hand-format every footnote by eye — slow, inconsistent, and easy to get wrong the night before a deadline.",
+      "approach": "A Python tool that parses citations inside a Word document, matches them against AGLC4 rules, and rewrites them in place — preserving the document structure while fixing punctuation, ordering, and style.",
+      "outcome": "Turns an hour of manual citation cleanup into a single pass, so the work goes into the argument instead of the footnotes.",
+      "metrics": [
+        { "value": "AGLC4", "label": "Standard enforced" },
+        { "value": ".docx", "label": "Edits in place" }
+      ],
+      "link": "https://github.com/finnjones/legal-citation-tool",
+      "repo": "https://github.com/finnjones/legal-citation-tool",
+      "image": null,
+      "cover": "code",
+      "featured": true
+    },
+    {
+      "slug": "liftlink",
+      "symbol": "LIFT",
+      "title": "LiftLink",
+      "year": "2025",
+      "role": "Creator",
+      "summary": "A web app that automatically merges duplicate Strava activities.",
+      "tech": ["JavaScript", "Node.js", "Strava API", "OAuth", "Vercel"],
+      "problem": "Athletes who record the same session on more than one device end up with duplicate activities cluttering their Strava feed, throwing off totals and stats.",
+      "approach": "Connect once with Strava via OAuth, detect overlapping activities by time and distance, and merge the duplicates — no manual deleting, no spreadsheet.",
+      "outcome": "A clean, accurate activity history maintained automatically after a single connection.",
+      "metrics": [
+        { "value": "OAuth", "label": "Strava connect" },
+        { "value": "Auto", "label": "Dedupe & merge" }
+      ],
+      "link": "https://lift-link-five.vercel.app",
+      "repo": "https://github.com/finnjones/LiftLink",
+      "image": null,
+      "cover": "signal",
+      "featured": true
+    },
+    {
+      "slug": "votencrypt",
+      "symbol": "VOTE",
       "title": "Votencrypt",
-      "description": "A voting platform using blockchain technology.",
-      "tech": ["Blockchain", "Web App"],
-      "image": "images/screenshot-202024-07-17-20at-209.05.58-e2-80-afam.png",
-      "link": "https://votencrypt.com"
+      "year": "2022",
+      "role": "Creator — Major Work",
+      "summary": "A blockchain voting platform built on DAML smart contracts.",
+      "tech": ["DAML", "Smart Contracts", "TypeScript", "Blockchain"],
+      "problem": "Digital voting has to prove two things at once that usually fight each other: every vote is counted exactly once, and no one can see how an individual voted.",
+      "approach": "A voting platform modelled as DAML smart contracts, so the rules of an election — eligibility, one vote per voter, tallying — are enforced by the ledger itself rather than by a trusted server.",
+      "outcome": "A working, verifiable voting system and my Year 12 Software Development major work, published at votencrypt.com.",
+      "metrics": [
+        { "value": "DAML", "label": "Contract ledger" },
+        { "value": "1:1", "label": "Vote integrity" }
+      ],
+      "link": "https://votencrypt.com",
+      "repo": "https://github.com/finnjones/Blockchain-Voting",
+      "image": "votencrypt.png",
+      "cover": "image",
+      "featured": true
     },
     {
+      "slug": "achieveit-bookings",
+      "symbol": "BOOK",
       "title": "AchieveIt Bookings",
-      "description": "Booking system for AchieveIt tutoring company.",
-      "tech": ["Web App", "Bookings"],
-      "image": "images/screenshot-202024-07-17-20at-208.59.09-e2-80-afam.png",
-      "link": "https://www.achieveittutor.com/book-online"
+      "year": "2024",
+      "role": "Developer",
+      "summary": "An online booking system for a private tutoring company.",
+      "tech": ["Web App", "Bookings", "Scheduling"],
+      "problem": "A tutoring business was coordinating sessions over back-and-forth messages, with no single place for clients to see availability and book.",
+      "approach": "A self-serve booking flow where clients pick a slot and confirm online, giving the business a clear schedule and fewer scheduling conflicts.",
+      "outcome": "Live booking for AchieveIt's clients, cutting the admin overhead of arranging each session by hand.",
+      "metrics": [
+        { "value": "Self-serve", "label": "Client booking" },
+        { "value": "Live", "label": "In production" }
+      ],
+      "link": "https://www.achieveittutor.com/book-online",
+      "repo": null,
+      "image": "achieveit.png",
+      "cover": "image",
+      "featured": true
     },
     {
+      "slug": "trading-game",
+      "symbol": "TGME",
+      "title": "Trading Game",
+      "year": "2023",
+      "role": "Creator",
+      "summary": "A stock-trading simulator driven by live market data.",
+      "tech": ["Python", "yfinance", "Yahoo Finance API"],
+      "problem": "Learning how markets behave is expensive and slow if the only way to practise is with real money.",
+      "approach": "A Python game that pulls live prices through the Yahoo Finance API and runs a paper-trading loop — buy, sell, and track a simulated portfolio against real market movements.",
+      "outcome": "A safe sandbox for building market intuition, and the project where my CS and finance interests first met in code.",
+      "metrics": [
+        { "value": "Live", "label": "Market data" },
+        { "value": "Paper", "label": "Risk-free trades" }
+      ],
+      "link": "https://github.com/finnjones/Trading-Game",
+      "repo": "https://github.com/finnjones/Trading-Game",
+      "image": null,
+      "cover": "chart",
+      "featured": true
+    },
+    {
+      "slug": "trigger-outlaws",
+      "symbol": "OTLW",
       "title": "Trigger Outlaws",
-      "description": "A top-down run-and-gun game.",
-      "tech": ["Game Dev"],
-      "image": "images/screenshot-202024-07-17-20at-209.25.58-e2-80-afam.png",
-      "link": "https://github.com/finnjones/TriggerOutlaws"
+      "year": "2024",
+      "role": "Developer — Team of 3",
+      "summary": "A tile-based, top-down RPG built with pygame.",
+      "tech": ["Python", "pygame", "Game Dev"],
+      "problem": "A team project to design and ship a complete game loop — movement, combat, levels, and win state — within a course deadline.",
+      "approach": "Built a top-down, tile-based RPG in pygame with a small team, dividing systems across movement, encounters, and level design.",
+      "outcome": "A finished, playable game and a lesson in shipping real software collaboratively under version control.",
+      "metrics": [
+        { "value": "Team", "label": "Built with 3" },
+        { "value": "pygame", "label": "Engine" }
+      ],
+      "link": "https://github.com/finnjones/TriggerOutlaws",
+      "repo": "https://github.com/finnjones/TriggerOutlaws",
+      "image": "triggeroutlaws.png",
+      "cover": "image",
+      "featured": false
     }
   ]
 }

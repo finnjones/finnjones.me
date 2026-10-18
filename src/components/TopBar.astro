@@ -1,0 +1,212 @@
+---
+import { profile } from '../lib/profile';
+
+const nav = [
+  { label: 'Index', href: '/#work', idx: '01' },
+  { label: 'Profile', href: '/#profile', idx: '02' },
+  { label: 'Experience', href: '/#experience', idx: '03' },
+  { label: 'Contact', href: '/#contact', idx: '04' },
+];
+---
+
+<header class="bar" data-bar>
+  <div class="bar-inner wrap">
+    <a href="/" class="bar-brand" aria-label="Finn Jones — home">
+      <span class="brand-mark">FJ</span>
+      <span class="brand-name mono">FINN JONES</span>
+    </a>
+
+    <nav class="bar-nav" aria-label="Primary">
+      {
+        nav.map((item) => (
+          <a href={item.href} class="bar-link mono-sm" data-magnetic>
+            <span class="bar-link-idx">{item.idx}</span>
+            <span class="bar-link-label">{item.label}</span>
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="bar-aside">
+      <span class="status-pill mono-sm" title={profile.status.detail}>
+        <span class="status-dot" aria-hidden="true"></span>
+        <span class="status-text">{profile.status.label}</span>
+      </span>
+      <time class="bar-clock mono-sm tabular" data-clock aria-label="Current time in Sydney">
+        --:--:-- <span class="bar-tz">SYD</span>
+      </time>
+      <button
+        class="theme-toggle mono-sm"
+        data-theme-toggle
+        type="button"
+        aria-label="Toggle colour theme"
+        aria-pressed="false"
+      >
+        <span data-theme-label>INK</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .bar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 200;
+    height: var(--bar-h);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    border-bottom: 1px solid var(--rule);
+    transition: transform 0.4s var(--ease-out), background 0.4s var(--ease-out);
+  }
+  .bar[data-hidden='true'] {
+    transform: translateY(-100%);
+  }
+  .bar-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .bar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+  .brand-mark {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.72rem;
+    border-radius: var(--radius);
+  }
+  .brand-name {
+    font-size: var(--fs-mono-sm);
+    letter-spacing: 0.16em;
+  }
+
+  .bar-nav {
+    display: flex;
+    gap: 0.35rem;
+  }
+  .bar-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: var(--radius);
+    color: var(--muted);
+    transition: color 0.25s var(--ease-out), background 0.25s var(--ease-out);
+  }
+  .bar-link:hover {
+    color: var(--fg);
+    background: var(--panel-hover);
+  }
+  .bar-link-idx {
+    color: var(--accent);
+    font-size: 0.6rem;
+  }
+  :root[data-theme='paper'] .bar-link-idx {
+    color: var(--accent-text);
+  }
+
+  .bar-aside {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    color: var(--muted);
+  }
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 var(--accent);
+    animation: pulse 2.4s var(--ease-out) infinite;
+  }
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 6px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+  .bar-clock {
+    color: var(--fg);
+  }
+  .bar-tz {
+    color: var(--faint);
+  }
+  .theme-toggle {
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    color: var(--fg);
+    min-width: 52px;
+    text-align: center;
+    transition: border-color 0.25s var(--ease-out), background 0.25s var(--ease-out);
+  }
+  .theme-toggle:hover {
+    border-color: var(--fg);
+    background: var(--panel-hover);
+  }
+
+  @media (max-width: 1100px) {
+    .bar-clock {
+      display: none;
+    }
+  }
+  @media (max-width: 980px) {
+    .status-text {
+      display: none;
+    }
+    .status-pill {
+      padding: 0.3rem;
+    }
+  }
+  @media (max-width: 860px) {
+    .bar-nav {
+      display: none;
+    }
+  }
+  @media (max-width: 540px) {
+    .brand-name {
+      display: none;
+    }
+    .bar-clock {
+      display: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .status-dot {
+        animation: none;
+      }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot {
+      animation: none;
+    }
+  }
+</style>

@@ -1,59 +1,78 @@
 # Keeping the site up to date
 
-All changeable content on finnjones.me lives in **`data/profile.json`**. The three
-HTML pages fetch it on load and render it with `js/render.js`. To update the site,
-edit that one file, commit, and push — no HTML changes needed.
+All changeable content on finnjones.me lives in **`data/profile.json`**. The site
+is built with [Astro](https://astro.build): at build time every page is
+pre-rendered from this one file, so the content is real HTML (good for SEO and
+speed) while you still edit a single JSON file. To update the site, edit
+`data/profile.json`, commit, and push to `main` — GitHub Actions builds and
+deploys automatically (see `.github/workflows/deploy.yml`).
 
 ## What each field drives
 
 | Field | Where it appears |
 | --- | --- |
-| `subheadline` | Home — hero paragraph under "Finn Jones." |
-| `headline` + `location` | Home — "Currently" panel |
-| `about` (array of paragraphs) | About — intro text next to the portrait |
-| `experience` | About — "Where I've worked" timeline |
-| `education` | About — "Where I've studied" timeline |
-| `projects` | Home — project rows (title, description, tech tags, image, link) |
-| `email` | Contact — the big email link |
-| `socials` | Contact cards + footer links on every page |
-| `linkedin` | Source-of-truth URL for the sync workflow below |
+| `positioning` | Hero + about — the "speaks finance" line |
+| `subheadline` | Hero — paragraph under the name |
+| `headline` | SEO title, JSON-LD, status pill |
+| `status` | Top-bar status pill (`available`, `label`, `detail`) |
+| `about` | Home profile block + `/about` intro |
+| `metrics` | Home — the animated counters (`value` counts up; `text` shows as-is) |
+| `skills` | Home — the stock-style ticker (`symbol`, `name`, `trend`) |
+| `capabilities` | Home — the capabilities matrix |
+| `experience` | Home `03` + `/about` — role ledger |
+| `education` | Home `03` + `/about` — education ledger |
+| `projects` | Home `01` ledger index **and** each `/work/<slug>` case study |
+| `socials` | Footer + contact section |
+| `email` | Contact — the giant click-to-copy email |
 
-Notes:
+## The `projects` schema
 
-- All strings render **verbatim** — dates are plain display text like `"2024"` /
-  `"Present"`, so write them exactly as you want them shown. Empty `start`/`end`
-  strings simply hide the date line.
-- Project images live in `images/` and are referenced by relative path.
-- New experience/education/project entries: copy an existing object in the array
-  and edit it. Order in the file = order on the page.
+Each project is one case study. Fields:
 
-## Syncing from LinkedIn
-
-LinkedIn has no public API, so the sync is a quick assisted workflow. In a Claude
-Code session (with the Claude in Chrome extension connected), ask:
-
-> Open my LinkedIn profile (the `linkedin` field in data/profile.json) in my
-> browser, compare it with data/profile.json, and update the JSON — experience,
-> education, headline — to match. Don't change the schema.
-
-Claude reads your logged-in profile, updates the JSON, and you review the diff
-before pushing.
-
-## Testing locally
-
-The pages `fetch()` the JSON, which browsers block on `file://` URLs — so always
-use a local server, never open the HTML files directly:
-
-```bash
-python3 -m http.server 8000
+```jsonc
+{
+  "slug": "liftlink",          // URL: /work/liftlink  (unique, kebab-case)
+  "symbol": "LIFT",            // ticker shown in the ledger
+  "title": "LiftLink",
+  "year": "2025",
+  "role": "Creator",
+  "summary": "One-line description.",
+  "tech": ["JavaScript", "Node.js"],   // first 3–4 show in the index
+  "problem": "What problem it solves.",
+  "approach": "How it works.",
+  "outcome": "The result.",
+  "metrics": [ { "value": "OAuth", "label": "Strava connect" } ],
+  "link": "https://…",         // live URL, or null
+  "repo": "https://github.com/…", // source, or null
+  "image": "liftlink.png",     // file in src/assets/work/, or null
+  "cover": "signal",           // "image" | "code" | "chart" | "signal"
+  "featured": true
+}
 ```
 
-Then visit http://localhost:8000/index.html.
+- **`cover`** picks the card artwork. Use `"image"` with an `image` file for a
+  real screenshot; otherwise a generated cover is drawn: `"code"` (terminal),
+  `"chart"` (candlesticks), or `"signal"` (activity waves).
+- **Images** go in `src/assets/work/` and are referenced by filename. Astro
+  optimizes them automatically (resizes + webp). The portrait is
+  `src/assets/portrait/finn.jpg`.
+- **Order in the file = order on the site**, and drives prev/next on case pages.
+
+> **Note:** experience/education dates marked `"datesPlaceholder": true` are
+> best-effort placeholders — replace them with your real dates and drop the flag.
+
+## Running locally
+
+```bash
+npm install
+npm run dev      # dev server with hot reload
+npm run build    # production build into dist/
+npm run preview  # preview the built site
+```
 
 ## Before you push
 
-Validate the JSON — a syntax error (stray comma, missing quote) blanks every
-dynamic section on the live site:
+Validate the JSON — a syntax error will fail the build:
 
 ```bash
 python3 -m json.tool data/profile.json

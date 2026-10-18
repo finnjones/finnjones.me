@@ -1,0 +1,113 @@
+---
+import { profile } from '../lib/profile';
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <a href="/" class="foot-brand">
+        finn<span class="accent">jones</span>.me
+      </a>
+      <nav class="foot-socials" aria-label="Social links">
+        {
+          profile.socials.map((s) => (
+            <a href={s.url} class="foot-social mono-sm" target="_blank" rel="me noopener" data-magnetic>
+              {s.label}
+              <span class="foot-arrow">↗</span>
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+
+    <div class="foot-rule rule"></div>
+
+    <div class="foot-bottom mono-sm">
+      <span>© {year} FINN JONES</span>
+      <span class="foot-live">
+        <span class="foot-live-dot" aria-hidden="true"></span>
+        <span class="tabular" data-clock>--:--:--</span>
+        <span class="muted">· SYDNEY</span>
+      </span>
+      <span class="muted">BUILT WITH ASTRO · GSAP</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    border-top: 1px solid var(--rule);
+    padding-block: clamp(2.5rem, 6vw, 4rem) 2rem;
+  }
+  .foot-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .foot-brand {
+    font-size: clamp(1.4rem, 3vw, 2.1rem);
+    font-weight: 620;
+    letter-spacing: -0.03em;
+  }
+  .foot-socials {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .foot-social {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    color: var(--muted);
+    transition: color 0.25s var(--ease-out), border-color 0.25s var(--ease-out),
+      background 0.25s var(--ease-out);
+  }
+  .foot-social:hover {
+    color: var(--fg);
+    border-color: var(--fg);
+    background: var(--panel-hover);
+  }
+  .foot-arrow {
+    color: var(--accent);
+    transition: transform 0.25s var(--ease-out);
+  }
+  :root[data-theme='paper'] .foot-arrow {
+    color: var(--accent-text);
+  }
+  .foot-social:hover .foot-arrow {
+    transform: translate(2px, -2px);
+  }
+  .foot-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: var(--muted);
+    margin-top: 1.5rem;
+  }
+  .foot-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--fg);
+  }
+  .foot-live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  @media (max-width: 560px) {
+    .foot-bottom {
+      justify-content: flex-start;
+    }
+  }
+</style>

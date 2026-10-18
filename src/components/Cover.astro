@@ -1,0 +1,135 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '../lib/profile';
+import { workImage } from '../lib/images';
+
+export interface Props {
+  project: Project;
+  sizes?: string;
+  eager?: boolean;
+}
+
+const { project, sizes = '(max-width: 720px) 90vw, 640px', eager = false } = Astro.props;
+const img = project.cover === 'image' ? workImage(project.image) : undefined;
+---
+
+<div class={`cover cover-${project.cover}`} data-cover>
+  {
+    img ? (
+      <Image
+        src={img}
+        alt={`${project.title} — ${project.summary}`}
+        widths={[480, 720, 1080]}
+        sizes={sizes}
+        loading={eager ? 'eager' : 'lazy'}
+        class="cover-img"
+      />
+    ) : project.cover === 'chart' ? (
+      <svg class="cover-svg" viewBox="0 0 640 400" role="img" aria-label={`${project.title} — market chart`} preserveAspectRatio="xMidYMid slice">
+        <g class="cover-grid">
+          <line x1="0" y1="100" x2="640" y2="100" />
+          <line x1="0" y1="200" x2="640" y2="200" />
+          <line x1="0" y1="300" x2="640" y2="300" />
+        </g>
+        <polyline class="cover-line" points="0,300 70,270 140,290 210,220 280,240 350,170 420,190 490,120 560,140 640,70" />
+        <g class="cover-candles">
+          <g transform="translate(70,0)"><line x1="0" y1="250" x2="0" y2="300"/><rect x="-7" y="262" width="14" height="26" class="up"/></g>
+          <g transform="translate(140,0)"><line x1="0" y1="275" x2="0" y2="320"/><rect x="-7" y="288" width="14" height="22" class="down"/></g>
+          <g transform="translate(210,0)"><line x1="0" y1="200" x2="0" y2="250"/><rect x="-7" y="210" width="14" height="30" class="up"/></g>
+          <g transform="translate(280,0)"><line x1="0" y1="225" x2="0" y2="265"/><rect x="-7" y="238" width="14" height="20" class="down"/></g>
+          <g transform="translate(350,0)"><line x1="0" y1="150" x2="0" y2="200"/><rect x="-7" y="162" width="14" height="30" class="up"/></g>
+          <g transform="translate(420,0)"><line x1="0" y1="170" x2="0" y2="215"/><rect x="-7" y="183" width="14" height="22" class="down"/></g>
+          <g transform="translate(490,0)"><line x1="0" y1="100" x2="0" y2="150"/><rect x="-7" y="112" width="14" height="30" class="up"/></g>
+          <g transform="translate(560,0)"><line x1="0" y1="120" x2="0" y2="165"/><rect x="-7" y="133" width="14" height="20" class="down"/></g>
+        </g>
+        <text class="cover-tick" x="20" y="40">{project.symbol}</text>
+        <text class="cover-tick-up" x="110" y="40">▲ SIM</text>
+      </svg>
+    ) : project.cover === 'signal' ? (
+      <svg class="cover-svg" viewBox="0 0 640 400" role="img" aria-label={`${project.title} — activity signal`} preserveAspectRatio="xMidYMid slice">
+        <path class="cover-wave wave-a" d="M0,210 C60,150 100,270 160,210 C220,150 260,270 320,210 C380,150 420,270 480,210 C540,150 580,270 640,210" />
+        <path class="cover-wave wave-b" d="M0,230 C60,290 100,170 160,230 C220,290 260,170 320,230 C380,290 420,170 480,230 C540,290 580,170 640,230" />
+        <path class="cover-wave wave-merged" d="M0,320 C80,300 120,340 200,320 C300,296 360,344 460,320 C540,302 580,338 640,320" />
+        <g class="cover-dots">
+          <circle cx="160" cy="210" r="4"/><circle cx="320" cy="210" r="4"/><circle cx="480" cy="210" r="4"/>
+        </g>
+        <text class="cover-tick" x="20" y="40">{project.symbol}</text>
+        <text class="cover-tick-up" x="110" y="40">◆ MERGE</text>
+      </svg>
+    ) : (
+      <svg class="cover-svg cover-code" viewBox="0 0 640 400" role="img" aria-label={`${project.title} — source`} preserveAspectRatio="xMidYMid slice">
+        <g class="cover-dots-win"><circle cx="26" cy="26" r="5"/><circle cx="46" cy="26" r="5"/><circle cx="66" cy="26" r="5"/></g>
+        <text class="cover-path" x="92" y="31">{project.slug}</text>
+        <line class="cover-hr" x1="0" y1="52" x2="640" y2="52" />
+        <g class="cover-codeln">
+          <text x="26" y="92"><tspan class="n">01</tspan><tspan class="k" dx="18">def</tspan><tspan class="f" dx="10">format</tspan><tspan dx="2">(src):</tspan></text>
+          <text x="26" y="122"><tspan class="n">02</tspan><tspan dx="42">rules = load(</tspan><tspan class="s">"AGLC4"</tspan><tspan>)</tspan></text>
+          <text x="26" y="152"><tspan class="n">03</tspan><tspan class="k" dx="42">for</tspan><tspan dx="10">cite</tspan><tspan class="k" dx="10">in</tspan><tspan dx="10">parse(src):</tspan></text>
+          <text x="26" y="182"><tspan class="n">04</tspan><tspan dx="66">cite.</tspan><tspan class="f">apply</tspan><tspan>(rules)</tspan></text>
+          <text x="26" y="212"><tspan class="n">05</tspan><tspan class="k" dx="42">return</tspan><tspan dx="10">render(src)</tspan><tspan class="cur">▊</tspan></text>
+        </g>
+        <text class="cover-tick" x="26" y="358">{project.symbol}</text>
+        <text class="cover-tick-up" x="116" y="358">▲ BUILD OK</text>
+      </svg>
+    )
+  }
+</div>
+
+<style>
+  .cover {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bg-raise);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+  }
+  .cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.25) contrast(1.02);
+    transition: transform 0.6s var(--ease-out), filter 0.6s var(--ease-out);
+  }
+  .cover-svg {
+    width: 100%;
+    height: 100%;
+    font-family: var(--font-mono);
+  }
+
+  /* chart */
+  .cover-grid line { stroke: var(--rule); stroke-width: 1; }
+  .cover-line { fill: none; stroke: var(--accent); stroke-width: 2; opacity: 0.85; }
+  :root[data-theme='paper'] .cover-line { stroke: var(--accent-text); }
+  .cover-candles line { stroke: var(--muted); stroke-width: 1; }
+  .cover-candles rect.up { fill: var(--accent); }
+  .cover-candles rect.down { fill: var(--muted); opacity: 0.5; }
+  :root[data-theme='paper'] .cover-candles rect.up { fill: var(--accent-text); }
+
+  /* signal */
+  .cover-wave { fill: none; stroke-width: 2; }
+  .wave-a { stroke: var(--muted); opacity: 0.55; }
+  .wave-b { stroke: var(--muted); opacity: 0.35; }
+  .wave-merged { stroke: var(--accent); stroke-width: 2.5; }
+  :root[data-theme='paper'] .wave-merged { stroke: var(--accent-text); }
+  .cover-dots circle { fill: var(--accent); }
+  :root[data-theme='paper'] .cover-dots circle { fill: var(--accent-text); }
+
+  /* code */
+  .cover-dots-win circle { fill: var(--muted); opacity: 0.4; }
+  .cover-hr { stroke: var(--rule); }
+  .cover-path { fill: var(--muted); font-size: 13px; }
+  .cover-codeln text { fill: var(--fg); font-size: 15px; opacity: 0.9; }
+  .cover-codeln .n { fill: var(--faint); }
+  .cover-codeln .k { fill: var(--accent); }
+  :root[data-theme='paper'] .cover-codeln .k { fill: var(--accent-text); }
+  .cover-codeln .f { fill: var(--fg); }
+  .cover-codeln .s { fill: var(--muted); }
+  .cover-codeln .cur { fill: var(--accent); }
+
+  /* tickers */
+  .cover-tick { fill: var(--fg); font-size: 18px; font-weight: 700; letter-spacing: 0.1em; }
+  .cover-tick-up { fill: var(--accent); font-size: 13px; letter-spacing: 0.1em; }
+  :root[data-theme='paper'] .cover-tick-up { fill: var(--accent-text); }
+</style>

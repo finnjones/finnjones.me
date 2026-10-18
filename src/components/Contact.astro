@@ -1,0 +1,147 @@
+---
+import { profile } from '../lib/profile';
+---
+
+<section class="section contact" id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-idx">04</span>
+      <h2 class="section-title" data-split>Contact</h2>
+    </div>
+
+    <div class="contact-lead" data-reveal>
+      <p>
+        Have a role, a project, or a problem worth solving? <span class="serif">Let's</span> talk.
+      </p>
+    </div>
+
+    <div class="contact-email-wrap">
+      <button class="contact-email" data-copy={profile.email} type="button" aria-label={`Copy email ${profile.email}`}>
+        <span class="contact-email-text" data-split>{profile.email}</span>
+        <span class="contact-email-hint mono-sm">
+          <span class="hint-default">CLICK TO COPY</span>
+        </span>
+      </button>
+      <a href={`mailto:${profile.email}`} class="contact-mailto mono-sm muted">or open mail client ↗</a>
+    </div>
+
+    <div class="contact-socials" data-stagger>
+      {
+        profile.socials.map((s) => (
+          <a
+            href={s.url}
+            class="contact-social"
+            target={s.url.startsWith('mailto:') ? undefined : '_blank'}
+            rel="me noopener"
+            data-magnetic
+          >
+            <span class="social-label">{s.label}</span>
+            <span class="social-handle mono-sm muted">{s.handle}</span>
+            <span class="social-arrow" aria-hidden="true">↗</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    border-top: 1px solid var(--rule);
+  }
+  .contact-lead p {
+    font-size: var(--fs-h3);
+    font-weight: 440;
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+    margin-bottom: clamp(2rem, 6vw, 4rem);
+  }
+  .contact-lead .serif {
+    font-size: 1.15em;
+  }
+
+  .contact-email-wrap {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding-block: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .contact-email {
+    display: block;
+    width: 100%;
+    text-align: left;
+    position: relative;
+  }
+  .contact-email-text {
+    display: block;
+    font-size: clamp(1.8rem, 7vw, 5.5rem);
+    font-weight: 620;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--fg);
+    transition: color 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
+    word-break: break-word;
+  }
+  .contact-email:hover .contact-email-text {
+    color: var(--accent);
+  }
+  :root[data-theme='paper'] .contact-email:hover .contact-email-text {
+    color: var(--accent-text);
+  }
+  .contact-email-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    color: var(--muted);
+  }
+  .contact-email-hint::before {
+    content: '●';
+    color: var(--accent);
+    font-size: 0.6rem;
+  }
+  .contact-mailto {
+    display: inline-block;
+    margin-top: 1.25rem;
+  }
+
+  .contact-socials {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+  }
+  .contact-social {
+    background: var(--bg);
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    position: relative;
+    transition: background 0.3s var(--ease-out);
+  }
+  .contact-social:hover {
+    background: var(--panel-hover);
+  }
+  .social-label {
+    font-size: var(--fs-h3);
+    font-weight: 520;
+    letter-spacing: -0.02em;
+  }
+  .social-arrow {
+    position: absolute;
+    top: clamp(1.25rem, 3vw, 1.75rem);
+    right: clamp(1.25rem, 3vw, 1.75rem);
+    color: var(--accent);
+    transition: transform 0.3s var(--ease-out);
+  }
+  :root[data-theme='paper'] .social-arrow {
+    color: var(--accent-text);
+  }
+  .contact-social:hover .social-arrow {
+    transform: translate(3px, -3px);
+  }
+</style>

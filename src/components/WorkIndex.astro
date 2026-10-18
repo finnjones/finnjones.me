@@ -1,0 +1,350 @@
+---
+import { projects } from '../lib/profile';
+import Cover from './Cover.astro';
+---
+
+<section class="section work" id="work" data-view="list">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-idx">01</span>
+      <h2 class="section-title" data-split>Selected work</h2>
+      <div class="work-tools">
+        <span class="mono-sm muted work-count">{String(projects.length).padStart(2, '0')} ENTRIES</span>
+        <div class="work-toggle mono-sm" role="group" aria-label="View mode">
+          <button type="button" data-view-btn="list" aria-pressed="true">List</button>
+          <button type="button" data-view-btn="grid" aria-pressed="false">Grid</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column header -->
+    <div class="work-colhead mono-sm muted" aria-hidden="true">
+      <span class="col-id">REF</span>
+      <span class="col-sym">SYM</span>
+      <span class="col-title">POSITION</span>
+      <span class="col-role">ROLE</span>
+      <span class="col-stack">STACK</span>
+      <span class="col-year">YR</span>
+      <span class="col-go"></span>
+    </div>
+
+    <ol class="work-list" data-stagger>
+      {
+        projects.map((p, i) => (
+          <li>
+            <a class="work-row" href={`/work/${p.slug}`} data-row data-index={i} aria-label={`${p.title} — case study`}>
+              <span class="col-id mono">P/{String(i + 1).padStart(2, '0')}</span>
+              <span class="col-sym mono"><span class="row-sym">{p.symbol}</span></span>
+              <span class="col-title">
+                <span class="row-title">{p.title}</span>
+                <span class="row-summary muted">{p.summary}</span>
+              </span>
+              <span class="col-role mono-sm muted">{p.role}</span>
+              <span class="col-stack mono-sm">{p.tech.slice(0, 3).join(' · ')}</span>
+              <span class="col-year mono tabular">{p.year}</span>
+              <span class="col-go" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+
+    <ul class="work-grid" data-stagger>
+      {
+        projects.map((p, i) => (
+          <li>
+            <a class="work-card" href={`/work/${p.slug}`} aria-label={`${p.title} — case study`}>
+              <Cover project={p} sizes="(max-width: 720px) 90vw, 420px" />
+              <div class="card-meta">
+                <span class="mono-sm"><span class="accent">{p.symbol}</span> · {p.year}</span>
+                <h3 class="card-title">{p.title}</h3>
+                <p class="card-summary muted">{p.summary}</p>
+                <span class="card-stack mono-sm muted">{p.tech.slice(0, 4).join(' · ')}</span>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <!-- Floating cursor preview (desktop) -->
+  <div class="work-preview" data-preview aria-hidden="true">
+    {
+      projects.map((p, i) => (
+        <div class="preview-layer" data-preview-layer={i}>
+          <Cover project={p} sizes="360px" />
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  function initWork() {
+    const section = document.querySelector<HTMLElement>('.work');
+    if (!section) return;
+
+    // View toggle
+    const btns = section.querySelectorAll<HTMLButtonElement>('[data-view-btn]');
+    btns.forEach((b) =>
+      b.addEventListener('click', () => {
+        const v = b.dataset.viewBtn!;
+        section.dataset.view = v;
+        btns.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.viewBtn === v)));
+      })
+    );
+
+    // Floating preview
+    const preview = section.querySelector<HTMLElement>('[data-preview]');
+    const layers = section.querySelectorAll<HTMLElement>('[data-preview-layer]');
+    const rows = section.querySelectorAll<HTMLElement>('[data-row]');
+    const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (preview && !isTouch) {
+      let px = 0, py = 0, tx = 0, ty = 0, raf = 0, active = false;
+      const loop = () => {
+        px += (tx - px) * 0.14;
+        py += (ty - py) * 0.14;
+        preview.style.transform = `translate(${px}px, ${py}px)`;
+        raf = requestAnimationFrame(loop);
+      };
+      const onMove = (e: MouseEvent) => { tx = e.clientX + 24; ty = e.clientY - 40; };
+      window.addEventListener('mousemove', onMove);
+      raf = requestAnimationFrame(loop);
+
+      rows.forEach((row) => {
+        row.addEventListener('mouseenter', () => {
+          const idx = row.dataset.index;
+          layers.forEach((l) => l.classList.toggle('is-active', l.dataset.previewLayer === idx));
+          preview.setAttribute('data-show', 'true');
+          active = true;
+        });
+        row.addEventListener('mouseleave', () => {
+          preview.removeAttribute('data-show');
+          active = false;
+        });
+      });
+      // init position to cursor start
+      if (reduce) preview.style.transition = 'none';
+    }
+  }
+  document.addEventListener('astro:page-load', initWork);
+</script>
+
+<style>
+  .work-tools {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .work-toggle {
+    display: inline-flex;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .work-toggle button {
+    padding: 0.4rem 0.8rem;
+    color: var(--muted);
+    transition: background 0.25s var(--ease-out), color 0.25s var(--ease-out);
+  }
+  .work-toggle button[aria-pressed='true'] {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  /* Column layout shared by header + rows */
+  .work-colhead,
+  .work-row {
+    display: grid;
+    grid-template-columns: 56px 68px minmax(0, 1fr) 150px 190px 54px 28px;
+    align-items: center;
+    gap: 1rem;
+  }
+  .work-colhead {
+    padding: 0 0.75rem 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .work-list {
+    list-style: none;
+  }
+  .work[data-view='grid'] .work-list,
+  .work[data-view='grid'] .work-colhead {
+    display: none;
+  }
+  .work[data-view='list'] .work-grid {
+    display: none;
+  }
+
+  .work-row {
+    position: relative;
+    padding: 1.15rem 0.75rem;
+    border-bottom: 1px solid var(--rule);
+    transition: background 0.3s var(--ease-out), padding 0.3s var(--ease-out);
+  }
+  .work-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.35s var(--ease-out);
+  }
+  .work-row:hover {
+    background: var(--panel-hover);
+    padding-left: 1.4rem;
+  }
+  .work-row:hover::before {
+    transform: scaleY(1);
+  }
+  .col-id {
+    color: var(--muted);
+  }
+  .row-sym {
+    display: inline-block;
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    color: var(--fg);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .col-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .row-title {
+    font-size: var(--fs-h3);
+    font-weight: 560;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .row-summary {
+    font-size: 0.85rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .col-stack {
+    color: var(--fg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .col-year {
+    color: var(--accent);
+    text-align: right;
+  }
+  :root[data-theme='paper'] .col-year {
+    color: var(--accent-text);
+  }
+  .col-go {
+    text-align: right;
+    color: var(--muted);
+    transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
+  }
+  .work-row:hover .col-go {
+    color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  /* Grid view */
+  .work-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 1.5rem;
+  }
+  .work-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .work-card:hover .cover-img {
+    transform: scale(1.04);
+    filter: grayscale(0) contrast(1.05);
+  }
+  .card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .card-title {
+    font-size: var(--fs-h3);
+    font-weight: 560;
+    letter-spacing: -0.02em;
+  }
+  .card-summary {
+    font-size: 0.9rem;
+  }
+
+  /* Floating preview */
+  .work-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 150;
+    width: 340px;
+    pointer-events: none;
+    opacity: 0;
+    scale: 0.92;
+    transition: opacity 0.3s var(--ease-out), scale 0.3s var(--ease-out);
+    will-change: transform;
+  }
+  .work-preview[data-show='true'] {
+    opacity: 1;
+    scale: 1;
+  }
+  .preview-layer {
+    display: none;
+    box-shadow: 0 24px 70px var(--shadow);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .preview-layer.is-active {
+    display: block;
+  }
+
+  @media (max-width: 1040px) {
+    .work-colhead,
+    .work-row {
+      grid-template-columns: 50px minmax(0, 1fr) 90px 48px 22px;
+    }
+    .col-sym,
+    .col-stack {
+      display: none;
+    }
+    .work-preview {
+      display: none;
+    }
+  }
+  @media (max-width: 620px) {
+    .work-colhead {
+      display: none;
+    }
+    .work-row {
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        'id year'
+        'title title'
+        'role go';
+      gap: 0.35rem 1rem;
+    }
+    .col-id { grid-area: id; }
+    .col-year { grid-area: year; }
+    .col-title { grid-area: title; }
+    .col-role { grid-area: role; }
+    .col-go { grid-area: go; }
+    .row-summary { white-space: normal; }
+  }
+</style>

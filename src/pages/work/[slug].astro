@@ -1,0 +1,313 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Cover from '../../components/Cover.astro';
+import { projects, adjacentProjects } from '../../lib/profile';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+const { prev, next } = adjacentProjects(project.slug);
+const idx = projects.findIndex((p) => p.slug === project.slug) + 1;
+
+const blocks = [
+  { label: 'Problem', body: project.problem },
+  { label: 'Approach', body: project.approach },
+  { label: 'Outcome', body: project.outcome },
+];
+---
+
+<BaseLayout title={project.title} description={project.summary}>
+  <article class="case">
+    <!-- Header -->
+    <header class="case-head wrap">
+      <nav class="case-crumb mono-sm" aria-label="Breadcrumb">
+        <a href="/#work" class="accent">← INDEX</a>
+        <span class="muted">/ WORK / P{String(idx).padStart(2, '0')}</span>
+      </nav>
+
+      <div class="case-sym mono">{project.symbol}</div>
+      <h1 class="case-title" data-split>{project.title}</h1>
+      <p class="case-summary">{project.summary}</p>
+
+      <!-- Metadata strip -->
+      <dl class="case-meta" data-stagger>
+        <div class="meta-cell">
+          <dt class="mono-sm muted">Year</dt>
+          <dd class="tabular">{project.year}</dd>
+        </div>
+        <div class="meta-cell">
+          <dt class="mono-sm muted">Role</dt>
+          <dd>{project.role}</dd>
+        </div>
+        <div class="meta-cell meta-stack">
+          <dt class="mono-sm muted">Stack</dt>
+          <dd>{project.tech.join(' · ')}</dd>
+        </div>
+        <div class="meta-cell">
+          <dt class="mono-sm muted">Link</dt>
+          <dd>
+            {
+              project.link ? (
+                <a href={project.link} target="_blank" rel="noopener" class="meta-link">
+                  Live ↗
+                </a>
+              ) : (
+                <span class="muted">—</span>
+              )
+            }
+          </dd>
+        </div>
+      </dl>
+    </header>
+
+    <!-- Hero cover -->
+    <div class="case-cover wrap" data-reveal>
+      <Cover project={project} sizes="(max-width: 1100px) 92vw, 1040px" eager={true} />
+    </div>
+
+    <!-- Problem / Approach / Outcome -->
+    <div class="case-body wrap">
+      <div class="case-blocks">
+        {
+          blocks.map((b, i) => (
+            <section class="case-block" data-reveal>
+              <h2 class="block-head">
+                <span class="block-idx mono-sm accent">0{i + 1}</span>
+                <span>{b.label}</span>
+              </h2>
+              <p class="block-body">{b.body}</p>
+            </section>
+          ))
+        }
+      </div>
+
+      <aside class="case-side">
+        <div class="case-metrics" data-stagger>
+          {
+            project.metrics.map((m) => (
+              <div class="case-metric">
+                <span class="metric-val tabular">{m.value}</span>
+                <span class="metric-lbl mono-sm muted">{m.label}</span>
+              </div>
+            ))
+          }
+        </div>
+        <div class="case-links">
+          {
+            project.link && (
+              <a href={project.link} target="_blank" rel="noopener" class="btn btn-solid" data-magnetic>
+                Visit live ↗
+              </a>
+            )
+          }
+          {
+            project.repo && (
+              <a href={project.repo} target="_blank" rel="noopener" class="btn" data-magnetic>
+                Source ↗
+              </a>
+            )
+          }
+        </div>
+      </aside>
+    </div>
+
+    <!-- Prev / Next ledger nav -->
+    <nav class="case-nav" aria-label="More projects">
+      <a href={`/work/${prev.slug}`} class="case-nav-item case-nav-prev" data-row data-index={projects.findIndex((p) => p.slug === prev.slug)}>
+        <span class="mono-sm muted">← PREV</span>
+        <span class="case-nav-title"><span class="accent">{prev.symbol}</span> {prev.title}</span>
+      </a>
+      <a href={`/work/${next.slug}`} class="case-nav-item case-nav-next" data-row data-index={projects.findIndex((p) => p.slug === next.slug)}>
+        <span class="mono-sm muted">NEXT →</span>
+        <span class="case-nav-title">{next.title} <span class="accent">{next.symbol}</span></span>
+      </a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .case {
+    padding-top: calc(var(--bar-h) + clamp(2rem, 6vw, 4rem));
+  }
+  .case-crumb {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: clamp(2rem, 6vw, 3.5rem);
+  }
+  .case-sym {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    margin-bottom: 1.25rem;
+  }
+  .case-title {
+    font-size: var(--fs-display);
+    font-weight: 680;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+  .case-summary {
+    font-size: var(--fs-body-lg);
+    color: var(--muted);
+    max-width: 48ch;
+    margin-top: 1.25rem;
+  }
+
+  .case-meta {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: clamp(2rem, 5vw, 3rem);
+    width: fit-content;
+    max-width: 100%;
+  }
+  .meta-cell {
+    background: var(--bg);
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .meta-cell dd {
+    font-size: 0.95rem;
+  }
+  .meta-link {
+    color: var(--accent);
+  }
+  :root[data-theme='paper'] .meta-link,
+  :root[data-theme='paper'] .case-crumb .accent {
+    color: var(--accent-text);
+  }
+
+  .case-cover {
+    margin-block: clamp(2.5rem, 6vw, 4rem);
+  }
+  .case-cover .cover {
+    aspect-ratio: 16 / 9;
+  }
+
+  .case-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: clamp(2rem, 6vw, 5rem);
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+    border-bottom: 1px solid var(--rule);
+  }
+  .case-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2rem, 5vw, 3.25rem);
+  }
+  .block-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-size: var(--fs-h3);
+    font-weight: 560;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .block-body {
+    font-size: var(--fs-body-lg);
+    max-width: 60ch;
+    color: var(--fg);
+  }
+
+  .case-side {
+    position: sticky;
+    top: calc(var(--bar-h) + 1.5rem);
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .case-metrics {
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .case-metric {
+    background: var(--bg);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .metric-val {
+    font-size: 1.9rem;
+    font-weight: 620;
+    letter-spacing: -0.03em;
+  }
+  .case-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .case-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .case-nav-item {
+    padding: clamp(2rem, 5vw, 3.5rem) var(--gutter);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: background 0.3s var(--ease-out);
+  }
+  .case-nav-item:hover {
+    background: var(--panel-hover);
+  }
+  .case-nav-next {
+    text-align: right;
+    align-items: flex-end;
+    border-left: 1px solid var(--rule);
+  }
+  .case-nav-title {
+    font-size: var(--fs-h3);
+    font-weight: 540;
+    letter-spacing: -0.02em;
+  }
+
+  @media (max-width: 880px) {
+    .case-body {
+      grid-template-columns: 1fr;
+    }
+    .case-side {
+      position: static;
+    }
+    .case-metrics {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .case-meta {
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+    }
+    .case-nav {
+      grid-template-columns: 1fr;
+    }
+    .case-nav-next {
+      border-left: 0;
+      border-top: 1px solid var(--rule);
+      text-align: left;
+      align-items: flex-start;
+    }
+  }
+</style>

@@ -1,0 +1,187 @@
+---
+import { profile } from '../lib/profile';
+---
+
+<section class="hero" id="top">
+  <canvas class="hero-field" data-hero-field aria-hidden="true"></canvas>
+
+  <div class="hero-grid wrap">
+    <div class="hero-meta mono-sm">
+      <span>00 — INDEX</span>
+      <span class="hero-meta-loc">{profile.location.toUpperCase()}</span>
+    </div>
+
+    <h1 class="hero-name">
+      <span class="hero-line">FINN</span>
+      <span class="hero-line">JONES</span>
+    </h1>
+
+    <div class="hero-foot">
+      <p class="hero-positioning">
+        A software engineer who <span class="serif">speaks</span> finance.
+      </p>
+      <p class="hero-sub muted">{profile.subheadline}</p>
+      <div class="hero-ctas">
+        <a href="/#work" class="btn btn-solid" data-magnetic>
+          Selected work <span aria-hidden="true">↓</span>
+        </a>
+        <a href="/#contact" class="btn" data-magnetic>Get in touch</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll mono-sm" aria-hidden="true">
+    <span>SCROLL</span>
+    <span class="hero-scroll-line"></span>
+  </div>
+</section>
+
+<script>
+  import { initHeroField } from '../scripts/hero-field.ts';
+  let destroy: (() => void) | null = null;
+  function mount() {
+    const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-field]');
+    if (canvas) destroy = initHeroField(canvas);
+  }
+  document.addEventListener('astro:page-load', () => {
+    destroy?.();
+    destroy = null;
+    mount();
+  });
+  document.addEventListener('astro:before-swap', () => {
+    destroy?.();
+    destroy = null;
+  });
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: stretch;
+    padding-top: var(--bar-h);
+    overflow: hidden;
+  }
+  .hero-field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: clamp(1.5rem, 5vh, 3rem);
+    padding-bottom: clamp(2rem, 6vh, 4rem);
+    pointer-events: none;
+  }
+  .hero-grid a,
+  .hero-grid button {
+    pointer-events: auto;
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1rem;
+  }
+
+  .hero-name {
+    font-size: var(--fs-mega);
+    font-weight: 700;
+    line-height: 0.86;
+    letter-spacing: -0.045em;
+    margin-block: auto;
+    padding-block: clamp(1rem, 4vh, 3rem);
+    text-transform: uppercase;
+  }
+  .hero-line {
+    display: block;
+  }
+
+  .hero-foot {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 1.5rem 3rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+  }
+  .hero-positioning {
+    font-size: var(--fs-h3);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    grid-column: 1;
+    max-width: 22ch;
+  }
+  .hero-positioning .serif {
+    font-size: 1.15em;
+  }
+  .hero-sub {
+    grid-column: 1;
+    max-width: 44ch;
+    font-size: var(--fs-body);
+  }
+  .hero-ctas {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-self: end;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    right: var(--gutter);
+    bottom: clamp(2rem, 6vh, 4rem);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--muted);
+    writing-mode: vertical-rl;
+  }
+  .hero-scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(var(--accent), transparent);
+    animation: scrollPulse 2s var(--ease-out) infinite;
+  }
+  @keyframes scrollPulse {
+    0% { transform: scaleY(0); transform-origin: top; }
+    40% { transform: scaleY(1); transform-origin: top; }
+    60% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  @media (max-width: 720px) {
+    .hero-foot {
+      grid-template-columns: 1fr;
+    }
+    .hero-ctas {
+      grid-column: 1;
+      grid-row: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .hero-scroll {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scroll-line {
+      animation: none;
+      transform: scaleY(1);
+    }
+  }
+</style>
