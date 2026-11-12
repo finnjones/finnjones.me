@@ -9,39 +9,130 @@
   "linkedin": "https://www.linkedin.com/in/finn-jones/",
   "github": "https://github.com/finnjones",
   "status": {
-    "available": true,
-    "label": "Open to opportunities",
     "detail": "Engineering @ Lendi Group"
   },
   "socials": [
-    { "label": "LinkedIn", "handle": "finn-jones", "url": "https://www.linkedin.com/in/finn-jones/" },
-    { "label": "GitHub", "handle": "finnjones", "url": "https://github.com/finnjones" },
-    { "label": "Email", "handle": "finnwjones@gmail.com", "url": "mailto:finnwjones@gmail.com" }
+    {
+      "label": "LinkedIn",
+      "handle": "finn-jones",
+      "url": "https://www.linkedin.com/in/finn-jones/"
+    },
+    {
+      "label": "GitHub",
+      "handle": "finnjones",
+      "url": "https://github.com/finnjones"
+    },
+    {
+      "label": "Email",
+      "handle": "finnwjones@gmail.com",
+      "url": "mailto:finnwjones@gmail.com"
+    }
   ],
   "about": [
     "I'm an engineer with a dual degree in Computer Science and Commerce (Finance) from UNSW. I pair technical depth with a working understanding of markets and money — which is how I ended up building software in the mortgage and lending space at Lendi Group.",
     "My path runs from IT support managing thousands of devices, through freelance development for small businesses, to enterprise software engineering. That range means I'm comfortable from low-level infrastructure up to the polished edge users actually touch."
   ],
   "metrics": [
-    { "value": 2000, "prefix": "", "suffix": "+", "label": "Devices managed", "mono": "DEV" },
-    { "value": 6, "prefix": "", "suffix": "", "label": "Projects shipped", "mono": "SHIP" },
-    { "value": 0, "text": "CS + Finance", "label": "Dual degree, UNSW", "mono": "EDU" }
+    {
+      "value": 2000,
+      "prefix": "",
+      "suffix": "+",
+      "label": "Devices managed",
+      "mono": "DEV"
+    },
+    {
+      "value": 7,
+      "prefix": "",
+      "suffix": "",
+      "label": "Projects shipped",
+      "mono": "SHIP"
+    },
+    {
+      "value": 0,
+      "text": "CS + Finance",
+      "label": "Dual degree, UNSW",
+      "mono": "EDU"
+    }
   ],
   "skills": [
-    { "symbol": "TS", "name": "TypeScript", "trend": "up" },
-    { "symbol": "REACT", "name": "React", "trend": "up" },
-    { "symbol": "NODE", "name": "Node.js", "trend": "up" },
-    { "symbol": "PY", "name": "Python", "trend": "up" },
-    { "symbol": "AWS", "name": "AWS", "trend": "up" },
-    { "symbol": "SQL", "name": "SQL", "trend": "up" },
-    { "symbol": "GIT", "name": "Git", "trend": "up" },
-    { "symbol": "DAML", "name": "DAML / Smart Contracts", "trend": "up" }
+    {
+      "symbol": "TS",
+      "name": "TypeScript",
+      "trend": "up"
+    },
+    {
+      "symbol": "REACT",
+      "name": "React",
+      "trend": "up"
+    },
+    {
+      "symbol": "NODE",
+      "name": "Node.js",
+      "trend": "up"
+    },
+    {
+      "symbol": "PY",
+      "name": "Python",
+      "trend": "up"
+    },
+    {
+      "symbol": "AWS",
+      "name": "AWS",
+      "trend": "up"
+    },
+    {
+      "symbol": "SQL",
+      "name": "SQL",
+      "trend": "up"
+    },
+    {
+      "symbol": "GIT",
+      "name": "Git",
+      "trend": "up"
+    },
+    {
+      "symbol": "DAML",
+      "name": "DAML / Smart Contracts",
+      "trend": "up"
+    }
   ],
   "capabilities": [
-    { "label": "Frontend", "items": ["React", "TypeScript", "Astro", "HTML/CSS", "Accessibility"] },
-    { "label": "Backend", "items": ["Node.js", "Python", "REST APIs", "SQL"] },
-    { "label": "Platform", "items": ["AWS", "CI/CD", "Git", "Agile delivery"] },
-    { "label": "Domain", "items": ["Lending & mortgages", "Fintech", "Markets & finance"] }
+    {
+      "label": "Frontend",
+      "items": [
+        "React",
+        "TypeScript",
+        "Astro",
+        "HTML/CSS",
+        "Accessibility"
+      ]
+    },
+    {
+      "label": "Backend",
+      "items": [
+        "Node.js",
+        "Python",
+        "REST APIs",
+        "SQL"
+      ]
+    },
+    {
+      "label": "Platform",
+      "items": [
+        "AWS",
+        "CI/CD",
+        "Git",
+        "Agile delivery"
+      ]
+    },
+    {
+      "label": "Domain",
+      "items": [
+        "Lending & mortgages",
+        "Fintech",
+        "Markets & finance"
+      ]
+    }
   ],
   "experience": [
     {
@@ -94,24 +185,106 @@
   "projects": [
     {
       "slug": "aglc4-citation-tool",
-      "symbol": "AGLC",
-      "title": "AGLC4 Citation Tool",
+      "symbol": "AFCT",
+      "title": "Aforecite",
       "year": "2026",
       "role": "Creator",
-      "summary": "A formatter that rewrites legal citations in Word essays to the AGLC4 standard.",
-      "tech": ["Python", "python-docx", "Regex", "CLI"],
-      "problem": "The Australian Guide to Legal Citation runs to hundreds of rules, and law students hand-format every footnote by eye — slow, inconsistent, and easy to get wrong the night before a deadline.",
-      "approach": "A Python tool that parses citations inside a Word document, matches them against AGLC4 rules, and rewrites them in place — preserving the document structure while fixing punctuation, ordering, and style.",
-      "outcome": "Turns an hour of manual citation cleanup into a single pass, so the work goes into the argument instead of the footnotes.",
-      "metrics": [
-        { "value": "AGLC4", "label": "Standard enforced" },
-        { "value": ".docx", "label": "Edits in place" }
+      "summary": "Fixes every AGLC4 footnote in a law essay and hands back the .docx with each edit as a Word tracked change.",
+      "tech": [
+        "Python",
+        "FastAPI",
+        "python-docx",
+        "LLM extraction",
+        "pytest"
       ],
-      "link": "https://github.com/finnjones/legal-citation-tool",
+      "problem": "Australian law students have to format every footnote to the Australian Guide to Legal Citation (4th ed): Ibid, (n x) cross-references, short titles, signals and dozens of rules for cases, legislation and secondary sources. It's slow to do by hand, usually close to a deadline, and generic referencing tools get the details wrong or quietly invent them.",
+      "approach": "Upload a .docx and an AI model reads each footnote, but only to pull out its parts (parties, years, report series, pinpoints). Deterministic Python code, tested against the Guide's own worked examples, rebuilds every citation and decides where Ibid, (n x) and short titles go. The output is checked so nothing is dropped and no number is invented; a footnote it can't fully account for is left as written and marked Check. Medium neutral citations and Act years are also checked offline against an index of published decisions and legislation.",
+      "outcome": "Live at aforecite.com.au. Students get a free preview of every flagged footnote, then pay A$1 per essay for the corrected .docx with every change as a Word tracked change, plus an optional AGLC4 bibliography. It's available as a web app, a CLI and an HTTP API.",
+      "metrics": [
+        {
+          "value": "AGLC4",
+          "label": "Rules enforced"
+        },
+        {
+          "value": "700+",
+          "label": "Automated tests"
+        },
+        {
+          "value": "A$1",
+          "label": "Per essay"
+        }
+      ],
+      "link": "https://aforecite.com.au",
       "repo": "https://github.com/finnjones/legal-citation-tool",
-      "image": null,
-      "cover": "code",
-      "featured": true
+      "image": "aforecite.png",
+      "cover": "image",
+      "featured": true,
+      "gallery": [
+        {
+          "image": "aforecite-before-after.png",
+          "caption": "Real formatter output: the first citation gets a short title, the next becomes Ibid, and a later one becomes (n 1). Each edit is tagged with the AGLC4 rule behind it."
+        }
+      ]
+    },
+    {
+      "slug": "transittracker",
+      "symbol": "TRNS",
+      "title": "TransitTracker",
+      "year": "2026",
+      "role": "Creator",
+      "summary": "A pixel-art Sydney transport app with live countdowns, journey planning and push alerts, built on Transport for NSW open data.",
+      "tech": [
+        "Kotlin Multiplatform",
+        "Compose Multiplatform",
+        "Ktor",
+        "GTFS-Realtime",
+        "SQLite",
+        "Firebase"
+      ],
+      "problem": "Commuters open a transport app to answer one question: when do I need to leave? Most apps bury that answer behind searches and taps, and each phone running its own copy of the live feeds wastes data and battery.",
+      "approach": "An Android app (iOS to follow) with its screens shared through Compose Multiplatform, and a small Kotlin server on my home server behind a Cloudflare Tunnel. Each night the server builds a compact timetable pack from TfNSW's GTFS data for phones to download. It fetches GTFS-Realtime only when a phone asks, matches live positions to trips, and sends push alerts through Firebase. On the phone, every saved trip shows a large countdown, its platform and live status, with an animated pixel vehicle showing where the service is.",
+      "outcome": "Running for me and a few friends through Firebase App Distribution on a free budget: one TfNSW key on the server, no paid hosting. It plans journeys across modes with walking time between changes, saves places and routes, and works from its offline timetable when the network drops.",
+      "metrics": [
+        {
+          "value": "Live",
+          "label": "GTFS-Realtime"
+        },
+        {
+          "value": "KMP",
+          "label": "Shared code"
+        },
+        {
+          "value": "$0",
+          "label": "Hosting"
+        }
+      ],
+      "link": null,
+      "repo": "https://github.com/finnjones/TransitTracker",
+      "image": "transittracker.png",
+      "cover": "image",
+      "featured": true,
+      "gallery": [
+        {
+          "image": "transittracker-home-night.png",
+          "frame": "phone",
+          "caption": "Home: each saved trip with a big countdown, a leave-by time, the platform and live status."
+        },
+        {
+          "image": "transittracker-service-live.png",
+          "frame": "phone",
+          "caption": "One service: where the train is now, its stops with timetabled and live times, and a countdown to departure."
+        },
+        {
+          "image": "transittracker-plan-options.png",
+          "frame": "phone",
+          "caption": "Journey planning across modes, with walking time between legs and a check on whether a late train still makes the change."
+        },
+        {
+          "image": "transittracker-timetable-today.png",
+          "frame": "phone",
+          "caption": "A route's full timetable for the day, with live delays shown alongside the timetabled times."
+        }
+      ]
     },
     {
       "slug": "liftlink",
@@ -119,19 +292,32 @@
       "title": "LiftLink",
       "year": "2025",
       "role": "Creator",
-      "summary": "A web app that automatically merges duplicate Strava activities.",
-      "tech": ["JavaScript", "Node.js", "Strava API", "OAuth", "Vercel"],
-      "problem": "Athletes who record the same session on more than one device end up with duplicate activities cluttering their Strava feed, throwing off totals and stats.",
-      "approach": "Connect once with Strava via OAuth, detect overlapping activities by time and distance, and merge the duplicates — no manual deleting, no spreadsheet.",
-      "outcome": "A clean, accurate activity history maintained automatically after a single connection.",
+      "summary": "Merges the duplicate Strava activities you get from logging one gym session on both a Garmin watch and Hevy.",
+      "tech": [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "Strava API",
+        "Firestore",
+        "Vercel"
+      ],
+      "problem": "Lifters often record one workout twice: on a Garmin watch for heart rate and on Hevy for sets and reps. Both sync to Strava, leaving two half-complete activities that have to be merged and deleted by hand after every session.",
+      "approach": "Connect once with Strava OAuth. LiftLink watches for new uploads, pairs a Garmin activity with the Hevy activity recorded at the same time, copies Hevy's title and exercise breakdown into the Garmin activity, then deletes the duplicate. A dashboard shows that monitoring is active and keeps a log of every merge.",
+      "outcome": "A set-and-forget service: each workout ends up as one complete Strava activity with heart-rate data and the full set-by-set log, with no manual tidy-up.",
       "metrics": [
-        { "value": "OAuth", "label": "Strava connect" },
-        { "value": "Auto", "label": "Dedupe & merge" }
+        {
+          "value": "OAuth",
+          "label": "Strava connect"
+        },
+        {
+          "value": "Auto",
+          "label": "Detect & merge"
+        }
       ],
       "link": "https://lift-link-five.vercel.app",
       "repo": "https://github.com/finnjones/LiftLink",
-      "image": null,
-      "cover": "signal",
+      "image": "liftlink.png",
+      "cover": "image",
       "featured": true
     },
     {
@@ -140,16 +326,27 @@
       "title": "Votencrypt",
       "year": "2022",
       "role": "Creator — Major Work",
-      "summary": "A blockchain voting platform built on DAML smart contracts.",
-      "tech": ["DAML", "Smart Contracts", "TypeScript", "Blockchain"],
+      "summary": "A blockchain voting platform with its election rules written as DAML smart contracts.",
+      "tech": [
+        "DAML",
+        "React",
+        "TypeScript",
+        "Material UI"
+      ],
       "problem": "Digital voting has to prove two things at once that usually fight each other: every vote is counted exactly once, and no one can see how an individual voted.",
       "approach": "A voting platform modelled as DAML smart contracts, so the rules of an election — eligibility, one vote per voter, tallying — are enforced by the ledger itself rather than by a trusted server.",
-      "outcome": "A working, verifiable voting system and my Year 12 Software Development major work, published at votencrypt.com.",
+      "outcome": "A working, verifiable voting system and my Year 12 Software Design & Development major work. It was published at votencrypt.com.",
       "metrics": [
-        { "value": "DAML", "label": "Contract ledger" },
-        { "value": "1:1", "label": "Vote integrity" }
+        {
+          "value": "DAML",
+          "label": "Contract ledger"
+        },
+        {
+          "value": "1:1",
+          "label": "Vote integrity"
+        }
       ],
-      "link": "https://votencrypt.com",
+      "link": null,
       "repo": "https://github.com/finnjones/Blockchain-Voting",
       "image": "votencrypt.png",
       "cover": "image",
@@ -161,16 +358,26 @@
       "title": "AchieveIt Bookings",
       "year": "2024",
       "role": "Developer",
-      "summary": "An online booking system for a private tutoring company.",
-      "tech": ["Web App", "Bookings", "Scheduling"],
-      "problem": "A tutoring business was coordinating sessions over back-and-forth messages, with no single place for clients to see availability and book.",
-      "approach": "A self-serve booking flow where clients pick a slot and confirm online, giving the business a clear schedule and fewer scheduling conflicts.",
-      "outcome": "Live booking for AchieveIt's clients, cutting the admin overhead of arranging each session by hand.",
-      "metrics": [
-        { "value": "Self-serve", "label": "Client booking" },
-        { "value": "Live", "label": "In production" }
+      "summary": "Online booking for a Sydney tutoring company: clients picked a subject and booked a session themselves.",
+      "tech": [
+        "Web App",
+        "Bookings",
+        "Scheduling"
       ],
-      "link": "https://www.achieveittutor.com/book-online",
+      "problem": "AchieveIt Tutoring arranged sessions through back-and-forth messages, so clients had no single place to see what was on offer, what it cost, or when they could book.",
+      "approach": "A Book Online page listing every service by level (HSC & Year 11, IB & Pre-IB, Year 7–10, Year 3–6), each with its length, its price and a Book Now button, so clients could choose a session and book it without messaging back and forth.",
+      "outcome": "Took the arranging of each session out of the inbox: clients booked themselves and the business had one clear schedule. The site has since moved to an enrolment enquiry form.",
+      "metrics": [
+        {
+          "value": "Self-serve",
+          "label": "Client booking"
+        },
+        {
+          "value": "5",
+          "label": "Service categories"
+        }
+      ],
+      "link": "https://achieveittutor.com",
       "repo": null,
       "image": "achieveit.png",
       "cover": "image",
@@ -182,14 +389,26 @@
       "title": "Trading Game",
       "year": "2023",
       "role": "Creator",
-      "summary": "A stock-trading simulator driven by live market data.",
-      "tech": ["Python", "yfinance", "Yahoo Finance API"],
+      "summary": "A paper-trading game that charts live Yahoo Finance prices so you can practise trading without risking money.",
+      "tech": [
+        "Python",
+        "pygame",
+        "tkinter",
+        "yfinance",
+        "matplotlib"
+      ],
       "problem": "Learning how markets behave is expensive and slow if the only way to practise is with real money.",
-      "approach": "A Python game that pulls live prices through the Yahoo Finance API and runs a paper-trading loop — buy, sell, and track a simulated portfolio against real market movements.",
+      "approach": "A Python desktop game: type a ticker and an amount to buy, and it pulls live prices and price history through Yahoo Finance and draws the chart with matplotlib inside a pygame window. Holdings sit in a list beside the chart, a negative amount sells, and your balance and portfolio are saved between sessions.",
       "outcome": "A safe sandbox for building market intuition, and the project where my CS and finance interests first met in code.",
       "metrics": [
-        { "value": "Live", "label": "Market data" },
-        { "value": "Paper", "label": "Risk-free trades" }
+        {
+          "value": "Live",
+          "label": "Market data"
+        },
+        {
+          "value": "Paper",
+          "label": "Risk-free trades"
+        }
       ],
       "link": "https://github.com/finnjones/Trading-Game",
       "repo": "https://github.com/finnjones/Trading-Game",
@@ -203,14 +422,24 @@
       "title": "Trigger Outlaws",
       "year": "2024",
       "role": "Developer — Team of 3",
-      "summary": "A tile-based, top-down RPG built with pygame.",
-      "tech": ["Python", "pygame", "Game Dev"],
-      "problem": "A team project to design and ship a complete game loop — movement, combat, levels, and win state — within a course deadline.",
-      "approach": "Built a top-down, tile-based RPG in pygame with a small team, dividing systems across movement, encounters, and level design.",
-      "outcome": "A finished, playable game and a lesson in shipping real software collaboratively under version control.",
+      "summary": "A top-down, wave-based Wild West shooter built in pygame by a team of three.",
+      "tech": [
+        "Python",
+        "pygame",
+        "Game Dev"
+      ],
+      "problem": "A team project to design and ship a complete game: movement, combat, enemy waves, an economy and a world to explore, within a course deadline.",
+      "approach": "A tile-based world built in pygame with a minimap, a pointer that leads you to the nearest enemy, health and ammo HUDs, and enemy waves. Coins from kills buy upgrades in the town's armoury and brewery. The three of us split the work across movement and combat, enemies and level design.",
+      "outcome": "A finished, playable game, and practice at shipping software as a team under version control.",
       "metrics": [
-        { "value": "Team", "label": "Built with 3" },
-        { "value": "pygame", "label": "Engine" }
+        {
+          "value": "Team",
+          "label": "Built with 3"
+        },
+        {
+          "value": "pygame",
+          "label": "Engine"
+        }
       ],
       "link": "https://github.com/finnjones/TriggerOutlaws",
       "repo": "https://github.com/finnjones/TriggerOutlaws",

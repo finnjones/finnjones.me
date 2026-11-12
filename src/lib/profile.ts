@@ -49,6 +49,12 @@ export interface ProjectMetric {
   label: string;
 }
 
+export interface GalleryShot {
+  image: string; // file in src/assets/work/
+  caption: string;
+  frame?: 'wide' | 'phone'; // phone = portrait app screen, shown three across
+}
+
 export type CoverKind = 'image' | 'code' | 'chart' | 'signal';
 
 export interface Project {
@@ -68,6 +74,7 @@ export interface Project {
   image: string | null;
   cover: CoverKind;
   featured: boolean;
+  gallery?: GalleryShot[];
 }
 
 export interface Profile {
@@ -80,7 +87,7 @@ export interface Profile {
   email: string;
   linkedin: string;
   github: string;
-  status: { available: boolean; label: string; detail: string };
+  status: { detail: string };
   socials: Social[];
   about: string[];
   metrics: Metric[];

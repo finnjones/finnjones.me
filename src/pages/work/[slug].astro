@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
 import Cover from '../../components/Cover.astro';
+import { workImage } from '../../lib/images';
 import { projects, adjacentProjects } from '../../lib/profile';
 
 export function getStaticPaths() {
@@ -10,6 +12,12 @@ export function getStaticPaths() {
 const { project } = Astro.props;
 const { prev, next } = adjacentProjects(project.slug);
 const idx = projects.findIndex((p) => p.slug === project.slug) + 1;
+
+const gallery = (project.gallery ?? [])
+  .map((g) => ({ ...g, src: workImage(g.image) }))
+  .filter((g) => g.src);
+const phoneShots = gallery.filter((g) => g.frame === 'phone');
+const wideShots = gallery.filter((g) => g.frame !== 'phone');
 
 const blocks = [
   { label: 'Problem', body: project.problem },
@@ -112,6 +120,34 @@ const blocks = [
         </div>
       </aside>
     </div>
+
+    <!-- Screens -->
+    {
+      gallery.length > 0 && (
+        <section class="case-gallery wrap" aria-labelledby="screens-head">
+          <h2 class="block-head" id="screens-head">
+            <span class="block-idx mono-sm accent">04</span>
+            <span>Screens</span>
+          </h2>
+          {phoneShots.length > 0 && (
+            <div class="gallery-phones" data-stagger>
+              {phoneShots.map((g) => (
+                <figure class="shot shot-phone">
+                  <Image src={g.src!} alt={g.caption} widths={[360, 540, 720]} sizes="(max-width: 720px) 80vw, 320px" class="shot-img" />
+                  <figcaption class="muted">{g.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
+          {wideShots.map((g) => (
+            <figure class="shot shot-wide" data-reveal>
+              <Image src={g.src!} alt={g.caption} widths={[720, 1080, 1600]} sizes="(max-width: 1100px) 92vw, 1040px" class="shot-img" />
+              <figcaption class="muted">{g.caption}</figcaption>
+            </figure>
+          ))}
+        </section>
+      )
+    }
 
     <!-- Prev / Next ledger nav -->
     <nav class="case-nav" aria-label="More projects">
@@ -257,6 +293,43 @@ const blocks = [
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+  }
+
+  .case-gallery {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2rem, 5vw, 3rem);
+  }
+  .case-gallery .block-head {
+    margin-bottom: 0;
+  }
+  .gallery-phones {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
+    max-width: 1040px;
+  }
+  .shot {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .shot-img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--bg-raise);
+  }
+  .shot-phone .shot-img {
+    border-radius: calc(var(--radius) * 3);
+  }
+  .shot figcaption {
+    max-width: 70ch;
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
 
   .case-nav {

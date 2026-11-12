@@ -13,8 +13,8 @@ deploys automatically (see `.github/workflows/deploy.yml`).
 | --- | --- |
 | `positioning` | Hero + about — the "speaks finance" line |
 | `subheadline` | Hero — paragraph under the name |
-| `headline` | SEO title, JSON-LD, status pill |
-| `status` | Top-bar status pill (`available`, `label`, `detail`) |
+| `headline` | SEO title, JSON-LD |
+| `status` | `detail`: the "Currently" line in Experience |
 | `about` | Home profile block + `/about` intro |
 | `metrics` | Home — the animated counters (`value` counts up; `text` shows as-is) |
 | `skills` | Home — the stock-style ticker (`symbol`, `name`, `trend`) |
@@ -46,7 +46,10 @@ Each project is one case study. Fields:
   "repo": "https://github.com/…", // source, or null
   "image": "liftlink.png",     // file in src/assets/work/, or null
   "cover": "signal",           // "image" | "code" | "chart" | "signal"
-  "featured": true
+  "featured": true,
+  "gallery": [                 // optional extra screenshots on the case page
+    { "image": "app-home.png", "caption": "What it shows.", "frame": "phone" } // frame: "wide" (default) | "phone"
+  ]
 }
 ```
 
