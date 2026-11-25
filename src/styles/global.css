@@ -1,42 +1,47 @@
 /*
   finnjones.me
-  One typeface, one link colour, no decoration. The screenshots are the
-  only pictures on the page. Read DESIGN.md before changing anything here.
+  Flat fields of colour, heavy type, thick ink outlines, and the pixel train
+  and ferry Finn drew for TransitTracker. Read DESIGN.md before changing this.
 */
 
 @import '@fontsource-variable/schibsted-grotesk/wght.css';
 @import '@fontsource-variable/schibsted-grotesk/wght-italic.css';
 
 :root {
+  /* Colours sampled from the TransitTracker sprites. */
+  --ink: #0d0d0d;
   --paper: #ffffff;
-  --ink: #15171c;
-  --ink-soft: #595f6b;
-  --line: #d8dbe1;
-  --link: #c4122f;
+  --cream: #f3ecd8;
+  --sun: #ffd23f;
+  --sky: #6cb6ff;
+  --sea: #3f8fe8;
+
+  /* The colours of the section you are in. Sections override these two. */
+  --bg: var(--paper);
+  --fg: var(--ink);
 
   --font: 'Schibsted Grotesk Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
-  /* Five sizes. Nothing on the site is set at any other size. */
-  --size-small: 0.875rem;
-  --size-body: 1.0625rem;
-  --size-text: 1.1875rem; /* running prose on the About and project pages */
-  --size-title: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
-  --size-lead: clamp(1.5rem, 1.1rem + 1.5vw, 2.125rem);
+  --size-small: 0.9375rem;
+  --size-body: 1.125rem;
+  --size-lead: clamp(1.3125rem, 1rem + 1.1vw, 1.75rem);
+  --size-title: clamp(2.5rem, 1.2rem + 5.4vw, 6rem);
+  --size-giant: clamp(4rem, 19.3vw, 21.5rem);
 
+  --stroke: 3px;
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --gap: clamp(1rem, 2vw, 1.5rem);
-  --space-section: clamp(4rem, 9vw, 8rem);
 
-  color-scheme: light dark;
+  /* One sprite pixel on screen. The rail and the train scale from it. */
+  --px: 2px;
+  --rail: calc(var(--px) * 16 + 10px);
+
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (min-width: 60rem) {
   :root {
-    --paper: #14161a;
-    --ink: #eceef2;
-    --ink-soft: #a2a8b3;
-    --line: #30343c;
-    --link: #ff6b6b;
+    --px: 3px;
   }
 }
 
@@ -49,6 +54,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  scroll-padding-top: var(--rail);
 }
 
 body {
@@ -57,7 +63,7 @@ body {
   color: var(--ink);
   font-family: var(--font);
   font-size: var(--size-body);
-  font-weight: 400;
+  font-weight: 450;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -83,9 +89,9 @@ ol {
 h1,
 h2,
 h3 {
-  font-weight: 650;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
   text-wrap: balance;
 }
 
@@ -104,52 +110,52 @@ img {
 
 ::selection {
   background: var(--ink);
-  color: var(--paper);
+  color: var(--sun);
 }
 
-/* ---- Links ----
-   Red and underlined means it is a link. Nothing else on the site is red. */
+/* ---- Links: thick underline, and the colours swap when you point ---- */
 a {
-  color: var(--link);
+  color: inherit;
   text-decoration-line: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.18em;
 }
 a:hover {
-  color: var(--ink);
-  text-decoration-thickness: 2px;
+  background: var(--fg);
+  color: var(--bg);
+  text-decoration-color: transparent;
 }
 a:focus-visible {
-  outline: 2px solid var(--link);
+  outline: var(--stroke) solid var(--fg);
   outline-offset: 3px;
-  border-radius: 2px;
 }
 
 .skip-link {
   position: absolute;
   left: var(--gutter);
-  top: -4rem;
+  top: -6rem;
+  z-index: 100;
   padding: 0.5rem 0.75rem;
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--sun);
+  color: var(--ink);
 }
 .skip-link:focus {
-  top: 0.75rem;
+  top: calc(var(--rail) + 0.5rem);
 }
 
-/* ---- Page frame ---- */
+/* ---- Frame ---- */
+.band {
+  background: var(--bg);
+  color: var(--fg);
+}
+
 .page {
   width: 100%;
-  max-width: 84rem;
+  max-width: 96rem;
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
-.section {
-  margin-top: var(--space-section);
-}
-
-/* Twelve columns on wide screens, one column on phones. */
 .grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -159,69 +165,23 @@ a:focus-visible {
   grid-column: 1 / -1;
 }
 
-/* A section whose heading sits in the left margin beside its content. */
-@media (min-width: 60rem) {
-  .grid > .side {
-    grid-column: 1 / span 3;
-  }
-  .grid > .main {
-    grid-column: 4 / span 8;
-  }
-}
-
-.section-title {
-  font-size: var(--size-title);
-  margin-bottom: 1.5rem;
-}
-
 .lead {
   font-size: var(--size-lead);
   font-weight: 500;
-  line-height: 1.18;
-  letter-spacing: -0.022em;
-}
-
-.soft {
-  color: var(--ink-soft);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
 }
 
 .small {
   font-size: var(--size-small);
 }
 
-/* ---- Screenshots ----
-   A hairline keeps white screenshots from dissolving into the page. */
+/* ---- Screenshots get the same ink outline the sprites have ---- */
 .shot {
   display: block;
   width: 100%;
-  border-radius: 6px;
-  box-shadow: 0 0 0 1px var(--line);
-  background: var(--line);
-}
-
-/* ---- Rows: a year, a thing, and where it happened ---- */
-.rows {
-  list-style: none;
-  border-top: 1px solid var(--line);
-}
-.rows > li {
-  display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr);
-  column-gap: var(--gap);
-  padding-block: 0.875rem;
-  border-bottom: 1px solid var(--line);
-}
-.rows .when {
-  color: var(--ink-soft);
-  font-variant-numeric: tabular-nums;
-}
-.rows strong {
-  font-weight: 650;
-}
-@media (max-width: 30rem) {
-  .rows > li {
-    grid-template-columns: 1fr;
-  }
+  border: var(--stroke) solid var(--ink);
+  background: var(--ink);
 }
 
 /* A row of links, spaced apart rather than separated by a glyph. */
@@ -230,4 +190,104 @@ a:focus-visible {
   flex-wrap: wrap;
   gap: 0.25rem 1.5rem;
   list-style: none;
+  font-weight: 650;
+}
+
+/* ---- Rows: a year, a thing, and where it happened ---- */
+.rows {
+  list-style: none;
+  border-top: var(--stroke) solid var(--fg);
+}
+.rows > li {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  column-gap: var(--gap);
+  padding-block: 1rem;
+  border-bottom: var(--stroke) solid var(--fg);
+}
+.rows .when {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+.rows strong {
+  font-weight: 800;
+}
+@media (max-width: 30rem) {
+  .rows > li {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- The line: Finn's TransitTracker train rides it as you scroll ---- */
+.rail {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  height: var(--rail);
+  background: var(--ink);
+  border-bottom: 2px solid var(--cream);
+  pointer-events: none;
+}
+.sprite {
+  display: block;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  image-rendering: pixelated;
+}
+.train {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: calc(var(--px) * 32);
+  height: calc(var(--px) * 16);
+  background-image: url('/sprites/train.png');
+  background-repeat: repeat-x;
+}
+
+@keyframes ride {
+  to {
+    transform: translateX(calc(100vw - 100%));
+  }
+}
+@keyframes train-frames {
+  to {
+    background-position-x: calc(var(--px) * -128);
+  }
+}
+@keyframes ferry-frames {
+  to {
+    background-position-x: calc(var(--px) * -272);
+  }
+}
+@keyframes sail {
+  from {
+    transform: translateX(calc(var(--px) * -80));
+  }
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Where the browser can tie an animation to scrolling, the train's place
+     on the line is how far down the page you are. Elsewhere it stays parked. */
+  @supports (animation-timeline: scroll()) {
+    .train {
+      animation-name: ride, train-frames;
+      animation-duration: auto, auto;
+      animation-timing-function: linear, steps(4);
+      animation-iteration-count: 1, 48;
+      animation-fill-mode: both, none;
+      animation-timeline: scroll(root block), scroll(root block);
+    }
+  }
+  .ferry {
+    animation:
+      ferry-frames 1.4s steps(4) infinite,
+      sail 70s linear -18s infinite;
+  }
+
+  @view-transition {
+    navigation: auto;
+  }
 }

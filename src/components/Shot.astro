@@ -1,0 +1,50 @@
+---
+import { Image } from 'astro:assets';
+import { workImage } from '../lib/images';
+import type { Project } from '../lib/profile';
+
+export interface Props {
+  project: Project;
+  sizes: string;
+  /** Crop to 16:10 so screenshots line up. Off on a project's own page. */
+  crop?: boolean;
+  eager?: boolean;
+}
+
+const { project, sizes, crop = true, eager = false } = Astro.props;
+const src = workImage(project.image);
+const zoom = crop && project.imageZoom ? project.imageZoom : null;
+---
+
+{
+  src && (
+    <span class:list={['shot', 'frame', { crop }]} style={`view-transition-name:shot-${project.slug}`}>
+      <Image
+        src={src}
+        alt={crop ? '' : (project.imageAlt ?? `Screenshot of ${project.title}.`)}
+        width={1800}
+        widths={[480, 720, 1200, 1800, 2400]}
+        sizes={sizes}
+        loading={eager ? 'eager' : 'lazy'}
+        style={zoom ? `transform:scale(${zoom})` : undefined}
+      />
+    </span>
+  )
+}
+
+<style>
+  .frame {
+    overflow: hidden;
+  }
+  .frame img {
+    width: 100%;
+  }
+  .crop {
+    aspect-ratio: 16 / 10;
+  }
+  .crop img {
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+</style>

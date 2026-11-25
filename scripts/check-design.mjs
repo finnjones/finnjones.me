@@ -14,14 +14,14 @@ const everywhere = [
 ];
 
 const inCode = [
-  [/@keyframes|animation(-name)?\s*:/, 'CSS animation'],
-  [/IntersectionObserver|ScrollTrigger|data-reveal/, 'scroll-triggered reveal'],
+  [/IntersectionObserver|ScrollTrigger|data-reveal|animation-timeline\s*:\s*view/, 'scroll-triggered reveal'],
+  [/box-shadow|text-shadow|drop-shadow/, 'shadow'],
+  [/border-radius/, 'rounded corner'],
   [/blur\(/, 'blur filter'],
   [/gradient\(/, 'gradient'],
   [/text-transform\s*:\s*uppercase/, 'uppercase label'],
   [/border-(left|inline-start)\s*:\s*[2-9]/, 'coloured side border'],
   [/font-style\s*:\s*italic/, 'italic set in CSS (use <em> in prose instead)'],
-  [/border-radius\s*:\s*(999|50%)/, 'pill or circle shape'],
 ];
 
 const codeTypes = new Set(['.astro', '.css', '.ts', '.js', '.mjs']);

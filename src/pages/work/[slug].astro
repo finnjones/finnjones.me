@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Shot from '../../components/Shot.astro';
 import { workImage } from '../../lib/images';
 import { projects, adjacentProjects, hostname, liveLink } from '../../lib/profile';
 
@@ -9,8 +10,8 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { prev, next } = adjacentProjects(project.slug);
-const cover = workImage(project.image);
+const { next } = adjacentProjects(project.slug);
+const live = liveLink(project);
 
 const gallery = (project.gallery ?? [])
   .map((g) => ({ ...g, src: workImage(g.image) }))
@@ -23,68 +24,58 @@ const parts = [
   { heading: 'How it works', body: project.approach },
   { heading: 'Where it is now', body: project.outcome },
 ];
-const live = liveLink(project);
+const theme = `--bg:${project.color};--fg:${project.ink}`;
 ---
 
-<BaseLayout title={project.title} description={project.summary}>
+<BaseLayout title={project.title} description={project.summary} color={project.color} ink={project.ink}>
   <article>
-    <header class="page grid case-head">
-      <div class="case-intro">
-        <h1 class="case-title">{project.title}</h1>
-        <p class="lead">{project.summary}</p>
+    <header class="band case-head" style={theme}>
+      <div class="page grid case-head-inner">
+        <h1 class="case-title" style={`view-transition-name:title-${project.slug}`}>{project.title}</h1>
+        <p class="lead case-summary">{project.summary}</p>
+        <dl class="case-facts">
+          <div>
+            <dt>Year</dt>
+            <dd>{project.year}</dd>
+          </div>
+          <div>
+            <dt>Role</dt>
+            <dd>{project.role}</dd>
+          </div>
+          <div>
+            <dt>Built with</dt>
+            <dd>{project.tech.join(', ')}</dd>
+          </div>
+          {
+            (live || project.repo) && (
+              <div>
+                <dt>Links</dt>
+                <dd>
+                  <ul class="links">
+                    {live && <li><a href={live}>{hostname(live)}</a></li>}
+                    {project.repo && <li><a href={project.repo}>Source on GitHub</a></li>}
+                  </ul>
+                </dd>
+              </div>
+            )
+          }
+        </dl>
       </div>
-
-      <dl class="case-facts">
-        <div>
-          <dt class="soft">Year</dt>
-          <dd>{project.year}</dd>
-        </div>
-        <div>
-          <dt class="soft">Role</dt>
-          <dd>{project.role}</dd>
-        </div>
-        <div>
-          <dt class="soft">Built with</dt>
-          <dd>{project.tech.join(', ')}</dd>
-        </div>
-        {
-          (live || project.repo) && (
-            <div>
-              <dt class="soft">Links</dt>
-              <dd>
-                <ul class="links">
-                  {live && <li><a href={live}>{hostname(live)}</a></li>}
-                  {project.repo && <li><a href={project.repo}>Source on GitHub</a></li>}
-                </ul>
-              </dd>
-            </div>
-          )
-        }
-      </dl>
+      {
+        workImage(project.image) && (
+          <div class="page case-cover">
+            <Shot project={project} sizes="(max-width: 96rem) 92vw, 88rem" crop={false} eager />
+          </div>
+        )
+      }
     </header>
-
-    {
-      cover && (
-        <div class="page case-cover">
-          <Image
-            src={cover}
-            alt={project.imageAlt ?? `Screenshot of ${project.title}.`}
-            width={1800}
-            widths={[720, 1200, 1800, 2400]}
-            sizes="(max-width: 84rem) 92vw, 78rem"
-            class="shot"
-            loading="eager"
-          />
-        </div>
-      )
-    }
 
     <div class="page case-body">
       {
         parts.map((part) => (
           <section class="grid case-part">
-            <h2 class="section-title side">{part.heading}</h2>
-            <p class="main case-text">{part.body}</p>
+            <h2 class="case-part-title">{part.heading}</h2>
+            <p class="case-text">{part.body}</p>
           </section>
         ))
       }
@@ -95,14 +86,8 @@ const live = liveLink(project);
         <div class="page case-phones">
           {phoneShots.map((g) => (
             <figure>
-              <Image
-                src={g.src!}
-                alt=""
-                widths={[360, 540, 780]}
-                sizes="(max-width: 48rem) 44vw, 19rem"
-                class="shot"
-              />
-              <figcaption class="small soft">{g.caption}</figcaption>
+              <Image src={g.src!} alt="" width={780} widths={[360, 540, 780]} sizes="(max-width: 48rem) 44vw, 20rem" class="shot" />
+              <figcaption class="small">{g.caption}</figcaption>
             </figure>
           ))}
         </div>
@@ -112,87 +97,96 @@ const live = liveLink(project);
     {
       wideShots.map((g) => (
         <figure class="page case-wide">
-          <Image
-            src={g.src!}
-            alt=""
-            width={1800}
-            widths={[720, 1200, 1800]}
-            sizes="(max-width: 84rem) 92vw, 78rem"
-            class="shot"
-          />
-          <figcaption class="small soft">{g.caption}</figcaption>
+          <Image src={g.src!} alt="" width={1800} widths={[720, 1200, 1800]} sizes="(max-width: 96rem) 92vw, 88rem" class="shot" />
+          <figcaption class="small">{g.caption}</figcaption>
         </figure>
       ))
     }
   </article>
 
-  <nav class="page grid section case-nav" aria-label="Other projects">
-    <p class="case-nav-prev">
-      <span class="soft">Previous</span>
-      <a href={`/work/${prev.slug}`}>{prev.title}</a>
-    </p>
-    <p class="case-nav-next">
-      <span class="soft">Next</span>
-      <a href={`/work/${next.slug}`}>{next.title}</a>
-    </p>
-  </nav>
+  <a class="band next" href={`/work/${next.slug}`} style={`--bg:${next.color};--fg:${next.ink}`}>
+    <span class="page next-inner">
+      <span class="next-title">{next.title}</span>
+      <span class="next-label lead">is the next project.</span>
+    </span>
+  </a>
 </BaseLayout>
 
 <style>
   .case-head {
-    margin-top: clamp(2rem, 6vw, 5rem);
-    row-gap: 2.5rem;
-    align-items: start;
+    position: relative;
+    z-index: 2;
+    padding-bottom: clamp(2.5rem, 6vw, 5rem);
+  }
+  .case-head-inner {
+    row-gap: 1.5rem;
+    align-items: end;
+    padding-top: clamp(1.5rem, 5vw, 4rem);
   }
   .case-title {
-    font-size: var(--size-lead);
-    margin-bottom: 0.35em;
+    font-size: var(--size-giant);
+    font-size: clamp(3.25rem, 1rem + 11vw, 13rem);
+    line-height: 0.85;
+    letter-spacing: -0.055em;
+    margin-left: -0.04em;
+    overflow-wrap: anywhere;
   }
-  .case-intro .lead {
-    color: var(--ink-soft);
-  }
-
   .case-facts > div {
     display: grid;
-    grid-template-columns: 6rem minmax(0, 1fr);
+    grid-template-columns: 6.5rem minmax(0, 1fr);
     column-gap: var(--gap);
     padding-block: 0.5rem;
-    border-top: 1px solid var(--line);
+    border-top: var(--stroke) solid var(--fg);
   }
   .case-facts > div:last-child {
-    border-bottom: 1px solid var(--line);
+    border-bottom: var(--stroke) solid var(--fg);
   }
-
+  .case-facts dt {
+    font-weight: 800;
+  }
   @media (min-width: 60rem) {
-    .case-intro {
-      grid-column: 1 / span 7;
+    .case-summary {
+      grid-column: 1 / span 6;
     }
     .case-facts {
-      grid-column: 9 / span 4;
+      grid-column: 8 / span 5;
     }
   }
-
   .case-cover {
     margin-top: clamp(2.5rem, 5vw, 4rem);
   }
 
   .case-body {
-    margin-top: clamp(3rem, 7vw, 6rem);
+    padding-block: clamp(3.5rem, 8vw, 7rem) 0;
+  }
+  .case-part {
+    row-gap: 0.75rem;
   }
   .case-part + .case-part {
-    margin-top: clamp(2rem, 4vw, 3.5rem);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .case-part-title {
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
   }
   .case-text {
-    max-width: 40rem;
-    font-size: var(--size-text);
-    line-height: 1.55;
+    max-width: 42rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+  @media (min-width: 60rem) {
+    .case-part-title {
+      grid-column: 1 / span 4;
+    }
+    .case-text {
+      grid-column: 5 / span 8;
+    }
   }
 
   .case-phones {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2.5rem var(--gap);
-    margin-top: clamp(3rem, 7vw, 6rem);
+    margin-top: clamp(3.5rem, 8vw, 7rem);
   }
   @media (min-width: 48rem) {
     .case-phones {
@@ -200,30 +194,37 @@ const live = liveLink(project);
     }
   }
   .case-wide {
-    margin-top: clamp(3rem, 7vw, 6rem);
+    margin-top: clamp(3.5rem, 8vw, 7rem);
   }
   figcaption {
     margin-top: 0.75rem;
     max-width: 40rem;
   }
 
-  .case-nav {
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--line);
-    row-gap: 1rem;
-  }
-  .case-nav p {
-    grid-column: span 6;
-  }
-  .case-nav span {
+  /* ---- The next project, in its own colour ---- */
+  .next {
     display: block;
+    margin-top: clamp(4rem, 9vw, 8rem);
+    text-decoration: none;
   }
-  .case-nav a {
-    font-size: var(--size-title);
-    font-weight: 650;
-    letter-spacing: -0.015em;
+  .next-inner {
+    display: block;
+    padding-block: clamp(2.5rem, 6vw, 5rem);
   }
-  .case-nav-next {
-    text-align: right;
+  .next-label {
+    display: block;
+    margin-top: 0.75rem;
+  }
+  .next:hover {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .next-title {
+    display: block;
+    font-size: clamp(3rem, 1rem + 9vw, 10rem);
+    font-weight: 800;
+    letter-spacing: -0.055em;
+    line-height: 0.9;
+    margin-left: -0.04em;
   }
 </style>

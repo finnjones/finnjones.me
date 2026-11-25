@@ -140,7 +140,9 @@
         }
       ],
       "lead": true,
-      "imageAlt": "Aforecite home page: an upload box for a .docx essay beside the heading 'Fix every AGLC4 footnote in your essay, as Word tracked changes'."
+      "imageAlt": "Aforecite home page: an upload box for a .docx essay beside the heading 'Fix every AGLC4 footnote in your essay, as Word tracked changes'.",
+      "color": "#a9c1e3",
+      "ink": "#0d0d0d"
     },
     {
       "slug": "transittracker",
@@ -185,7 +187,9 @@
         }
       ],
       "lead": true,
-      "imageAlt": "Three TransitTracker phone screens in pixel-art style: a live train service, saved trips with countdowns, and journey options."
+      "imageAlt": "Three TransitTracker phone screens in pixel-art style: a live train service, saved trips with countdowns, and journey options.",
+      "color": "#0d0d0d",
+      "ink": "#f3ecd8"
     },
     {
       "slug": "liftlink",
@@ -207,8 +211,11 @@
       "link": "https://lift-link-five.vercel.app",
       "repo": "https://github.com/finnjones/LiftLink",
       "image": "liftlink.png",
-      "lead": false,
-      "imageAlt": "LiftLink sign-in page with a 'Connect with Strava' button."
+      "lead": true,
+      "imageAlt": "LiftLink sign-in page with a 'Connect with Strava' button.",
+      "color": "#ff7a1a",
+      "ink": "#0d0d0d",
+      "imageZoom": 1.9
     },
     {
       "slug": "votencrypt",
@@ -229,7 +236,9 @@
       "repo": "https://github.com/finnjones/Blockchain-Voting",
       "image": "votencrypt.png",
       "lead": false,
-      "imageAlt": "Votencrypt landing page with Login and Vote buttons."
+      "imageAlt": "Votencrypt landing page with Login and Vote buttons.",
+      "color": "#5b8df7",
+      "ink": "#0d0d0d"
     },
     {
       "slug": "achieveit-bookings",
@@ -249,7 +258,9 @@
       "repo": null,
       "image": "achieveit.png",
       "lead": false,
-      "imageAlt": "AchieveIt 'Our Services' page listing tutoring sessions, each with a length, a price and a Book Now button."
+      "imageAlt": "AchieveIt 'Our Services' page listing tutoring sessions, each with a length, a price and a Book Now button.",
+      "color": "#35c2a4",
+      "ink": "#0d0d0d"
     },
     {
       "slug": "trading-game",
@@ -270,7 +281,9 @@
       "link": "https://github.com/finnjones/Trading-Game",
       "repo": "https://github.com/finnjones/Trading-Game",
       "image": null,
-      "lead": false
+      "lead": false,
+      "color": "#5ab031",
+      "ink": "#0d0d0d"
     },
     {
       "slug": "trigger-outlaws",
@@ -290,12 +303,14 @@
       "repo": "https://github.com/finnjones/TriggerOutlaws",
       "image": "triggeroutlaws.png",
       "lead": false,
-      "imageAlt": "Trigger Outlaws gameplay: a pixel-art desert town seen from above, with a wave counter, minimap, health bar and ammo count."
+      "imageAlt": "Trigger Outlaws gameplay: a pixel-art desert town seen from above, with a wave counter, minimap, health bar and ammo count.",
+      "color": "#f2c572",
+      "ink": "#0d0d0d"
     }
   ],
   "intro": [
     "I'm a software engineer at Lendi Group in Sydney, where I work on mortgage and lending software. I'm also studying Computer Science and Commerce (Finance) at UNSW.",
-    "Outside work I build my own software. The two most recent are Aforecite, which fixes the footnotes in law essays, and TransitTracker, a transport app for Sydney."
+    "Outside work I build my own software. The pixel train at the top of this page is from one of them."
   ],
   "description": "Finn Jones is a software engineer at Lendi Group in Sydney, studying Computer Science and Commerce (Finance) at UNSW. This site collects the software he has built."
 }

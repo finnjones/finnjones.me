@@ -49,7 +49,10 @@ export interface Project {
   repo: string | null;
   image: string | null;
   imageAlt?: string;
-  lead: boolean; // shown full width on the home page
+  imageZoom?: number; // enlarge a sparse screenshot inside its frame on the home page
+  lead: boolean; // gets a full stage on the home page
+  color: string; // the project's field of colour
+  ink: string; // text colour that reads on it
   gallery?: GalleryShot[];
 }
 

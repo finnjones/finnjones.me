@@ -1,263 +1,300 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Shot from '../components/Shot.astro';
 import { workImage, portraitImage } from '../lib/images';
 import { profile, projects, years, hostname, liveLink } from '../lib/profile';
 
-const withImage = projects.filter((p) => workImage(p.image));
-const lead = withImage.filter((p) => p.lead);
-const rest = withImage.filter((p) => !p.lead);
-const textOnly = projects.filter((p) => !workImage(p.image));
+const lead = projects.filter((p) => p.lead);
+const earlier = projects.filter((p) => !p.lead);
 ---
 
 <BaseLayout>
-  <section class="page grid intro">
-    <div class="intro-text">
-      {profile.intro.map((para) => <p class="lead">{para}</p>)}
+  <section class="hero band">
+    <div class="page hero-inner">
+      <div class="grid hero-top">
+        <div class="hero-text">
+          {profile.intro.map((para) => <p class="lead">{para}</p>)}
+        </div>
+        <Image
+          src={portraitImage}
+          alt="Finn Jones in sunglasses and a cap, standing at a street market."
+          width={960}
+          widths={[400, 640, 960]}
+          sizes="(max-width: 60rem) 60vw, 20rem"
+          class="shot hero-photo"
+          loading="eager"
+        />
+      </div>
+      <h1 class="hero-name">{profile.name}</h1>
     </div>
-    <Image
-      src={portraitImage}
-      alt="Finn Jones in sunglasses and a cap, standing at a street market."
-      width={960}
-      widths={[400, 640, 960]}
-      sizes="(max-width: 60rem) 92vw, 22rem"
-      class="shot intro-photo"
-      loading="eager"
-    />
   </section>
 
-  <section class="page section" id="work">
-    <h2 class="section-title">Work</h2>
-
+  <div class="stages" id="work">
     {
       lead.map((p, i) => (
-        <article class="grid project project-lead">
-          <a class="project-shot" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
-            <Image
-              src={workImage(p.image)!}
-              alt=""
-              width={1800}
-              widths={[720, 1200, 1800, 2400]}
-              sizes="(max-width: 84rem) 92vw, 78rem"
-              class="shot"
-              loading={i === 0 ? 'eager' : 'lazy'}
-            />
-          </a>
-          <header class="project-name">
-            <h3>
+        <article class="stage band" style={`--bg:${p.color};--fg:${p.ink}`}>
+          <div class="page grid stage-inner">
+            <h2 class="stage-title" style={`view-transition-name:title-${p.slug}`}>
               <a href={`/work/${p.slug}`}>{p.title}</a>
-            </h3>
-            <p class="soft">{p.year}</p>
-          </header>
-          <p class="project-summary">{p.summary}</p>
-          <ul class="links project-links">
-            {liveLink(p) && <li><a href={liveLink(p)}>{hostname(liveLink(p)!)}</a></li>}
-            {p.repo && <li><a href={p.repo}>Source on GitHub</a></li>}
-          </ul>
+            </h2>
+            <div class="stage-text">
+              <p class="lead">{p.summary}</p>
+              <p class="stage-meta">
+                {p.year}. Built with {p.tech.slice(0, 4).join(', ')}.
+              </p>
+              <ul class="links">
+                <li><a href={`/work/${p.slug}`}>How it works</a></li>
+                {liveLink(p) && <li><a href={liveLink(p)}>{hostname(liveLink(p)!)}</a></li>}
+                {p.repo && <li><a href={p.repo}>Source on GitHub</a></li>}
+              </ul>
+            </div>
+            <a class="stage-shot" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
+              <Shot project={p} sizes="(max-width: 60rem) 92vw, 54vw" eager={i === 0} />
+            </a>
+          </div>
         </article>
       ))
     }
+  </div>
 
-    <div class="project-pairs">
+  <section class="page earlier">
+    <h2 class="section-title">Earlier work</h2>
+    <ul class="earlier-list">
       {
-        rest.map((p) => (
-          <article class="project">
-            <a class="project-shot" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
-              <Image
-                src={workImage(p.image)!}
-                alt=""
-                width={1200}
-                widths={[480, 720, 1200]}
-                sizes="(max-width: 48rem) 92vw, 38rem"
-                class="shot"
-              />
+        earlier.map((p) => (
+          <li>
+            <a class="earlier-row" href={`/work/${p.slug}`} style={`--hover:${p.color}`}>
+              <span class="earlier-year">{p.year}</span>
+              <span class="earlier-name">{p.title}</span>
+              <span class="earlier-summary">{p.summary}</span>
+              {workImage(p.image) && (
+                <span class="earlier-thumb">
+                  <Shot project={p} sizes="12rem" />
+                </span>
+              )}
             </a>
-            <header class="project-name">
-              <h3>
-                <a href={`/work/${p.slug}`}>{p.title}</a>
-              </h3>
-              <p class="soft">{p.year}</p>
-            </header>
-            <p class="project-summary">{p.summary}</p>
-            <ul class="links project-links">
-              {liveLink(p) && <li><a href={liveLink(p)}>{hostname(liveLink(p)!)}</a></li>}
-              {p.repo && <li><a href={p.repo}>Source on GitHub</a></li>}
-            </ul>
-          </article>
+          </li>
         ))
       }
-    </div>
-
-    {
-      textOnly.length > 0 && (
-        <ul class="rows project-rows">
-          {textOnly.map((p) => (
-            <li>
-              <span class="when">{p.year}</span>
-              <span>
-                <a href={`/work/${p.slug}`}>
-                  <strong>{p.title}</strong>
-                </a>
-                <br />
-                {p.summary}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )
-    }
+    </ul>
   </section>
 
-  <section class="page grid section" id="experience">
-    <h2 class="section-title side">Experience</h2>
-    <div class="main">
-      <ul class="rows">
-        {
-          profile.experience.map((e) => (
-            <li>
-              <span class="when">{years(e.start, e.end)}</span>
-              <span>
-                <strong>{e.role}</strong>
-                <br />
-                {e.company}
-              </span>
-            </li>
-          ))
-        }
-        {
-          profile.education.map((e) => (
-            <li>
-              <span class="when">{years(e.start, e.end)}</span>
-              <span>
-                <strong>{e.degree}</strong>
-                <br />
-                {e.institution}
-              </span>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="more"><a href="/about">More about me</a></p>
+  <section class="page grid about" id="about">
+    <div class="about-text">
+      <h2 class="section-title">About</h2>
+      <p class="lead">{profile.about[0]}</p>
+      <p class="about-more"><a href="/about">More about me</a></p>
     </div>
-  </section>
-
-  <section class="page grid section" id="contact">
-    <h2 class="section-title side">Contact</h2>
-    <div class="main">
-      <p class="lead contact-email"><a href={`mailto:${profile.email}`}>{profile.email}</a></p>
-      <ul class="links">
-        {profile.socials.filter((s) => s.label !== 'Email').map((s) => <li><a href={s.url}>{s.label}</a></li>)}
-      </ul>
-    </div>
+    <ul class="rows about-rows">
+      {
+        profile.experience.map((e) => (
+          <li>
+            <span class="when">{years(e.start, e.end)}</span>
+            <span>
+              <strong>{e.role}</strong>
+              <br />
+              {e.company}
+            </span>
+          </li>
+        ))
+      }
+      {
+        profile.education.map((e) => (
+          <li>
+            <span class="when">{years(e.start, e.end)}</span>
+            <span>
+              <strong>{e.degree}</strong>
+              <br />
+              {e.institution}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 </BaseLayout>
 
 <style>
-  /* ---- Intro: two plain paragraphs and a photograph ---- */
-  .intro {
-    margin-top: clamp(1.5rem, 4vw, 3rem);
+  /* ---- Hero: a yellow field, the introduction, and the name at full width ---- */
+  .hero {
+    --bg: var(--sun);
+    position: relative;
+    z-index: 2;
+  }
+  .hero-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    min-height: calc(100svh - var(--rail) - 5rem);
+    padding-block: clamp(1rem, 3vw, 2.5rem) 0;
+  }
+  .hero-top {
     row-gap: 2rem;
     align-items: start;
   }
-  .intro-text .lead + .lead {
+  .hero-text {
+    max-width: 44rem;
+  }
+  .hero-text .lead + .lead {
     margin-top: 0.75em;
   }
-  .intro-photo {
-    aspect-ratio: 4 / 3;
+  .hero-photo {
+    width: min(60%, 16rem);
+    aspect-ratio: 4 / 5;
     object-fit: cover;
-    object-position: 70% 40%;
+    object-position: 78% 40%;
   }
   @media (min-width: 60rem) {
-    .intro-text {
-      grid-column: 1 / span 8;
+    .hero-text {
+      grid-column: 1 / span 7;
     }
-    .intro-photo {
+    .hero-photo {
       grid-column: 10 / span 3;
-      aspect-ratio: 4 / 5;
-      object-position: 78% 40%;
-      margin-top: 0.4rem;
+      width: 100%;
     }
+  }
+  .hero-name {
+    margin-left: -0.045em;
+    font-size: var(--size-giant);
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+    padding-bottom: 0.08em;
   }
 
-  /* ---- Projects ---- */
-  .project {
-    row-gap: 0;
+  /* ---- Stages: one field of colour per project ---- */
+  .stage {
+    position: relative;
+    z-index: 2;
   }
-  .project-shot {
-    display: block;
-    margin-bottom: 1.25rem;
+  .stage-inner {
+    row-gap: clamp(1.25rem, 3vw, 2rem);
+    align-items: start;
+    padding-block: clamp(3rem, 8vw, 6rem);
   }
-  .project-name {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
+  .stage-title {
+    font-size: clamp(2.75rem, 0.5rem + 9.2vw, 9.5rem);
+    line-height: 0.85;
+    letter-spacing: -0.055em;
+    margin-left: -0.04em;
+    overflow-wrap: anywhere;
   }
-  .project-name h3 {
-    font-size: var(--size-title);
-  }
-  .project-name h3 a {
-    color: var(--ink);
+  .stage-title a {
     text-decoration: none;
   }
-  .project-name h3 a:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
+  .stage-meta {
+    margin-block: 1rem 1.5rem;
   }
-  .project-summary {
-    max-width: 34rem;
+  .stage-shot {
+    display: block;
   }
-  .project-links {
-    margin-top: 0.75rem;
+  .stage-shot:hover {
+    background: none;
   }
-
-  .project-lead {
-    margin-bottom: clamp(3.5rem, 7vw, 6rem);
-  }
-  /* On wide screens a lead project reads across: name, summary, links. */
   @media (min-width: 60rem) {
-    .project-lead .project-name {
-      grid-column: 1 / span 3;
-      display: block;
-      margin-bottom: 0;
+    .stage-text {
+      grid-column: 1 / span 5;
+      align-self: end;
     }
-    .project-lead .project-summary {
-      grid-column: 4 / span 5;
+    .stage-shot {
+      grid-column: 6 / span 7;
+      justify-self: end;
+      /* Never taller than half the screen, so a pinned stage always fits. */
+      width: min(100%, 52svh * 1.6);
     }
-    .project-lead .project-links {
-      grid-column: 10 / span 3;
-      margin-top: 0;
-      flex-direction: column;
+  }
+  /* On a screen tall enough to hold one, each stage sticks under the rail
+     and the next slides up over it. */
+  @media (min-width: 60rem) and (min-height: 44rem) {
+    .stage {
+      position: sticky;
+      top: var(--rail);
+      display: flex;
+      align-items: center;
+      min-height: calc(100svh - var(--rail));
+    }
+    .stage-inner {
+      padding-block: 1.5rem;
     }
   }
 
-  /* Paired screenshots share one shape so the text under them lines up. */
-  .project-pairs .shot {
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
-    object-position: top;
+  /* ---- Sections on white ---- */
+  .earlier,
+  .about {
+    padding-block: clamp(4rem, 9vw, 8rem) 0;
   }
-  .project-pairs {
+  .section-title {
+    font-size: var(--size-title);
+    margin-bottom: 0.4em;
+  }
+
+  .earlier-list {
+    list-style: none;
+    border-top: var(--stroke) solid var(--ink);
+  }
+  .earlier-row {
     display: grid;
-    gap: clamp(3rem, 6vw, 4.5rem) var(--gap);
+    grid-template-columns: minmax(0, 1fr) 5.5rem;
+    gap: 0.25rem var(--gap);
+    align-items: center;
+    padding-block: 1.25rem;
+    border-bottom: var(--stroke) solid var(--ink);
+    text-decoration: none;
   }
-  @media (min-width: 48rem) {
-    .project-pairs {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+  .earlier-row:hover {
+    background: var(--hover);
+    color: var(--ink);
+  }
+  .earlier-name {
+    grid-column: 1;
+    font-size: clamp(1.75rem, 1rem + 2.6vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .earlier-year {
+    grid-column: 1;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+  }
+  .earlier-summary {
+    grid-column: 1;
+  }
+  .earlier-thumb {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+  @media (min-width: 60rem) {
+    .earlier-row {
+      grid-template-columns: 5rem minmax(0, 5fr) minmax(0, 5fr) 11rem;
+      padding-inline: 0.75rem;
+    }
+    .earlier-year,
+    .earlier-name,
+    .earlier-summary,
+    .earlier-thumb {
+      grid-column: auto;
+      grid-row: auto;
     }
   }
 
-  .project-rows {
-    margin-top: clamp(3rem, 6vw, 4.5rem);
+  .about {
+    row-gap: 2.5rem;
+    padding-bottom: clamp(4rem, 9vw, 8rem);
   }
-
-  .more {
+  .about-more {
     margin-top: 1.5rem;
+    font-weight: 650;
   }
-
-  .contact-email {
-    margin-bottom: 1rem;
-    overflow-wrap: anywhere;
+  @media (min-width: 60rem) {
+    .about-text {
+      grid-column: 1 / span 6;
+    }
+    .about-rows {
+      grid-column: 8 / span 5;
+      align-self: end;
+    }
   }
 </style>

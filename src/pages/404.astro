@@ -4,28 +4,30 @@ import { projects } from '../lib/profile';
 ---
 
 <BaseLayout title="Page not found">
-  <section class="page not-found">
-    <h1 class="lead">There is no page at this address.</h1>
-    <p>
-      It may have moved when the site was rebuilt. Go to the <a href="/">home page</a>, or straight to a
-      project:
-    </p>
-    <ul class="links">
-      {projects.map((p) => <li><a href={`/work/${p.slug}`}>{p.title}</a></li>)}
-    </ul>
+  <section class="band not-found">
+    <div class="page">
+      <h1>This train does not stop here.</h1>
+      <p class="lead">
+        There is no page at this address. Go to the <a href="/">home page</a>, or straight to a project:
+      </p>
+      <ul class="links">
+        {projects.map((p) => <li><a href={`/work/${p.slug}`}>{p.title}</a></li>)}
+      </ul>
+    </div>
   </section>
 </BaseLayout>
 
 <style>
   .not-found {
-    margin-top: clamp(2rem, 6vw, 5rem);
+    --bg: var(--sun);
+    padding-block: clamp(2rem, 6vw, 5rem) clamp(4rem, 9vw, 8rem);
   }
   .not-found h1 {
-    font-weight: 500;
-    margin-bottom: 1.5rem;
+    font-size: var(--size-title);
+    margin-bottom: 0.4em;
   }
   .not-found p {
-    max-width: 34rem;
-    margin-bottom: 1rem;
+    max-width: 40rem;
+    margin-bottom: 1.25rem;
   }
 </style>

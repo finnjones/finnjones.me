@@ -10,16 +10,16 @@ push to `main`. GitHub Actions builds and deploys it (see
 
 | Field | Where it appears |
 | --- | --- |
-| `intro` | Home: the large opening paragraphs |
+| `intro` | Home: the paragraphs in the yellow hero |
 | `description` | The meta description search engines and link previews show |
 | `headline` | Job title in the structured data for search engines |
-| `about` | `/about`: the paragraphs beside the photo |
+| `about` | `/about`, and the first paragraph on Home |
 | `experience` | Home (role and company) and `/about` (with highlights) |
 | `education` | Home and `/about` |
 | `capabilities` | `/about`: the Skills rows |
 | `projects` | Home, and one `/work/<slug>` page per project |
-| `socials` | Contact section on Home and `/about` |
-| `email` | Contact section |
+| `socials` | The footer on every page |
+| `email` | The footer on every page |
 
 ## The `projects` schema
 
@@ -38,20 +38,24 @@ push to `main`. GitHub Actions builds and deploys it (see
   "repo": "https://github.com/finnjones/LiftLink", // source, or null
   "image": "liftlink.png",     // file in src/assets/work/, or null
   "imageAlt": "What the screenshot shows, for screen readers.",
-  "lead": false,               // true shows it full width on the home page
+  "imageZoom": 1.9,            // optional: enlarge a sparse screenshot inside its frame on the home page
+  "lead": false,               // true gives it a full-screen stage on the home page
+  "color": "#ff7a1a",          // the project's field of colour (see DESIGN.md)
+  "ink": "#0d0d0d",            // text colour that reads on it
   "gallery": [                 // optional extra screenshots on the project page
     { "image": "app-home.png", "caption": "What it shows.", "frame": "phone" } // frame: "wide" (default) or "phone"
   ]
 }
 ```
 
-- **Order in the file is the order on the site**, and sets Previous and Next
+- **Order in the file is the order on the site**, and sets which project comes next
   on project pages.
-- **`lead`** projects come first on the home page at full width. Keep it to
-  two. The rest sit in pairs beneath them.
-- **A project with no `image`** is listed as a text row under the screenshots.
-  Add a screenshot of the running software and it joins the pairs. Do not
-  draw a placeholder cover for it.
+- **`lead`** projects each get a full-screen stage on the home page. Keep it
+  to three. The rest are listed as rows under "Earlier work".
+- **`color`** must be one no other project uses, and `ink` must stay readable
+  on it (4.5:1 or better).
+- **A project with no `image`** shows no thumbnail. Add a screenshot of the
+  running software when there is one. Do not draw a placeholder cover.
 - **Images** go in `src/assets/work/` and are referenced by filename. Astro
   resizes them and converts them to WebP. The photo of Finn is
   `src/assets/portrait/finn.jpg`.

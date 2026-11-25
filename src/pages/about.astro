@@ -6,25 +6,28 @@ import { profile, years } from '../lib/profile';
 ---
 
 <BaseLayout title="About" description={profile.about[0]}>
-  <section class="page grid about-head">
-    <div class="about-text">
+  <section class="band about-head">
+    <div class="page grid about-head-inner">
       <h1 class="about-title">About</h1>
-      {profile.about.map((para) => <p class="about-para">{para}</p>)}
+      <div class="about-text">
+        <p class="lead">{profile.about[0]}</p>
+        {profile.about.slice(1).map((para) => <p class="about-para">{para}</p>)}
+      </div>
+      <Image
+        src={portraitImage}
+        alt="Finn Jones in sunglasses and a cap, standing at a street market."
+        width={1200}
+        widths={[480, 800, 1200]}
+        sizes="(max-width: 60rem) 92vw, 30rem"
+        class="shot about-photo"
+        loading="eager"
+      />
     </div>
-    <Image
-      src={portraitImage}
-      alt="Finn Jones in sunglasses and a cap, standing at a street market."
-      width={1200}
-      widths={[480, 800, 1200]}
-      sizes="(max-width: 60rem) 92vw, 30rem"
-      class="shot about-photo"
-      loading="eager"
-    />
   </section>
 
-  <section class="page grid section">
-    <h2 class="section-title side">Experience</h2>
-    <ul class="rows main">
+  <section class="page grid about-section">
+    <h2 class="about-section-title">Experience</h2>
+    <ul class="rows about-rows">
       {
         profile.experience.map((e) => (
           <li>
@@ -46,9 +49,9 @@ import { profile, years } from '../lib/profile';
     </ul>
   </section>
 
-  <section class="page grid section">
-    <h2 class="section-title side">Education</h2>
-    <ul class="rows main">
+  <section class="page grid about-section">
+    <h2 class="about-section-title">Education</h2>
+    <ul class="rows about-rows">
       {
         profile.education.map((e) => (
           <li>
@@ -64,9 +67,9 @@ import { profile, years } from '../lib/profile';
     </ul>
   </section>
 
-  <section class="page grid section">
-    <h2 class="section-title side">Skills</h2>
-    <ul class="rows main">
+  <section class="page grid about-section about-last">
+    <h2 class="about-section-title">Skills</h2>
+    <ul class="rows about-rows">
       {
         profile.capabilities.map((c) => (
           <li>
@@ -77,35 +80,28 @@ import { profile, years } from '../lib/profile';
       }
     </ul>
   </section>
-
-  <section class="page grid section">
-    <h2 class="section-title side">Contact</h2>
-    <div class="main">
-      <p class="lead about-email"><a href={`mailto:${profile.email}`}>{profile.email}</a></p>
-      <ul class="links">
-        {profile.socials.filter((s) => s.label !== 'Email').map((s) => <li><a href={s.url}>{s.label}</a></li>)}
-      </ul>
-    </div>
-  </section>
 </BaseLayout>
 
 <style>
   .about-head {
-    margin-top: clamp(2rem, 6vw, 5rem);
+    --bg: var(--sun);
+    padding-bottom: clamp(3rem, 7vw, 6rem);
+  }
+  .about-head-inner {
     row-gap: 2rem;
     align-items: start;
+    padding-top: clamp(1.5rem, 5vw, 4rem);
   }
   .about-title {
-    font-size: var(--size-lead);
-    margin-bottom: 1.5rem;
+    font-size: clamp(3.25rem, 1rem + 11vw, 13rem);
+    line-height: 0.85;
+    letter-spacing: -0.055em;
+    margin-left: -0.04em;
   }
   .about-para {
-    max-width: 40rem;
-    font-size: var(--size-text);
-    line-height: 1.55;
-  }
-  .about-para + .about-para {
+    max-width: 42rem;
     margin-top: 1.25rem;
+    font-size: 1.25rem;
   }
   .about-photo {
     aspect-ratio: 3 / 2;
@@ -119,7 +115,25 @@ import { profile, years } from '../lib/profile';
       grid-column: 9 / span 4;
       aspect-ratio: 4 / 5;
       object-position: 78% 40%;
-      margin-top: 0.4rem;
+    }
+  }
+
+  .about-section {
+    row-gap: 1.25rem;
+    padding-top: clamp(3.5rem, 8vw, 7rem);
+  }
+  .about-last {
+    padding-bottom: clamp(4rem, 9vw, 8rem);
+  }
+  .about-section-title {
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  }
+  @media (min-width: 60rem) {
+    .about-section-title {
+      grid-column: 1 / span 4;
+    }
+    .about-rows {
+      grid-column: 5 / span 8;
     }
   }
 
@@ -127,14 +141,8 @@ import { profile, years } from '../lib/profile';
     margin-top: 0.5rem;
     padding-left: 1.1em;
     list-style: disc;
-    color: var(--ink-soft);
   }
   .points li + li {
     margin-top: 0.25rem;
-  }
-
-  .about-email {
-    margin-bottom: 1rem;
-    overflow-wrap: anywhere;
   }
 </style>
