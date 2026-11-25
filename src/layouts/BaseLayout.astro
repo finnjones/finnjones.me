@@ -36,6 +36,8 @@ const year = new Date().getFullYear();
     <link rel="apple-touch-icon" href="/app-icon.png" />
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href="/fonts/pixelify-sans-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/doto-black.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="generator" content={Astro.generator} />
 
     <title>{pageTitle}</title>
@@ -73,13 +75,9 @@ const year = new Date().getFullYear();
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
 
-    <div class="rail" aria-hidden="true">
-      <span class="sprite train"></span>
-    </div>
-
     <header class="site-head band" style={`--bg:${color};--fg:${ink}`}>
       <div class="page site-head-inner">
-        {isHome ? <span /> : <a class="site-name" href="/">{profile.name}</a>}
+        {isHome ? <span class="site-name">finnjones.me</span> : <a class="site-name" href="/">{profile.name}</a>}
         <nav aria-label="Main">
           <ul class="links">
             <li><a href="/#work">Work</a></li>
@@ -117,7 +115,9 @@ const year = new Date().getFullYear();
       .site-head {
         position: relative;
         z-index: 2;
-        padding-top: var(--rail);
+        font-family: var(--label);
+        font-size: 0.875rem;
+        letter-spacing: 0.06em;
       }
       .site-head-inner {
         display: flex;
@@ -125,11 +125,10 @@ const year = new Date().getFullYear();
         align-items: baseline;
         justify-content: space-between;
         gap: 0.5rem 2rem;
-        padding-block: clamp(1rem, 2.5vw, 1.75rem);
+        padding-block: clamp(0.9rem, 1.8vw, 1.4rem);
       }
       .site-name {
-        font-weight: 800;
-        letter-spacing: -0.02em;
+        font-weight: 700;
         text-decoration: none;
       }
       .site-head nav a {

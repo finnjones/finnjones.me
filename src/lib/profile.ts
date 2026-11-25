@@ -35,9 +35,12 @@ export interface GalleryShot {
   frame?: 'wide' | 'phone'; // phone = portrait app screen, shown four across
 }
 
+export type Vehicle = 'train-long' | 'metro-long' | 'lightrail-pair' | 'bus' | 'coach' | 'ferry';
+
 export interface Project {
   slug: string;
   title: string;
+  code: string; // two letters on the line badge, like a Sydney line code
   year: string;
   role: string;
   summary: string;
@@ -51,8 +54,9 @@ export interface Project {
   imageAlt?: string;
   imageZoom?: number; // enlarge a sparse screenshot inside its frame on the home page
   lead: boolean; // gets a full stage on the home page
-  color: string; // the project's field of colour
+  color: string; // the project's line colour: its badge, its vehicle's livery and its stage
   ink: string; // text colour that reads on it
+  vehicle: Vehicle; // which TransitTracker sprite runs the service
   gallery?: GalleryShot[];
 }
 

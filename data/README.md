@@ -10,14 +10,14 @@ push to `main`. GitHub Actions builds and deploys it (see
 
 | Field | Where it appears |
 | --- | --- |
-| `intro` | Home: the paragraphs in the yellow hero |
+| `intro` | Not shown at the moment |
 | `description` | The meta description search engines and link previews show |
 | `headline` | Job title in the structured data for search engines |
 | `about` | `/about`, and the first paragraph on Home |
 | `experience` | Home (role and company) and `/about` (with highlights) |
 | `education` | Home and `/about` |
 | `capabilities` | `/about`: the Skills rows |
-| `projects` | Home, and one `/work/<slug>` page per project |
+| `projects` | Home (a row each on the board, a station for each `lead`), and one `/work/<slug>` page per project |
 | `socials` | The footer on every page |
 | `email` | The footer on every page |
 
@@ -27,6 +27,7 @@ push to `main`. GitHub Actions builds and deploys it (see
 {
   "slug": "liftlink",          // URL: /work/liftlink (unique, kebab-case)
   "title": "LiftLink",
+  "code": "LL",                // two letters on the line badge
   "year": "2025",
   "role": "Creator",
   "summary": "One sentence saying what it does.",
@@ -40,8 +41,9 @@ push to `main`. GitHub Actions builds and deploys it (see
   "imageAlt": "What the screenshot shows, for screen readers.",
   "imageZoom": 1.9,            // optional: enlarge a sparse screenshot inside its frame on the home page
   "lead": false,               // true gives it a full-screen stage on the home page
-  "color": "#ff7a1a",          // the project's field of colour (see DESIGN.md)
-  "ink": "#0d0d0d",            // text colour that reads on it
+  "color": "#168388",          // line colour: badge, vehicle livery, station (see DESIGN.md)
+  "ink": "#0c0c0a",            // text colour that reads on it
+  "vehicle": "metro-long",     // train-long, metro-long, lightrail-pair, bus, coach or ferry
   "gallery": [                 // optional extra screenshots on the project page
     { "image": "app-home.png", "caption": "What it shows.", "frame": "phone" } // frame: "wide" (default) or "phone"
   ]
@@ -50,8 +52,8 @@ push to `main`. GitHub Actions builds and deploys it (see
 
 - **Order in the file is the order on the site**, and sets which project comes next
   on project pages.
-- **`lead`** projects each get a full-screen stage on the home page. Keep it
-  to three. The rest are listed as rows under "Earlier work".
+- **`lead`** projects each get a full-screen station on the home page. Keep it
+  to three. Every project is a row on the board.
 - **`color`** must be one no other project uses, and `ink` must stay readable
   on it (4.5:1 or better).
 - **A project with no `image`** shows no thumbnail. Add a screenshot of the

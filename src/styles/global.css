@@ -7,6 +7,37 @@
 @import '@fontsource-variable/schibsted-grotesk/wght.css';
 @import '@fontsource-variable/schibsted-grotesk/wght-italic.css';
 
+@font-face {
+  font-family: 'TT Pixelify';
+  src: url('/fonts/pixelify-sans-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TT Pixelify';
+  src: url('/fonts/pixelify-sans-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Doto';
+  src: url('/fonts/doto-black.woff2') format('woff2');
+  font-weight: 400 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Silkscreen';
+  src: url('/fonts/silkscreen-bold.woff2') format('woff2');
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Jersey 15';
+  src: url('/fonts/jersey15-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   /* Colours sampled from the TransitTracker sprites. */
   --ink: #0d0d0d;
@@ -21,6 +52,11 @@
   --fg: var(--ink);
 
   --font: 'Schibsted Grotesk Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* TransitTracker's four pixel faces (SIL Open Font Licence, in public/fonts). */
+  --pixel: 'TT Pixelify', var(--font);
+  --dots: 'Doto', var(--pixel);
+  --label: 'Silkscreen', var(--pixel);
+  --digits: 'Jersey 15', var(--pixel);
 
   --size-small: 0.9375rem;
   --size-body: 1.125rem;
@@ -32,9 +68,9 @@
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --gap: clamp(1rem, 2vw, 1.5rem);
 
-  /* One sprite pixel on screen. The rail and the train scale from it. */
+  /* One sprite pixel on screen, for the ferry in the footer. */
   --px: 2px;
-  --rail: calc(var(--px) * 16 + 10px);
+  --rail: 0px;
 
   color-scheme: light;
 }
@@ -89,9 +125,10 @@ ol {
 h1,
 h2,
 h3 {
-  font-weight: 800;
+  font-family: var(--pixel);
+  font-weight: 700;
   line-height: 0.95;
-  letter-spacing: -0.035em;
+  letter-spacing: 0;
   text-wrap: balance;
 }
 
@@ -218,42 +255,13 @@ a:focus-visible {
   }
 }
 
-/* ---- The line: Finn's TransitTracker train rides it as you scroll ---- */
-.rail {
-  position: fixed;
-  inset: 0 0 auto 0;
-  z-index: 50;
-  height: var(--rail);
-  background: var(--ink);
-  border-bottom: 2px solid var(--cream);
-  pointer-events: none;
-}
 .sprite {
   display: block;
   background-repeat: no-repeat;
   background-size: auto 100%;
   image-rendering: pixelated;
 }
-.train {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: calc(var(--px) * 32);
-  height: calc(var(--px) * 16);
-  background-image: url('/sprites/train.png');
-  background-repeat: repeat-x;
-}
 
-@keyframes ride {
-  to {
-    transform: translateX(calc(100vw - 100%));
-  }
-}
-@keyframes train-frames {
-  to {
-    background-position-x: calc(var(--px) * -128);
-  }
-}
 @keyframes ferry-frames {
   to {
     background-position-x: calc(var(--px) * -272);
@@ -269,18 +277,6 @@ a:focus-visible {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Where the browser can tie an animation to scrolling, the train's place
-     on the line is how far down the page you are. Elsewhere it stays parked. */
-  @supports (animation-timeline: scroll()) {
-    .train {
-      animation-name: ride, train-frames;
-      animation-duration: auto, auto;
-      animation-timing-function: linear, steps(4);
-      animation-iteration-count: 1, 48;
-      animation-fill-mode: both, none;
-      animation-timeline: scroll(root block), scroll(root block);
-    }
-  }
   .ferry {
     animation:
       ferry-frames 1.4s steps(4) infinite,

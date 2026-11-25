@@ -1,300 +1,280 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Departures from '../components/Departures.astro';
 import Shot from '../components/Shot.astro';
-import { workImage, portraitImage } from '../lib/images';
 import { profile, projects, years, hostname, liveLink } from '../lib/profile';
 
 const lead = projects.filter((p) => p.lead);
-const earlier = projects.filter((p) => !p.lead);
+const stops = [
+  ...profile.experience.map((e) => ({ when: years(e.start, e.end), what: e.role, where: e.company, now: e.end === 'Present' })),
+  ...profile.education.map((e) => ({ when: years(e.start, e.end), what: e.degree, where: e.institution, now: false })),
+];
 ---
 
-<BaseLayout>
-  <section class="hero band">
-    <div class="page hero-inner">
-      <div class="grid hero-top">
-        <div class="hero-text">
-          {profile.intro.map((para) => <p class="lead">{para}</p>)}
-        </div>
-        <Image
-          src={portraitImage}
-          alt="Finn Jones in sunglasses and a cap, standing at a street market."
-          width={960}
-          widths={[400, 640, 960]}
-          sizes="(max-width: 60rem) 60vw, 20rem"
-          class="shot hero-photo"
-          loading="eager"
-        />
-      </div>
-      <h1 class="hero-name">{profile.name}</h1>
-    </div>
-  </section>
+<BaseLayout color="var(--sky)">
+  <Departures />
 
-  <div class="stages" id="work">
+  <div class="stations" id="work">
     {
       lead.map((p, i) => (
-        <article class="stage band" style={`--bg:${p.color};--fg:${p.ink}`}>
-          <div class="page grid stage-inner">
-            <h2 class="stage-title" style={`view-transition-name:title-${p.slug}`}>
-              <a href={`/work/${p.slug}`}>{p.title}</a>
-            </h2>
-            <div class="stage-text">
-              <p class="lead">{p.summary}</p>
-              <p class="stage-meta">
-                {p.year}. Built with {p.tech.slice(0, 4).join(', ')}.
-              </p>
-              <ul class="links">
-                <li><a href={`/work/${p.slug}`}>How it works</a></li>
-                {liveLink(p) && <li><a href={liveLink(p)}>{hostname(liveLink(p)!)}</a></li>}
-                {p.repo && <li><a href={p.repo}>Source on GitHub</a></li>}
-              </ul>
+        <section class="station-run" data-station data-vehicle={p.vehicle} data-colour={p.color}>
+          <article class="station band" style={`--bg:${p.color};--fg:${p.ink}`}>
+            <div class="page station-inner">
+              <header class="station-head">
+                <span class="station-badge">{p.code}</span>
+                <h2 class="station-title" style={`view-transition-name:title-${p.slug}`}>
+                  <a href={`/work/${p.slug}`}>{p.title}</a>
+                </h2>
+              </header>
+              <div class="station-text">
+                <p class="station-summary">{p.summary}</p>
+                <p class="station-meta">
+                  {p.year}. Built with {p.tech.slice(0, 4).join(', ')}.
+                </p>
+                <ul class="links station-links">
+                  <li><a href={`/work/${p.slug}`}>How it works</a></li>
+                  {liveLink(p) && <li><a href={liveLink(p)}>{hostname(liveLink(p)!)}</a></li>}
+                  {p.repo && <li><a href={p.repo}>Source on GitHub</a></li>}
+                </ul>
+              </div>
+              <a class="station-shot" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
+                <Shot project={p} sizes="(max-width: 60rem) 92vw, 50vw" eager={i === 0} />
+              </a>
             </div>
-            <a class="stage-shot" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
-              <Shot project={p} sizes="(max-width: 60rem) 92vw, 54vw" eager={i === 0} />
-            </a>
-          </div>
-        </article>
+            <div class="station-track" aria-hidden="true">
+              <canvas></canvas>
+            </div>
+          </article>
+        </section>
       ))
     }
   </div>
 
-  <section class="page earlier">
-    <h2 class="section-title">Earlier work</h2>
-    <ul class="earlier-list">
-      {
-        earlier.map((p) => (
-          <li>
-            <a class="earlier-row" href={`/work/${p.slug}`} style={`--hover:${p.color}`}>
-              <span class="earlier-year">{p.year}</span>
-              <span class="earlier-name">{p.title}</span>
-              <span class="earlier-summary">{p.summary}</span>
-              {workImage(p.image) && (
-                <span class="earlier-thumb">
-                  <Shot project={p} sizes="12rem" />
-                </span>
-              )}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+  <section class="band pattern" id="about">
+    <div class="page pattern-inner">
+      <div class="pattern-text">
+        <h2 class="pattern-title">About</h2>
+        <p class="pattern-lead">{profile.about[0]}</p>
+        <p class="pattern-more"><a href="/about">More about me</a></p>
+      </div>
+      <ol class="pattern-stops">
+        {
+          stops.map((s) => (
+            <li class:list={['stop', { 'is-now': s.now }]}>
+              <span class="stop-when">{s.when}</span>
+              <span class="stop-what">{s.what}</span>
+              <span class="stop-where">{s.where}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
   </section>
 
-  <section class="page grid about" id="about">
-    <div class="about-text">
-      <h2 class="section-title">About</h2>
-      <p class="lead">{profile.about[0]}</p>
-      <p class="about-more"><a href="/about">More about me</a></p>
-    </div>
-    <ul class="rows about-rows">
-      {
-        profile.experience.map((e) => (
-          <li>
-            <span class="when">{years(e.start, e.end)}</span>
-            <span>
-              <strong>{e.role}</strong>
-              <br />
-              {e.company}
-            </span>
-          </li>
-        ))
-      }
-      {
-        profile.education.map((e) => (
-          <li>
-            <span class="when">{years(e.start, e.end)}</span>
-            <span>
-              <strong>{e.degree}</strong>
-              <br />
-              {e.institution}
-            </span>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  <script>
+    import { stations } from '../scripts/stations';
+    stations([...document.querySelectorAll<HTMLElement>('[data-station]')]);
+  </script>
 </BaseLayout>
 
+
 <style>
-  /* ---- Hero: a yellow field, the introduction, and the name at full width ---- */
-  .hero {
-    --bg: var(--sun);
+  /* ---- Stations: each lead project is a stop in its line colour ---- */
+  .station {
     position: relative;
-    z-index: 2;
-  }
-  .hero-inner {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: clamp(2.5rem, 6vw, 5rem);
-    min-height: calc(100svh - var(--rail) - 5rem);
-    padding-block: clamp(1rem, 3vw, 2.5rem) 0;
+    overflow: hidden;
   }
-  .hero-top {
-    row-gap: 2rem;
-    align-items: start;
+  .station-inner {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto 1fr;
+    gap: clamp(1.25rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 4rem);
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(1rem, 2vw, 1.5rem);
   }
-  .hero-text {
-    max-width: 44rem;
+  .station-head {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+    min-width: 0;
   }
-  .hero-text .lead + .lead {
-    margin-top: 0.75em;
+  .station-badge {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: clamp(3rem, 7vw, 6.5rem);
+    aspect-ratio: 1;
+    background: var(--fg);
+    color: var(--bg);
+    font-family: var(--label);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 2.25rem);
   }
-  .hero-photo {
-    width: min(60%, 16rem);
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: 78% 40%;
+  .station-title {
+    font-size: clamp(2.75rem, 0.5rem + 9.2vw, 10rem);
+    line-height: 0.85;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
-  @media (min-width: 60rem) {
-    .hero-text {
-      grid-column: 1 / span 7;
+  .station-title a {
+    text-decoration: none;
+  }
+  .station-title a:hover {
+    background: none;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+  }
+  .station-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .station-summary {
+    font-family: var(--pixel);
+    font-size: clamp(1.25rem, 0.9rem + 1.1vw, 2rem);
+    line-height: 1.25;
+  }
+  .station-meta {
+    font-size: var(--size-body);
+  }
+  .station-links {
+    font-family: var(--pixel);
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+  .station-shot {
+    align-self: start;
+    width: min(100%, 52svh * 1.6);
+    justify-self: end;
+  }
+  .station-shot:hover {
+    background: none;
+  }
+  .station-track {
+    line-height: 0;
+    overflow: hidden;
+  }
+  .station-track canvas {
+    display: block;
+    image-rendering: pixelated;
+  }
+
+  /* On a screen tall enough, each station holds still while its vehicle
+     pulls in, stops and leaves, then the next one slides over it. */
+  @media (min-width: 60rem) and (min-height: 44rem) {
+    .station-run {
+      height: 190svh;
     }
-    .hero-photo {
-      grid-column: 10 / span 3;
+    .station {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+    }
+  }
+  @media (max-width: 60rem) {
+    .station-inner {
+      grid-template-columns: 1fr;
+    }
+    .station-title {
+      font-size: clamp(1.9rem, 8.4vw, 5rem);
+    }
+    .station-shot {
+      justify-self: stretch;
       width: 100%;
     }
   }
-  .hero-name {
-    margin-left: -0.045em;
-    font-size: var(--size-giant);
-    line-height: 0.8;
-    letter-spacing: -0.06em;
-    white-space: nowrap;
-    padding-bottom: 0.08em;
-  }
 
-  /* ---- Stages: one field of colour per project ---- */
-  .stage {
+  /* ---- About: the stopping pattern ---- */
+  .pattern {
+    --bg: var(--sun);
     position: relative;
-    z-index: 2;
+    z-index: 1;
   }
-  .stage-inner {
-    row-gap: clamp(1.25rem, 3vw, 2rem);
-    align-items: start;
-    padding-block: clamp(3rem, 8vw, 6rem);
-  }
-  .stage-title {
-    font-size: clamp(2.75rem, 0.5rem + 9.2vw, 9.5rem);
-    line-height: 0.85;
-    letter-spacing: -0.055em;
-    margin-left: -0.04em;
-    overflow-wrap: anywhere;
-  }
-  .stage-title a {
-    text-decoration: none;
-  }
-  .stage-meta {
-    margin-block: 1rem 1.5rem;
-  }
-  .stage-shot {
-    display: block;
-  }
-  .stage-shot:hover {
-    background: none;
-  }
-  @media (min-width: 60rem) {
-    .stage-text {
-      grid-column: 1 / span 5;
-      align-self: end;
-    }
-    .stage-shot {
-      grid-column: 6 / span 7;
-      justify-self: end;
-      /* Never taller than half the screen, so a pinned stage always fits. */
-      width: min(100%, 52svh * 1.6);
-    }
-  }
-  /* On a screen tall enough to hold one, each stage sticks under the rail
-     and the next slides up over it. */
-  @media (min-width: 60rem) and (min-height: 44rem) {
-    .stage {
-      position: sticky;
-      top: var(--rail);
-      display: flex;
-      align-items: center;
-      min-height: calc(100svh - var(--rail));
-    }
-    .stage-inner {
-      padding-block: 1.5rem;
-    }
-  }
-
-  /* ---- Sections on white ---- */
-  .earlier,
-  .about {
-    padding-block: clamp(4rem, 9vw, 8rem) 0;
-  }
-  .section-title {
-    font-size: var(--size-title);
-    margin-bottom: 0.4em;
-  }
-
-  .earlier-list {
-    list-style: none;
-    border-top: var(--stroke) solid var(--ink);
-  }
-  .earlier-row {
+  .pattern-inner {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 5.5rem;
-    gap: 0.25rem var(--gap);
-    align-items: center;
-    padding-block: 1.25rem;
-    border-bottom: var(--stroke) solid var(--ink);
-    text-decoration: none;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    padding-block: clamp(3.5rem, 8vw, 7rem);
   }
-  .earlier-row:hover {
-    background: var(--hover);
-    color: var(--ink);
+  .pattern-title {
+    font-size: var(--size-title);
+    margin-bottom: 1.5rem;
   }
-  .earlier-name {
-    grid-column: 1;
-    font-size: clamp(1.75rem, 1rem + 2.6vw, 3.25rem);
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 1;
+  .pattern-lead {
+    font-size: var(--size-lead);
+    line-height: 1.35;
+    font-weight: 500;
+    max-width: 36rem;
   }
-  .earlier-year {
-    grid-column: 1;
-    font-weight: 650;
-    font-variant-numeric: tabular-nums;
-  }
-  .earlier-summary {
-    grid-column: 1;
-  }
-  .earlier-thumb {
-    grid-column: 2;
-    grid-row: 1 / span 3;
-  }
-  @media (min-width: 60rem) {
-    .earlier-row {
-      grid-template-columns: 5rem minmax(0, 5fr) minmax(0, 5fr) 11rem;
-      padding-inline: 0.75rem;
-    }
-    .earlier-year,
-    .earlier-name,
-    .earlier-summary,
-    .earlier-thumb {
-      grid-column: auto;
-      grid-row: auto;
-    }
-  }
-
-  .about {
-    row-gap: 2.5rem;
-    padding-bottom: clamp(4rem, 9vw, 8rem);
-  }
-  .about-more {
+  .pattern-more {
     margin-top: 1.5rem;
-    font-weight: 650;
+    font-family: var(--pixel);
+    font-weight: 700;
+    font-size: 1.25rem;
   }
-  @media (min-width: 60rem) {
-    .about-text {
-      grid-column: 1 / span 6;
-    }
-    .about-rows {
-      grid-column: 8 / span 5;
-      align-self: end;
+  /* A vertical line with a square stop for each role, as on TransitTracker's service screen. */
+  .pattern-stops {
+    --line-x: 1.25rem;
+    position: relative;
+    list-style: none;
+    align-self: start;
+  }
+  .pattern-stops::before {
+    content: '';
+    position: absolute;
+    top: 1.5rem;
+    bottom: 1.5rem;
+    left: calc(var(--line-x) - 6px);
+    width: 12px;
+    background: var(--ink);
+  }
+  .stop {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.1rem 1rem;
+    padding: 1rem 1rem 1rem calc(var(--line-x) * 2 + 1rem);
+  }
+  .stop::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--line-x) - 14px);
+    top: 1.35rem;
+    width: 28px;
+    height: 28px;
+    background: var(--sun);
+    border: 6px solid var(--ink);
+  }
+  .stop.is-now {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .stop.is-now::before {
+    background: var(--cream);
+  }
+  .stop-what {
+    font-family: var(--pixel);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    line-height: 1.15;
+  }
+  .stop-when {
+    grid-column: 2;
+    grid-row: 1;
+    font-family: var(--digits);
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    line-height: 1.15;
+  }
+  .stop-where {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 60rem) {
+    .pattern-inner {
+      grid-template-columns: 1fr;
     }
   }
 </style>

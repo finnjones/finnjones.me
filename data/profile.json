@@ -117,6 +117,7 @@
     {
       "slug": "aglc4-citation-tool",
       "title": "Aforecite",
+      "code": "AF",
       "year": "2026",
       "role": "Creator",
       "summary": "Fixes every AGLC4 footnote in a law essay and hands back the .docx with each edit as a Word tracked change.",
@@ -141,12 +142,14 @@
       ],
       "lead": true,
       "imageAlt": "Aforecite home page: an upload box for a .docx essay beside the heading 'Fix every AGLC4 footnote in your essay, as Word tracked changes'.",
-      "color": "#a9c1e3",
-      "ink": "#0d0d0d"
+      "color": "#f99d1c",
+      "ink": "#0c0c0a",
+      "vehicle": "train-long"
     },
     {
       "slug": "transittracker",
       "title": "TransitTracker",
+      "code": "TT",
       "year": "2026",
       "role": "Creator",
       "summary": "A pixel-art Sydney transport app with live countdowns, journey planning and push alerts, built on Transport for NSW open data.",
@@ -188,12 +191,14 @@
       ],
       "lead": true,
       "imageAlt": "Three TransitTracker phone screens in pixel-art style: a live train service, saved trips with countdowns, and journey options.",
-      "color": "#0d0d0d",
-      "ink": "#f3ecd8"
+      "color": "#d11f2f",
+      "ink": "#ffffff",
+      "vehicle": "train-long"
     },
     {
       "slug": "liftlink",
       "title": "LiftLink",
+      "code": "LL",
       "year": "2025",
       "role": "Creator",
       "summary": "Merges the duplicate Strava activities you get from logging one gym session on both a Garmin watch and Hevy.",
@@ -213,13 +218,15 @@
       "image": "liftlink.png",
       "lead": true,
       "imageAlt": "LiftLink sign-in page with a 'Connect with Strava' button.",
-      "color": "#ff7a1a",
-      "ink": "#0d0d0d",
-      "imageZoom": 1.9
+      "color": "#168388",
+      "ink": "#0c0c0a",
+      "imageZoom": 1.9,
+      "vehicle": "metro-long"
     },
     {
       "slug": "votencrypt",
       "title": "Votencrypt",
+      "code": "VE",
       "year": "2022",
       "role": "Creator (Year 12 major work)",
       "summary": "A blockchain voting platform with its election rules written as DAML smart contracts.",
@@ -237,12 +244,14 @@
       "image": "votencrypt.png",
       "lead": false,
       "imageAlt": "Votencrypt landing page with Login and Vote buttons.",
-      "color": "#5b8df7",
-      "ink": "#0d0d0d"
+      "color": "#8e5bd0",
+      "ink": "#ffffff",
+      "vehicle": "bus"
     },
     {
       "slug": "achieveit-bookings",
       "title": "AchieveIt Bookings",
+      "code": "AB",
       "year": "2024",
       "role": "Developer",
       "summary": "Online booking for a Sydney tutoring company: clients picked a subject and booked a session themselves.",
@@ -259,12 +268,14 @@
       "image": "achieveit.png",
       "lead": false,
       "imageAlt": "AchieveIt 'Our Services' page listing tutoring sessions, each with a length, a price and a Book Now button.",
-      "color": "#35c2a4",
-      "ink": "#0d0d0d"
+      "color": "#00954c",
+      "ink": "#0c0c0a",
+      "vehicle": "lightrail-pair"
     },
     {
       "slug": "trading-game",
       "title": "Trading Game",
+      "code": "TG",
       "year": "2023",
       "role": "Creator",
       "summary": "A paper-trading game that charts live Yahoo Finance prices so you can practise trading without risking money.",
@@ -282,12 +293,14 @@
       "repo": "https://github.com/finnjones/Trading-Game",
       "image": null,
       "lead": false,
-      "color": "#5ab031",
-      "ink": "#0d0d0d"
+      "color": "#0098cd",
+      "ink": "#0c0c0a",
+      "vehicle": "ferry"
     },
     {
       "slug": "trigger-outlaws",
       "title": "Trigger Outlaws",
+      "code": "TO",
       "year": "2024",
       "role": "Developer, team of three",
       "summary": "A top-down, wave-based Wild West shooter built in pygame by a team of three.",
@@ -304,8 +317,9 @@
       "image": "triggeroutlaws.png",
       "lead": false,
       "imageAlt": "Trigger Outlaws gameplay: a pixel-art desert town seen from above, with a wave counter, minimap, health bar and ammo count.",
-      "color": "#f2c572",
-      "ink": "#0d0d0d"
+      "color": "#c98a1b",
+      "ink": "#0c0c0a",
+      "vehicle": "coach"
     }
   ],
   "intro": [
