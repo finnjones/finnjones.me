@@ -32,7 +32,29 @@ const year = new Date().getFullYear();
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script is:inline>
+      // Before first paint: cover the first page of a visit with the loading screen.
+      // If the loader script never runs, the page uncovers itself after 10 seconds.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        var seen = false;
+        try { seen = sessionStorage.getItem('fj-seen') === '1'; } catch (e) {}
+        if (!seen) {
+          d.classList.add('loading');
+          setTimeout(function () { d.classList.remove('loading'); }, 10000);
+        }
+      })();
+    </script>
+    <style is:inline>
+      .loader { display: none; }
+      html.loading { overflow: hidden; }
+      html.loading .loader {
+        position: fixed; inset: 0; z-index: 1000;
+        display: grid; place-items: center;
+        background: #0c0c0a; color: #f3ecd8;
+      }
+    </style>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/app-icon.png" />
     <link rel="canonical" href={canonical} />
@@ -74,6 +96,16 @@ const year = new Date().getFullYear();
   </head>
 
   <body>
+    <div class="loader" data-loader aria-hidden="true">
+      <div class="loader-inner">
+        <div class="loader-window"><canvas></canvas></div>
+        <p class="loader-name" data-flap>{profile.name}</p>
+        <div class="loader-cars">
+          {Array.from({ length: 12 }, () => <span />)}
+        </div>
+      </div>
+    </div>
+
     <a href="#main" class="skip-link">Skip to content</a>
 
     <header class="site-head band" style={`--bg:${color};--fg:${ink}`}>
@@ -112,7 +144,74 @@ const year = new Date().getFullYear();
       </div>
     </footer>
 
+    <script>
+      import '../scripts/loader';
+    </script>
+
     <style>
+      /* ---- The loading screen (see src/scripts/loader.ts) ---- */
+      .loader-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(1.25rem, 3vh, 2rem);
+      }
+      .loader-window {
+        line-height: 0;
+        padding: 6px;
+        background: #181816;
+        border: 3px solid #3d3d38;
+      }
+      .loader-window canvas {
+        display: block;
+        image-rendering: pixelated;
+      }
+      .loader-name {
+        display: flex;
+        gap: 4px;
+        font-family: var(--label);
+        font-weight: 700;
+        font-size: clamp(1.5rem, 0.6rem + 3vw, 3.25rem);
+        line-height: 1;
+        color: #f3ecd8;
+      }
+      /* Split-flap cells, each with its hinge across the middle. */
+      .loader-name :global(.flap) {
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        width: 1.15em;
+        height: 1.45em;
+        background: #181816;
+      }
+      .loader-name :global(.flap)::after {
+        content: '';
+        position: absolute;
+        inset: 50% 0 auto 0;
+        height: 2px;
+        background: #0c0c0a;
+      }
+      .loader-name :global(.flap.gap) {
+        width: 0.5em;
+        background: none;
+      }
+      .loader-cars {
+        display: flex;
+        gap: 6px;
+      }
+      .loader-cars span {
+        width: 14px;
+        height: 14px;
+        background: #3d3d38;
+      }
+      .loader-cars span:global(.on) {
+        background: #f3ecd8;
+      }
+      .loader:global(.is-leaving) .loader-inner {
+        opacity: 0;
+        transition: opacity 0.2s steps(3);
+      }
+
       .site-head {
         position: relative;
         z-index: 2;

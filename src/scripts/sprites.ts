@@ -6,6 +6,9 @@
 */
 
 export type SheetName =
+  | 'train'
+  | 'metro'
+  | 'lightrail'
   | 'train-long'
   | 'metro-long'
   | 'lightrail-pair'
@@ -23,6 +26,9 @@ export interface Sheet {
 
 // Sizes from SpriteSheet in SpriteSheets.kt.
 export const SHEETS: Record<SheetName, Sheet> = {
+  train: { w: 32, h: 16, n: 5, ground: 15 },
+  metro: { w: 32, h: 16, n: 5, ground: 15 },
+  lightrail: { w: 36, h: 16, n: 5, ground: 14 },
   'train-long': { w: 113, h: 16, n: 5, ground: 15 },
   'metro-long': { w: 113, h: 16, n: 5, ground: 15 },
   'lightrail-pair': { w: 67, h: 16, n: 5, ground: 14 },
@@ -39,7 +45,7 @@ export const STOPPED_FRAME = 4;
 export type Ground = 'rail' | 'wire' | 'road' | 'water';
 
 export function groundFor(name: SheetName): Ground {
-  if (name === 'lightrail-pair') return 'wire';
+  if (name === 'lightrail-pair' || name === 'lightrail') return 'wire';
   if (name === 'bus' || name === 'coach') return 'road';
   if (name === 'ferry') return 'water';
   return 'rail';
@@ -130,7 +136,8 @@ export function drawFrame(
 /**
  * Draws [ground] from [from] to [to] (dots) with its surface on [groundY], after Ground.kt:
  * rails and sleepers, a rail under an overhead wire, a road with a dashed centre line, or water.
- * Everything below the surface is filled with ink down to [bottom].
+ * Everything below the surface is filled with ink down to [bottom]. [scroll] moves the sleepers,
+ * dashes and waves that many dots to the left, for a vehicle running on the spot.
  */
 export function drawGround(
   ctx: CanvasRenderingContext2D,
@@ -140,42 +147,34 @@ export function drawGround(
   to: number,
   bottom: number,
   t = 0,
+  scroll = 0,
 ): void {
   const w = to - from;
   if (w <= 0) return;
+  const mod = (n: number, m: number) => ((n % m) + m) % m;
   ctx.fillStyle = COLOURS.ink;
   ctx.fillRect(from, groundY, w, bottom - groundY);
   if (ground === 'rail' || ground === 'wire') {
     ctx.fillStyle = COLOURS.rail;
     ctx.fillRect(from, groundY, w, 1);
     ctx.fillStyle = COLOURS.sleeper;
-    for (let x = from - (from % 4); x < to; x += 4) {
-      if (x >= from) ctx.fillRect(x, groundY + 1, 1, 2);
-    }
+    for (let x = from; x < to; x++) if (mod(x + scroll, 4) === 0) ctx.fillRect(x, groundY + 1, 1, 2);
     if (ground === 'wire') {
-      ctx.fillStyle = COLOURS.ink;
+      ctx.fillStyle = COLOURS.sleeper;
       ctx.fillRect(from, groundY - SHEETS['lightrail-pair'].ground, w, 1);
     }
   } else if (ground === 'road') {
     ctx.fillStyle = COLOURS.sleeper;
     ctx.fillRect(from, groundY, w, 1);
     ctx.fillStyle = COLOURS.line;
-    for (let x = from - (from % 7); x < to; x += 7) {
-      const a = Math.max(x, from);
-      const b = Math.min(x + 3, to);
-      if (b > a) ctx.fillRect(a, groundY + 3, b - a, 1);
-    }
+    for (let x = from; x < to; x++) if (mod(x + scroll, 7) < 3) ctx.fillRect(x, groundY + 3, 1, 1);
   } else {
-    // Water: a sea band with a row of moving wave dots on its surface.
+    // Water: a sea band with a row of wave dots on its surface, drifting.
     ctx.fillStyle = COLOURS.water;
     ctx.fillRect(from, groundY, w, 4);
     ctx.fillStyle = COLOURS.wave;
-    const shift = Math.floor(t * 3) % 6;
-    for (let x = from - (from % 6) + shift - 6; x < to; x += 6) {
-      const a = Math.max(x, from);
-      const b = Math.min(x + 2, to);
-      if (b > a) ctx.fillRect(a, groundY, b - a, 1);
-    }
+    const shift = Math.floor(t * 3) + scroll;
+    for (let x = from; x < to; x++) if (mod(x + shift, 6) < 2) ctx.fillRect(x, groundY, 1, 1);
   }
 }
 
