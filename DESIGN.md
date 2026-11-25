@@ -47,6 +47,9 @@ pointer. A big name over a paragraph has none of those.
 3. **Stations.** Each `lead` project gets a full screen in its line colour.
    On a tall enough screen it pins while its vehicle pulls in along the
    foot of the screen, stops, and leaves as the next station slides over.
+   Scrolling only decides where the vehicle should be (coming, standing,
+   gone); the vehicle then drives there in its own time, so it never
+   stutters with the scroll wheel and never stops dead between stations.
 4. **About.** A stopping pattern: roles as stops on a vertical line, as on
    the app's service screen, with the current one lit.
 5. **The harbour.** The footer on every page: contact details, then the
@@ -89,6 +92,14 @@ from the sprite's livery mask.
 
 What moves, and why it may:
 
+- the loading screen, on the first page of a visit: TransitTracker's own
+  loaders at full size (the treadmill, where the fleet takes turns running
+  on the spot, and the flap board spelling Finn's name), with a row of cars
+  that lights up as the fonts, sprites and first images actually load. When
+  they are in, the vehicle drives off and the dark screen closes down onto
+  the departures board, which then flickers on. It is covered before first
+  paint by a class the page head sets, so no half-loaded page ever shows,
+  and it uncovers itself after 10 seconds if the script fails;
 - the vehicles and the walking figure, drawn frame by frame from the sprite
   sheets, with wheels that turn by the distance travelled;
 - the board's refresh: its text flickers into place once per visit, as an

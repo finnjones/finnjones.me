@@ -18,6 +18,7 @@ import {
   type Ground,
   type SheetName,
 } from './sprites';
+import { ready, firstVisit } from './loader';
 
 const ROWS = 27; // canvas height in dots
 const GROUND_Y = 19; // the rail's top row
@@ -274,19 +275,16 @@ export function departures(root: HTMLElement): void {
   new ResizeObserver(resize).observe(cnv.parentElement!);
   walker.x = walker.target = Math.round(W * 0.14);
 
-  // The board flickers into place once per visit. Storage can be unavailable; then it always does.
-  let seen = false;
-  try {
-    seen = sessionStorage.getItem('fj-board') === '1';
-    sessionStorage.setItem('fj-board', '1');
-  } catch {
-    seen = false;
-  }
-  if (!still && !seen) {
-    const items = [...root.querySelectorAll<HTMLElement>('[data-scramble]')];
-    items.forEach((el, k) => scramble(el, 0.1 + k * 0.07, k === 0 ? 0.9 : 0.5));
-  }
-  setCurrent(0);
   check();
-  if (still) frame(performance.now());
+
+  // The first service pulls in once the page is uncovered. On the visit that showed the
+  // loading screen, the board's text also flickers into place as the screen closes onto it.
+  ready.then(() => {
+    if (firstVisit && !still) {
+      const items = [...root.querySelectorAll<HTMLElement>('[data-scramble]')];
+      items.forEach((el, k) => scramble(el, k * 0.06, k === 0 ? 0.8 : 0.45));
+    }
+    setCurrent(0);
+    if (still) frame(performance.now());
+  });
 }

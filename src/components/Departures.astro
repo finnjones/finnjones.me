@@ -243,8 +243,14 @@ import { profile, projects } from '../lib/profile';
     animation: dwell var(--dwell, 7s) steps(56) forwards;
   }
   .board:hover .service-bar,
-  .departures.is-paused .service-bar {
+  .departures.is-paused .service-bar,
+  :global(html.loading) .service-bar {
     animation-play-state: paused;
+  }
+  /* Under the loading screen the board is empty, so the screen closes onto a blank board
+     and the text arrives after it. */
+  :global(html.loading) .board > * {
+    visibility: hidden;
   }
   @media (prefers-reduced-motion: reduce) {
     .service-bar {
