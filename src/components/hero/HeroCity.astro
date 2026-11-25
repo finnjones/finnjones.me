@@ -1,0 +1,168 @@
+---
+// Option 1. The name stands like a row of buildings on a quay. A train
+// crosses behind the letters and the ferry passes in front on the harbour.
+import Nav from './Nav.astro';
+import { profile } from '../../lib/profile';
+---
+
+<section class="city band">
+  <div class="page city-top">
+    <Nav />
+    <div class="city-text">
+      {profile.intro.map((para) => <p class="lead">{para}</p>)}
+    </div>
+  </div>
+
+  <div class="city-scene">
+    <span class="city-viaduct" aria-hidden="true"></span>
+    <span class="sprite city-train" aria-hidden="true"></span>
+    <div class="page">
+      <h1 class="city-name">{profile.name}</h1>
+    </div>
+  </div>
+
+  <div class="city-harbour" aria-hidden="true">
+    <span class="sprite city-ferry"></span>
+  </div>
+</section>
+
+<style>
+  .city {
+    --bg: var(--sun);
+    --u: var(--px);
+    display: flex;
+    flex-direction: column;
+    min-height: var(--hero-h, calc(100svh - var(--rail)));
+    overflow: hidden;
+  }
+  @media (min-width: 60rem) {
+    .city {
+      --u: calc(var(--px) * 2);
+    }
+  }
+  .city-top {
+    flex: 1;
+    padding-bottom: clamp(2rem, 5vw, 4rem);
+  }
+  .city-text {
+    max-width: 44rem;
+    margin-top: clamp(0.5rem, 2vw, 1.5rem);
+  }
+  .city-text .lead + .lead {
+    margin-top: 0.75em;
+  }
+
+  /* The letters, with the line running behind them. */
+  .city-scene {
+    position: relative;
+    border-bottom: var(--stroke) solid var(--ink);
+  }
+  .city-name {
+    position: relative;
+    z-index: 2;
+    margin-left: -0.045em;
+    font-size: var(--size-giant);
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+  }
+  /* On a phone the name breaks onto two lines so the letters stay taller
+     than the train that passes behind them. */
+  @media (max-width: 59.99rem) {
+    .city-name {
+      font-size: 31vw;
+    }
+    .city-viaduct {
+      bottom: 14%;
+    }
+    .city-train {
+      bottom: calc(14% + var(--stroke));
+    }
+  }
+  @media (min-width: 60rem) {
+    .city-name {
+      white-space: nowrap;
+    }
+  }
+  .city-viaduct {
+    position: absolute;
+    inset: auto 0 34% 0;
+    height: var(--stroke);
+    background: var(--ink);
+  }
+  .city-train {
+    position: absolute;
+    left: 0;
+    bottom: calc(34% + var(--stroke));
+    z-index: 1;
+    width: calc(var(--u) * 113);
+    height: calc(var(--u) * 16);
+    background-image: url('/sprites/train-long.png');
+    background-repeat: repeat-x;
+    transform: translateX(46vw);
+  }
+
+  /* The harbour in front. */
+  .city-harbour {
+    position: relative;
+    height: calc(var(--u) * 20);
+    background: var(--sky);
+  }
+  .city-harbour::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: calc(var(--u) * 7);
+    background: var(--sea);
+  }
+  .city-harbour::before {
+    content: '';
+    position: absolute;
+    inset: auto 0 calc(var(--u) * 7) 0;
+    height: calc(var(--u) * 2);
+    background: url('/sprites/wave.png') repeat-x;
+    background-size: auto 100%;
+    image-rendering: pixelated;
+  }
+  .city-ferry {
+    position: absolute;
+    left: 0;
+    bottom: calc(var(--u) * 4);
+    z-index: 1;
+    width: calc(var(--u) * 34);
+    height: calc(var(--u) * 18);
+    background-image: url('/sprites/ferry.png');
+    background-repeat: repeat-x;
+    transform: translateX(14vw);
+  }
+
+  @keyframes city-cross {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100vw);
+    }
+  }
+  @keyframes city-long-frames {
+    to {
+      background-position-x: calc(var(--u) * -452);
+    }
+  }
+  @keyframes city-ferry-frames {
+    to {
+      background-position-x: calc(var(--u) * -136);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .city-train {
+      animation:
+        city-long-frames 0.5s steps(4) infinite,
+        city-cross 14s linear -5s infinite;
+    }
+    .city-ferry {
+      animation:
+        city-ferry-frames 1.4s steps(4) infinite,
+        city-cross 48s linear -9s infinite;
+    }
+  }
+</style>

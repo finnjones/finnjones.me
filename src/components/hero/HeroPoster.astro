@@ -1,0 +1,119 @@
+---
+// Option 2. A poster: the name stacked at the height of the screen, with
+// the train at the scale of the letters, parked on the first line.
+import Nav from './Nav.astro';
+import { profile } from '../../lib/profile';
+
+const [first, ...rest] = profile.name.split(' ');
+---
+
+<section class="poster band">
+  <div class="page poster-inner">
+    <Nav />
+    <div class="poster-body">
+      <h1 class="poster-name" aria-label={profile.name}>
+        <span class="poster-line">
+          {first}
+          <span class="sprite poster-train" aria-hidden="true"></span>
+        </span>
+        <span class="poster-line">{rest.join(' ')}</span>
+      </h1>
+      <div class="poster-text">
+        {profile.intro.map((para) => <p>{para}</p>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .poster {
+    --bg: var(--sun);
+    display: flex;
+    min-height: var(--hero-h, calc(100svh - var(--rail)));
+    overflow: hidden;
+  }
+  .poster-inner {
+    display: flex;
+    flex-direction: column;
+  }
+  .poster-body {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    padding-bottom: clamp(1rem, 2vw, 2rem);
+  }
+  .poster-name {
+    margin-left: -0.05em;
+    font-size: clamp(5.5rem, 26.5vw, 25.5rem);
+    line-height: 0.78;
+    letter-spacing: -0.065em;
+  }
+  .poster-line {
+    display: block;
+    white-space: nowrap;
+  }
+  /* The sprite is sized in ems so it scales with the letters. */
+  .poster-train {
+    display: inline-block;
+    width: 1.16em;
+    height: 0.58em;
+    margin-left: 0.04em;
+    background-image: url('/sprites/train.png');
+    background-repeat: repeat-x;
+  }
+  .poster-text {
+    max-width: 30rem;
+    font-size: var(--size-body);
+    font-weight: 500;
+  }
+  .poster-text p + p {
+    margin-top: 0.75em;
+  }
+  @media (min-width: 60rem) {
+    .poster-train {
+      width: 1.32em;
+      height: 0.66em;
+    }
+  }
+  /* On a wide screen the text sits in the space to the right of the surname. */
+  @media (min-width: 80rem) {
+    .poster-text {
+      position: absolute;
+      right: 0;
+      bottom: clamp(1.5rem, 3vw, 2.5rem);
+      width: min(19.5vw, 19rem);
+      font-size: 1rem;
+    }
+  }
+
+  @keyframes poster-frames {
+    to {
+      background-position-x: -5.28em;
+    }
+  }
+  @keyframes poster-frames-small {
+    to {
+      background-position-x: -4.64em;
+    }
+  }
+  @keyframes poster-arrive {
+    from {
+      transform: translateX(-120vw);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .poster-train {
+      animation:
+        poster-frames-small 0.6s steps(4) infinite,
+        poster-arrive 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @media (min-width: 60rem) {
+      .poster-train {
+        animation-name: poster-frames, poster-arrive;
+      }
+    }
+  }
+</style>

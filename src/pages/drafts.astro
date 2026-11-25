@@ -1,0 +1,77 @@
+---
+// Temporary page: hero options side by side for review. Delete once one is chosen.
+import HeroCity from '../components/hero/HeroCity.astro';
+import HeroPoster from '../components/hero/HeroPoster.astro';
+import HeroPhoto from '../components/hero/HeroPhoto.astro';
+import HeroWall from '../components/hero/HeroWall.astro';
+import '../styles/global.css';
+
+const options = [
+  { name: 'The city', note: 'Your name as a row of buildings on a quay. The train crosses behind the letters and the ferry passes in front.' },
+  { name: 'The poster', note: 'The name stacked at the height of the screen, with the train drawn at the scale of the letters.' },
+  { name: 'The photograph', note: 'Your photo at full bleed, the name outlined across it, the introduction on a block of yellow.' },
+  { name: 'The wall', note: 'Your work and your photo pinned up beside the introduction. Each piece links to its project.' },
+];
+const heroes = [HeroCity, HeroPoster, HeroPhoto, HeroWall];
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Hero options | Finn Jones</title>
+  </head>
+  <body>
+    <div class="rail" aria-hidden="true"><span class="sprite train"></span></div>
+    <main class="drafts">
+      {
+        heroes.map((Hero, i) => (
+          <section class="draft" id={`option-${i + 1}`}>
+            <header class="draft-label">
+              <div class="page draft-label-inner">
+                <h2>
+                  Option {i + 1}: {options[i].name}
+                </h2>
+                <p>{options[i].note}</p>
+              </div>
+            </header>
+            <Hero />
+          </section>
+        ))
+      }
+    </main>
+  </body>
+</html>
+
+<style>
+  .drafts {
+    padding-top: var(--rail);
+    --label: 4.5rem;
+    --hero-h: calc(100svh - var(--rail) - var(--label));
+  }
+  .draft-label {
+    background: var(--ink);
+    color: var(--cream);
+    min-height: var(--label);
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--cream);
+  }
+  .draft-label-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.125rem 1.5rem;
+    padding-block: 0.5rem;
+  }
+  .draft-label h2 {
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .draft-label p {
+    font-size: var(--size-small);
+  }
+</style>
