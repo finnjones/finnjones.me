@@ -1,18 +1,215 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import Ticker from '../components/Ticker.astro';
-import WorkIndex from '../components/WorkIndex.astro';
-import Profile from '../components/Profile.astro';
-import Experience from '../components/Experience.astro';
-import Contact from '../components/Contact.astro';
+import Departures from '../components/Departures.astro';
+import Shot from '../components/Shot.astro';
+import Track from '../components/Track.astro';
+import Stops from '../components/Stops.astro';
+import { profile, projects, years, hostname, liveLink } from '../lib/profile';
+
+const lead = projects.filter((p) => p.lead);
+const stops = [
+  ...profile.experience.map((e) => ({ when: years(e.start, e.end), title: e.role, place: e.company, now: e.end === 'Present' })),
+  ...profile.education.map((e) => ({ when: years(e.start, e.end), title: e.degree, place: e.institution })),
+];
 ---
 
-<BaseLayout>
-  <Hero />
-  <Ticker />
-  <WorkIndex />
-  <Profile />
-  <Experience />
-  <Contact />
+<BaseLayout color="var(--sky)">
+  <Departures />
+
+  <div class="stations" id="work">
+    {
+      lead.map((p, i) => (
+        <section class="station-run" data-track-scope>
+          <article class="station band" style={`--bg:${p.color};--fg:${p.ink}`}>
+            <div class="page station-inner">
+              <header class="station-head">
+                <span class="station-badge">{p.code}</span>
+                <h2 class="station-title" style={`view-transition-name:title-${p.slug}`}>
+                  <a href={`/work/${p.slug}`}>{p.title}</a>
+                </h2>
+              </header>
+              <div class="station-text">
+                <p class="station-summary">{p.summary}</p>
+                <p class="station-meta">
+                  {p.year}. Built with {p.tech.slice(0, 4).join(', ')}.
+                </p>
+                <ul class="links station-links">
+                  <li><a href={`/work/${p.slug}`}>How it works</a></li>
+                  {liveLink(p) && <li><a href={liveLink(p)}>{hostname(liveLink(p)!)}</a></li>}
+                  {p.repo && <li><a href={p.repo}>Source on GitHub</a></li>}
+                </ul>
+              </div>
+              <a class="station-shot" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
+                <Shot project={p} sizes="(max-width: 60rem) 92vw, 50vw" eager={i === 0} named={false} />
+              </a>
+            </div>
+            <Track vehicle={p.vehicle} colour={p.color} />
+          </article>
+        </section>
+      ))
+    }
+  </div>
+
+  <section class="band pattern" id="about">
+    <div class="page pattern-inner">
+      <div class="pattern-text">
+        <h2 class="pattern-title">About</h2>
+        <p class="pattern-lead">{profile.about[0]}</p>
+        <p class="pattern-more"><a href="/about">More about me</a></p>
+      </div>
+      <div class="pattern-stops">
+        <Stops stops={stops} ground="var(--sun)" />
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // The screenshot a visitor clicks travels into the project page.
+    document.querySelectorAll<HTMLAnchorElement>('.station a[href^="/work/"]').forEach((a) =>
+      a.addEventListener('click', () => {
+        const shot = a.closest('.station')?.querySelector<HTMLElement>('.frame');
+        if (shot) shot.style.viewTransitionName = `shot-${a.getAttribute('href')!.split('/')[2]}`;
+      }),
+    );
+  </script>
 </BaseLayout>
+
+
+<style>
+  /* ---- Stations: each lead project is a stop in its line colour ---- */
+  .station {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .station-inner {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: auto 1fr;
+    gap: clamp(1.25rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 4rem);
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(1rem, 2vw, 1.5rem);
+  }
+  .station-head {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+    min-width: 0;
+  }
+  .station-badge {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: clamp(3rem, 7vw, 6.5rem);
+    aspect-ratio: 1;
+    background: var(--fg);
+    color: var(--bg);
+    font-family: var(--label);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.4vw, 2.25rem);
+  }
+  .station-title {
+    font-size: clamp(2.75rem, 0.5rem + 9.2vw, 10rem);
+    line-height: 0.85;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .station-title a {
+    text-decoration: none;
+  }
+  .station-title a:hover {
+    background: none;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+  }
+  .station-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .station-summary {
+    font-family: var(--pixel);
+    font-size: clamp(1.25rem, 0.9rem + 1.1vw, 2rem);
+    line-height: 1.25;
+  }
+  .station-meta {
+    font-size: var(--size-body);
+  }
+  .station-links {
+    font-family: var(--pixel);
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+  .station-shot {
+    align-self: start;
+    width: min(100%, 52svh * 1.6);
+    justify-self: end;
+  }
+  .station-shot:hover {
+    background: none;
+  }
+  /* On a screen tall enough, each station holds still while its vehicle
+     pulls in, stops and leaves, then the next one slides over it. */
+  @media (min-width: 60rem) and (min-height: 44rem) {
+    .station-run {
+      height: 190svh;
+    }
+    .station {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+    }
+  }
+  @media (max-width: 60rem) {
+    .station-inner {
+      grid-template-columns: 1fr;
+    }
+    .station-title {
+      font-size: clamp(1.9rem, 8.4vw, 5rem);
+    }
+    .station-shot {
+      justify-self: stretch;
+      width: 100%;
+    }
+  }
+
+  /* ---- About: the stopping pattern ---- */
+  .pattern {
+    --bg: var(--sun);
+    position: relative;
+    z-index: 1;
+  }
+  .pattern-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    padding-block: clamp(3.5rem, 8vw, 7rem);
+  }
+  .pattern-title {
+    font-size: var(--size-title);
+    margin-bottom: 1.5rem;
+  }
+  .pattern-lead {
+    font-size: var(--size-lead);
+    line-height: 1.35;
+    font-weight: 500;
+    max-width: 36rem;
+  }
+  .pattern-more {
+    margin-top: 1.5rem;
+    font-family: var(--pixel);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  .pattern-stops {
+    align-self: start;
+  }
+  @media (max-width: 60rem) {
+    .pattern-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

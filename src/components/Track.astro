@@ -1,0 +1,44 @@
+---
+/*
+  A strip of track along the foot of a section, with one of Finn's vehicles
+  on it. See src/scripts/tracks.ts for how it moves. Without the script the
+  strip is a plain band of ground.
+*/
+import type { Vehicle } from '../lib/profile';
+
+export interface Props {
+  vehicle: Vehicle;
+  colour: string;
+  /** "scroll": follows the scroll through its [data-track-scope]. "arrive": pulls in once, when seen. "pass": runs through without stopping. */
+  mode?: 'scroll' | 'arrive' | 'pass';
+  /** Where the vehicle stops, as a share of the width. */
+  stop?: number;
+}
+
+const { vehicle, colour, mode = 'scroll', stop = 0.5 } = Astro.props;
+---
+
+<div class="track" data-track={mode} data-vehicle={vehicle} data-colour={colour} data-stop={stop} aria-hidden="true">
+  <canvas></canvas>
+</div>
+
+<script>
+  import { tracks } from '../scripts/tracks';
+  tracks([...document.querySelectorAll<HTMLElement>('[data-track]')]);
+</script>
+
+<style>
+  .track {
+    line-height: 0;
+    overflow: hidden;
+  }
+  /* Without the script: just the ground. */
+  :global(html:not(.js)) .track {
+    height: 3rem;
+    border-bottom: 1.5rem solid #0c0c0a;
+  }
+  .track canvas {
+    display: block;
+    image-rendering: pixelated;
+  }
+</style>

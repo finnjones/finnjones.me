@@ -1,82 +1,88 @@
 # Keeping the site up to date
 
-All changeable content on finnjones.me lives in **`data/profile.json`**. The site
-is built with [Astro](https://astro.build): at build time every page is
-pre-rendered from this one file, so the content is real HTML (good for SEO and
-speed) while you still edit a single JSON file. To update the site, edit
-`data/profile.json`, commit, and push to `main` — GitHub Actions builds and
-deploys automatically (see `.github/workflows/deploy.yml`).
+All the content on finnjones.me lives in **`data/profile.json`**. The site is
+built with [Astro](https://astro.build): at build time every page is rendered
+from this one file. To update the site, edit `data/profile.json`, commit, and
+push to `main`. GitHub Actions builds and deploys it (see
+`.github/workflows/deploy.yml`).
 
 ## What each field drives
 
 | Field | Where it appears |
 | --- | --- |
-| `positioning` | Hero + about — the "speaks finance" line |
-| `subheadline` | Hero — paragraph under the name |
-| `headline` | SEO title, JSON-LD |
-| `status` | `detail`: the "Currently" line in Experience |
-| `about` | Home profile block + `/about` intro |
-| `metrics` | Home — the animated counters (`value` counts up; `text` shows as-is) |
-| `skills` | Home — the stock-style ticker (`symbol`, `name`, `trend`) |
-| `capabilities` | Home — the capabilities matrix |
-| `experience` | Home `03` + `/about` — role ledger |
-| `education` | Home `03` + `/about` — education ledger |
-| `projects` | Home `01` ledger index **and** each `/work/<slug>` case study |
-| `socials` | Footer + contact section |
-| `email` | Contact — the giant click-to-copy email |
+| `intro` | Not shown at the moment |
+| `description` | The meta description search engines and link previews show |
+| `headline` | Job title in the structured data for search engines |
+| `about` | `/about`, and the first paragraph on Home |
+| `experience` | Home (role and company) and `/about` (with highlights) |
+| `education` | Home and `/about` |
+| `capabilities` | `/about`: the Skills rows |
+| `projects` | Home (a row each on the board, a station for each `lead`), and one `/work/<slug>` page per project |
+| `socials` | The footer on every page |
+| `email` | The footer on every page |
 
 ## The `projects` schema
 
-Each project is one case study. Fields:
-
 ```jsonc
 {
-  "slug": "liftlink",          // URL: /work/liftlink  (unique, kebab-case)
-  "symbol": "LIFT",            // ticker shown in the ledger
+  "slug": "liftlink",          // URL: /work/liftlink (unique, kebab-case)
   "title": "LiftLink",
+  "code": "LL",                // two letters on the line badge
   "year": "2025",
   "role": "Creator",
-  "summary": "One-line description.",
-  "tech": ["JavaScript", "Node.js"],   // first 3–4 show in the index
+  "summary": "One sentence saying what it does.",
+  "tech": ["React", "Node.js"],
   "problem": "What problem it solves.",
   "approach": "How it works.",
-  "outcome": "The result.",
-  "metrics": [ { "value": "OAuth", "label": "Strava connect" } ],
-  "link": "https://…",         // live URL, or null
-  "repo": "https://github.com/…", // source, or null
+  "outcome": "Where it is now.",
+  "link": "https://example.com",   // live URL, or null
+  "repo": "https://github.com/finnjones/LiftLink", // source, or null
   "image": "liftlink.png",     // file in src/assets/work/, or null
-  "cover": "signal",           // "image" | "code" | "chart" | "signal"
-  "featured": true,
-  "gallery": [                 // optional extra screenshots on the case page
-    { "image": "app-home.png", "caption": "What it shows.", "frame": "phone" } // frame: "wide" (default) | "phone"
+  "imageAlt": "What the screenshot shows, for screen readers.",
+  "imageZoom": 1.9,            // optional: enlarge a sparse screenshot inside its frame on the home page
+  "lead": false,               // true gives it a full-screen stage on the home page
+  "color": "#168388",          // line colour: badge, vehicle livery, station (see DESIGN.md)
+  "ink": "#0c0c0a",            // text colour that reads on it
+  "vehicle": "metro-long",     // train-long, metro-long, lightrail-pair, bus, coach or ferry
+  "gallery": [                 // optional extra screenshots on the project page
+    { "image": "app-home.png", "caption": "What it shows.", "frame": "phone" } // frame: "wide" (default) or "phone"
   ]
 }
 ```
 
-- **`cover`** picks the card artwork. Use `"image"` with an `image` file for a
-  real screenshot; otherwise a generated cover is drawn: `"code"` (terminal),
-  `"chart"` (candlesticks), or `"signal"` (activity waves).
+- **Order in the file is the order on the site**, and sets which project comes next
+  on project pages.
+- **`lead`** projects each get a full-screen station on the home page. Keep it
+  to three. Every project is a row on the board.
+- **`color`** must be one no other project uses, and `ink` must stay readable
+  on it (4.5:1 or better).
+- **A project with no `image`** shows no thumbnail. Add a screenshot of the
+  running software when there is one. Do not draw a placeholder cover.
 - **Images** go in `src/assets/work/` and are referenced by filename. Astro
-  optimizes them automatically (resizes + webp). The portrait is
+  resizes them and converts them to WebP. The photo of Finn is
   `src/assets/portrait/finn.jpg`.
-- **Order in the file = order on the site**, and drives prev/next on case pages.
 
-> **Note:** experience/education dates marked `"datesPlaceholder": true` are
-> best-effort placeholders — replace them with your real dates and drop the flag.
+> **Dates.** Experience and education entries marked `"datesPlaceholder": true`
+> are best guesses. Replace them with the correct years and remove the flag.
+
+## Writing for the site
+
+Read `DESIGN.md` first. In short: say what the thing does in plain sentences,
+keep every number checkable, and separate lists with commas.
 
 ## Running locally
 
 ```bash
 npm install
 npm run dev      # dev server with hot reload
+npm run check    # fails if a pattern DESIGN.md rules out has crept back in
 npm run build    # production build into dist/
 npm run preview  # preview the built site
 ```
 
 ## Before you push
 
-Validate the JSON — a syntax error will fail the build:
-
 ```bash
-python3 -m json.tool data/profile.json
+python3 -m json.tool data/profile.json > /dev/null   # a syntax error fails the build
+npm run check
 ```

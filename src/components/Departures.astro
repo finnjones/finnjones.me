@@ -1,0 +1,396 @@
+---
+/*
+  The first screen: a platform indicator board drawn like TransitTracker's,
+  with every project as a service, and the platform under it where that
+  service's vehicle pulls in. The script brings the board and the platform to
+  life; without it the board still lists every project and the first train
+  stands at the platform.
+*/
+import { Image } from 'astro:assets';
+import { workImage } from '../lib/images';
+import { profile, projects } from '../lib/profile';
+---
+
+<section class="departures" data-departures aria-label="Projects">
+  <div class="page dep-inner">
+    <div class="board">
+      <header class="board-head">
+        <h1 class="board-name" data-scramble>{profile.name}</h1>
+        <p class="board-clock">
+          <time class="board-time" data-clock>--:--:--</time>
+          <span class="board-place">Sydney</span>
+        </p>
+        <p class="board-role">
+          Software engineer at Lendi Group. These are the things I build in my own time.
+        </p>
+      </header>
+
+      <div class="board-body">
+        <ol class="services">
+          {
+            projects.map((p, i) => (
+              <li>
+                <a
+                  class:list={['service', { 'is-current': i === 0 }]}
+                  href={`/work/${p.slug}`}
+                  data-service={p.slug}
+                  data-vehicle={p.vehicle}
+                  data-colour={p.color}
+                  aria-current={i === 0 ? 'true' : undefined}
+                  style={`--line:${p.color};--line-ink:${p.ink}`}
+                >
+                  <span class="badge">{p.code}</span>
+                  <span class="service-name" data-scramble>{p.title}</span>
+                  <span class="service-year">{p.year}</span>
+                  <span class="service-bar" aria-hidden="true" />
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="now">
+          {
+            projects.map((p, i) => {
+              const img = workImage(p.image);
+              return (
+                <figure class="now-item" data-now={p.slug} hidden={i !== 0} style={`--line:${p.color};--line-ink:${p.ink}`}>
+                  <div class="now-shot" data-shot={p.slug}>
+                    {img ? (
+                      <Image
+                        src={img}
+                        alt={p.imageAlt ?? ''}
+                        width={960}
+                        widths={[480, 720, 960]}
+                        sizes="(max-width: 60rem) 92vw, 30vw"
+                        loading={i === 0 ? 'eager' : 'lazy'}
+                      />
+                    ) : (
+                      <span class="now-noshot">{p.code}</span>
+                    )}
+                  </div>
+                  <figcaption>{p.summary}</figcaption>
+                </figure>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="posts" aria-hidden="true">
+    <span data-post></span>
+    <span data-post></span>
+  </div>
+
+  <div class="platform" aria-hidden="true">
+    <canvas></canvas>
+    <span class="platform-still"></span>
+  </div>
+</section>
+
+<script>
+  import { departures } from '../scripts/departures';
+  document.querySelectorAll<HTMLElement>('[data-departures]').forEach(departures);
+</script>
+
+<style>
+  .departures {
+    --dot: 3px;
+    --board: #0c0c0a;
+    --panel: #181816;
+    --divider: #3d3d38;
+    --text: #f3ecd8;
+    --text-2: #a3a092;
+    --reading: #d9d2be;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100svh - var(--head-h, 4rem));
+    background: var(--sky);
+    color: var(--text);
+  }
+  .dep-inner {
+    width: 100%;
+    padding-top: clamp(0.25rem, 1.5vw, 1rem);
+  }
+
+  /* ---- The board ---- */
+  .board {
+    background: var(--board);
+    border: var(--stroke) solid var(--board);
+    outline: var(--stroke) solid var(--divider);
+    outline-offset: calc(var(--stroke) * -2);
+    padding: clamp(0.9rem, 1.8vw, 1.6rem);
+  }
+  .board-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 0.25rem 2rem;
+    padding-bottom: clamp(0.6rem, 1.2vw, 1rem);
+    border-bottom: 3px dashed var(--divider);
+  }
+  .board-name {
+    font-family: var(--pixel);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 0.8rem + 4.6vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .board-clock {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+  }
+  .board-time {
+    font-family: var(--dots);
+    font-size: clamp(1.75rem, 0.8rem + 3vw, 4.25rem);
+    line-height: 1;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .board-place,
+  .badge {
+    font-family: var(--label);
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+  }
+  .board-place {
+    color: var(--text-2);
+  }
+  .board-role {
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
+    font-family: var(--pixel);
+    font-size: clamp(1rem, 0.85rem + 0.35vw, 1.25rem);
+    color: var(--reading);
+    max-width: 46rem;
+  }
+
+  .board-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(1rem, 2.4vw, 2.25rem);
+    padding-top: clamp(0.6rem, 1.2vw, 1rem);
+  }
+
+  /* ---- The services: one row per project ---- */
+  .services {
+    list-style: none;
+  }
+  .services li + li {
+    border-top: 2px dashed var(--divider);
+  }
+  .service {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: clamp(0.3rem, 0.55vw, 0.5rem) 0.6rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .service:hover,
+  .service:focus-visible {
+    background: var(--panel);
+    color: var(--text);
+  }
+  .service.is-current {
+    background: var(--text);
+    color: var(--board);
+  }
+  .badge {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.75em;
+    padding: 0.35em 0.4em 0.3em;
+    background: var(--line);
+    color: var(--line-ink);
+    font-weight: 700;
+    border: 2px solid var(--board);
+  }
+  .service-name {
+    font-family: var(--pixel);
+    font-weight: 700;
+    font-size: clamp(1.125rem, 0.6rem + 1.1vw, 1.75rem);
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .service-year {
+    font-family: var(--digits);
+    font-size: clamp(1.125rem, 0.8rem + 0.7vw, 1.5rem);
+    color: var(--text-2);
+  }
+  .service.is-current .service-year {
+    color: var(--board);
+  }
+  /* The time left before the current service leaves, filling along the row. */
+  .service-bar {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 3px;
+    background: var(--board);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  .service.is-current .service-bar {
+    animation: dwell var(--dwell, 7s) steps(56) forwards;
+  }
+  .board:hover .service-bar,
+  .departures.is-paused .service-bar {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .service-bar {
+      display: none;
+    }
+  }
+  @keyframes dwell {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  /* ---- Now at the platform: the current project's screenshot ---- */
+  .now {
+    min-width: 0;
+  }
+  .now-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    height: 100%;
+  }
+  .now-item[hidden] {
+    display: none;
+  }
+  .now-shot {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--line);
+    border: var(--stroke) solid var(--divider);
+  }
+  .now-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .now-noshot {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--dots);
+    font-size: clamp(4rem, 9vw, 9rem);
+    color: var(--line-ink);
+  }
+  .now-item figcaption {
+    font-family: var(--pixel);
+    font-size: clamp(1rem, 0.85rem + 0.3vw, 1.1875rem);
+    line-height: 1.4;
+    color: var(--reading);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .now-item:not([hidden]) .now-shot {
+      animation: refresh 0.42s steps(7) both;
+    }
+  }
+  @keyframes refresh {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  /* ---- The posts the board hangs from, and the platform ---- */
+  .posts {
+    flex: 1;
+    min-height: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 96rem;
+    margin-inline: auto;
+    padding-inline: calc(var(--gutter) + 8%);
+  }
+  /* The posts run down behind the platform's open top to the ground. */
+  .posts {
+    margin-bottom: calc(var(--dot) * -19);
+  }
+  .posts span {
+    width: calc(var(--dot) * 2);
+    background: var(--board);
+  }
+  .platform {
+    position: relative;
+    z-index: 1;
+    line-height: 0;
+    overflow: hidden;
+  }
+  .platform canvas {
+    display: block;
+    image-rendering: pixelated;
+  }
+  /* Without the script: the first train standing at the platform, on its rails. */
+  .platform-still {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: calc(var(--dot) * 26);
+    background: url('/sprites/train-long.png') 50% calc(var(--dot) * 4) / calc(var(--dot) * 452) calc(var(--dot) * 16) no-repeat;
+    image-rendering: pixelated;
+  }
+  .platform-still::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--dot) * 19) 0 0 0;
+    background: var(--board);
+  }
+  :global(html.js) .platform-still {
+    display: none;
+  }
+
+  @media (max-width: 60rem) {
+    .board-body {
+      grid-template-columns: 1fr;
+    }
+    .now {
+      order: -1;
+    }
+    .now-shot {
+      aspect-ratio: 16 / 9;
+    }
+    .board-head {
+      grid-template-columns: 1fr;
+    }
+    .board-clock {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .board-name {
+      font-size: clamp(2.5rem, 13vw, 5rem);
+    }
+  }
+  /* On a phone the lead projects' stations below show the screenshots, so the
+     board keeps to its list and the platform stays on the first screen. */
+  @media (max-width: 40rem) {
+    .now {
+      display: none;
+    }
+    .service {
+      gap: 0.75rem;
+      padding-inline: 0.4rem;
+    }
+  }
+</style>
