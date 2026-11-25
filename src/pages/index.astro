@@ -2,12 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Departures from '../components/Departures.astro';
 import Shot from '../components/Shot.astro';
+import Track from '../components/Track.astro';
+import Stops from '../components/Stops.astro';
 import { profile, projects, years, hostname, liveLink } from '../lib/profile';
 
 const lead = projects.filter((p) => p.lead);
 const stops = [
-  ...profile.experience.map((e) => ({ when: years(e.start, e.end), what: e.role, where: e.company, now: e.end === 'Present' })),
-  ...profile.education.map((e) => ({ when: years(e.start, e.end), what: e.degree, where: e.institution, now: false })),
+  ...profile.experience.map((e) => ({ when: years(e.start, e.end), title: e.role, place: e.company, now: e.end === 'Present' })),
+  ...profile.education.map((e) => ({ when: years(e.start, e.end), title: e.degree, place: e.institution })),
 ];
 ---
 
@@ -17,7 +19,7 @@ const stops = [
   <div class="stations" id="work">
     {
       lead.map((p, i) => (
-        <section class="station-run" data-station data-vehicle={p.vehicle} data-colour={p.color}>
+        <section class="station-run" data-track-scope>
           <article class="station band" style={`--bg:${p.color};--fg:${p.ink}`}>
             <div class="page station-inner">
               <header class="station-head">
@@ -38,12 +40,10 @@ const stops = [
                 </ul>
               </div>
               <a class="station-shot" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
-                <Shot project={p} sizes="(max-width: 60rem) 92vw, 50vw" eager={i === 0} />
+                <Shot project={p} sizes="(max-width: 60rem) 92vw, 50vw" eager={i === 0} named={false} />
               </a>
             </div>
-            <div class="station-track" aria-hidden="true">
-              <canvas></canvas>
-            </div>
+            <Track vehicle={p.vehicle} colour={p.color} />
           </article>
         </section>
       ))
@@ -57,23 +57,20 @@ const stops = [
         <p class="pattern-lead">{profile.about[0]}</p>
         <p class="pattern-more"><a href="/about">More about me</a></p>
       </div>
-      <ol class="pattern-stops">
-        {
-          stops.map((s) => (
-            <li class:list={['stop', { 'is-now': s.now }]}>
-              <span class="stop-when">{s.when}</span>
-              <span class="stop-what">{s.what}</span>
-              <span class="stop-where">{s.where}</span>
-            </li>
-          ))
-        }
-      </ol>
+      <div class="pattern-stops">
+        <Stops stops={stops} ground="var(--sun)" />
+      </div>
     </div>
   </section>
 
   <script>
-    import { stations } from '../scripts/stations';
-    stations([...document.querySelectorAll<HTMLElement>('[data-station]')]);
+    // The screenshot a visitor clicks travels into the project page.
+    document.querySelectorAll<HTMLAnchorElement>('.station a[href^="/work/"]').forEach((a) =>
+      a.addEventListener('click', () => {
+        const shot = a.closest('.station')?.querySelector<HTMLElement>('.frame');
+        if (shot) shot.style.viewTransitionName = `shot-${a.getAttribute('href')!.split('/')[2]}`;
+      }),
+    );
   </script>
 </BaseLayout>
 
@@ -154,15 +151,6 @@ const stops = [
   .station-shot:hover {
     background: none;
   }
-  .station-track {
-    line-height: 0;
-    overflow: hidden;
-  }
-  .station-track canvas {
-    display: block;
-    image-rendering: pixelated;
-  }
-
   /* On a screen tall enough, each station holds still while its vehicle
      pulls in, stops and leaves, then the next one slides over it. */
   @media (min-width: 60rem) and (min-height: 44rem) {
@@ -216,61 +204,8 @@ const stops = [
     font-weight: 700;
     font-size: 1.25rem;
   }
-  /* A vertical line with a square stop for each role, as on TransitTracker's service screen. */
   .pattern-stops {
-    --line-x: 1.25rem;
-    position: relative;
-    list-style: none;
     align-self: start;
-  }
-  .pattern-stops::before {
-    content: '';
-    position: absolute;
-    top: 1.5rem;
-    bottom: 1.5rem;
-    left: calc(var(--line-x) - 6px);
-    width: 12px;
-    background: var(--ink);
-  }
-  .stop {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.1rem 1rem;
-    padding: 1rem 1rem 1rem calc(var(--line-x) * 2 + 1rem);
-  }
-  .stop::before {
-    content: '';
-    position: absolute;
-    left: calc(var(--line-x) - 14px);
-    top: 1.35rem;
-    width: 28px;
-    height: 28px;
-    background: var(--sun);
-    border: 6px solid var(--ink);
-  }
-  .stop.is-now {
-    background: var(--ink);
-    color: var(--cream);
-  }
-  .stop.is-now::before {
-    background: var(--cream);
-  }
-  .stop-what {
-    font-family: var(--pixel);
-    font-weight: 700;
-    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
-    line-height: 1.15;
-  }
-  .stop-when {
-    grid-column: 2;
-    grid-row: 1;
-    font-family: var(--digits);
-    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
-    line-height: 1.15;
-  }
-  .stop-where {
-    grid-column: 1 / -1;
   }
   @media (max-width: 60rem) {
     .pattern-inner {

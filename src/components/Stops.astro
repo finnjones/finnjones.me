@@ -1,0 +1,137 @@
+---
+/*
+  A stopping pattern, as on TransitTracker's service screen: a vertical line
+  with a square stop for each item. The lit stop is drawn in ink.
+*/
+export interface Stop {
+  title: string;
+  when?: string;
+  place?: string;
+  body?: string;
+  points?: string[];
+  now?: boolean;
+}
+
+export interface Props {
+  stops: Stop[];
+  /** Colour of the line. Defaults to ink. */
+  line?: string;
+  /** The colour behind the list, shown inside the hollow stops. */
+  ground?: string;
+  /** Larger titles and reading-size body text, for a project's write-up. */
+  large?: boolean;
+}
+
+const { stops, line = 'var(--ink)', ground = 'var(--bg)', large = false } = Astro.props;
+---
+
+<ol class:list={['stops', { large }]} style={`--stop-line:${line};--stop-ground:${ground}`}>
+  {
+    stops.map((s) => (
+      <li class:list={['stop', { 'is-now': s.now }]}>
+        {large ? <h2 class="stop-title">{s.title}</h2> : <span class="stop-title">{s.title}</span>}
+        {s.when && <span class="stop-when">{s.when}</span>}
+        {s.place && <span class="stop-place">{s.place}</span>}
+        {s.body && <p class="stop-body">{s.body}</p>}
+        {s.points && s.points.length > 0 && (
+          <ul class="stop-points">
+            {s.points.map((p) => (
+              <li>{p}</li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .stops {
+    --x: 1.25rem;
+    --bar: 12px;
+    --box: 28px;
+    position: relative;
+    list-style: none;
+    padding: 0;
+  }
+  .large {
+    --x: 1.75rem;
+    --bar: 16px;
+    --box: 38px;
+  }
+  .stops::before {
+    content: '';
+    position: absolute;
+    top: 1.5rem;
+    bottom: 1.5rem;
+    left: calc(var(--x) - var(--bar) / 2);
+    width: var(--bar);
+    background: var(--stop-line);
+  }
+  .stop {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.15rem 1rem;
+    padding: 1rem 1rem 1rem calc(var(--x) * 2 + 1rem);
+  }
+  .large .stop {
+    padding-block: 1.25rem 2rem;
+  }
+  .stop::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--x) - var(--box) / 2);
+    top: 1.35rem;
+    width: var(--box);
+    height: var(--box);
+    background: var(--stop-ground);
+    border: calc(var(--bar) / 2) solid var(--stop-line);
+  }
+  .large .stop::before {
+    top: 1.5rem;
+  }
+  .stop.is-now {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .stop.is-now::before {
+    background: var(--cream);
+  }
+  .stop-title {
+    font-family: var(--pixel);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    line-height: 1.15;
+  }
+  .large .stop-title {
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+    line-height: 1;
+  }
+  .stop-when {
+    grid-column: 2;
+    grid-row: 1;
+    font-family: var(--digits);
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    line-height: 1.15;
+  }
+  .stop-place,
+  .stop-body,
+  .stop-points {
+    grid-column: 1 / -1;
+  }
+  .stop-body {
+    margin-top: 0.75rem;
+    max-width: 42rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+  .stop-points {
+    margin-top: 0.6rem;
+    padding-left: 1.1em;
+    list-style: square;
+  }
+  .stop-points li + li {
+    margin-top: 0.25rem;
+  }
+</style>

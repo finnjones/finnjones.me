@@ -1,33 +1,99 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Track from '../components/Track.astro';
 import { projects } from '../lib/profile';
 ---
 
-<BaseLayout title="Page not found">
-  <section class="band not-found">
+<BaseLayout title="Page not found" color="var(--sky)">
+  <section class="lost">
     <div class="page">
-      <h1>This train does not stop here.</h1>
-      <p class="lead">
-        There is no page at this address. Go to the <a href="/">home page</a>, or straight to a project:
-      </p>
-      <ul class="links">
-        {projects.map((p) => <li><a href={`/work/${p.slug}`}>{p.title}</a></li>)}
-      </ul>
+      <div class="lost-board">
+        <p class="lost-status">Not in service</p>
+        <h1 class="lost-title">This train does not stop here.</h1>
+        <p class="lost-text">
+          There is no page at this address. Go back to the <a href="/">departures board</a>, or take one of these services:
+        </p>
+        <ul class="lost-services">
+          {
+            projects.map((p) => (
+              <li>
+                <a href={`/work/${p.slug}`} style={`--line:${p.color};--line-ink:${p.ink}`}>
+                  <span class="lost-badge">{p.code}</span>
+                  <span>{p.title}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
+    <Track vehicle="train-long" colour="#f99d1c" mode="pass" />
   </section>
 </BaseLayout>
 
 <style>
-  .not-found {
-    --bg: var(--sun);
-    padding-block: clamp(2rem, 6vw, 5rem) clamp(4rem, 9vw, 8rem);
+  .lost {
+    background: var(--sky);
+    padding-top: clamp(0.5rem, 2vw, 1.5rem);
   }
-  .not-found h1 {
+  .lost-board {
+    background: #0c0c0a;
+    color: #f3ecd8;
+    border: var(--stroke) solid #0c0c0a;
+    outline: var(--stroke) solid #3d3d38;
+    outline-offset: calc(var(--stroke) * -2);
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+    margin-bottom: clamp(2rem, 6vw, 5rem);
+  }
+  .lost-status {
+    font-family: var(--dots);
+    font-size: clamp(1.75rem, 1rem + 3vw, 4rem);
+    color: #ffb020;
+    line-height: 1;
+  }
+  .lost-title {
+    margin-top: 1rem;
     font-size: var(--size-title);
-    margin-bottom: 0.4em;
   }
-  .not-found p {
+  .lost-text {
+    margin-top: 1.25rem;
     max-width: 40rem;
-    margin-bottom: 1.25rem;
+    font-family: var(--pixel);
+    font-size: clamp(1.125rem, 0.95rem + 0.5vw, 1.375rem);
+    color: #d9d2be;
+  }
+  .lost-text a:hover {
+    background: #f3ecd8;
+    color: #0c0c0a;
+  }
+  .lost-services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    margin-top: 1.75rem;
+    list-style: none;
+  }
+  .lost-services a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--pixel);
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-decoration: none;
+  }
+  .lost-services a:hover {
+    background: #f3ecd8;
+    color: #0c0c0a;
+  }
+  .lost-badge {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.6em;
+    padding: 0.35em 0.4em 0.3em;
+    background: var(--line);
+    color: var(--line-ink);
+    font-family: var(--label);
+    font-size: 0.75rem;
   }
 </style>

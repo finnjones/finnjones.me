@@ -9,16 +9,18 @@ export interface Props {
   /** Crop to 16:10 so screenshots line up. Off on a project's own page. */
   crop?: boolean;
   eager?: boolean;
+  /** Give it the view-transition name. Off where another element on the page may carry it. */
+  named?: boolean;
 }
 
-const { project, sizes, crop = true, eager = false } = Astro.props;
+const { project, sizes, crop = true, eager = false, named = true } = Astro.props;
 const src = workImage(project.image);
 const zoom = crop && project.imageZoom ? project.imageZoom : null;
 ---
 
 {
   src && (
-    <span class:list={['shot', 'frame', { crop }]} style={`view-transition-name:shot-${project.slug}`}>
+    <span class:list={['shot', 'frame', { crop }]} style={named ? `view-transition-name:shot-${project.slug}` : undefined}>
       <Image
         src={src}
         alt={crop ? '' : (project.imageAlt ?? `Screenshot of ${project.title}.`)}

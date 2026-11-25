@@ -52,10 +52,21 @@ pointer. A big name over a paragraph has none of those.
 5. **The harbour.** The footer on every page: contact details, then the
    ferry crossing a strip of sea.
 
-A project page opens with a band in the project's line colour and ends with
-a band in the next project's colour. Page changes use the browser's
-cross-page view transition, so the screenshot travels from the board to the
-project page.
+A project page is laid out like the app's service screen: the project's
+line colour with its vehicle pulling in, the facts on a board panel, the
+screenshot on the dark ground below the track, the write-up (the problem,
+how it works, where it is now) as a stopping pattern on the line colour,
+and the next service at the end with its own vehicle. The About page uses
+the same stopping pattern for work and study and a board panel for skills.
+The 404 page is a board that reads "Not in service" while a train runs
+straight through.
+
+Page changes use the browser's cross-page view transition, so the
+screenshot travels from the board to the project page.
+
+Every vehicle strip is one `Track` component (`src/components/Track.astro`)
+in one of three modes: following the scroll, pulling in once, or passing
+through.
 
 ## Colour
 
