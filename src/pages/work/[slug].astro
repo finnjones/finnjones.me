@@ -1,9 +1,8 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
-import Cover from '../../components/Cover.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { workImage } from '../../lib/images';
-import { projects, adjacentProjects } from '../../lib/profile';
+import { projects, adjacentProjects, hostname, liveLink } from '../../lib/profile';
 
 export function getStaticPaths() {
   return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
@@ -11,7 +10,7 @@ export function getStaticPaths() {
 
 const { project } = Astro.props;
 const { prev, next } = adjacentProjects(project.slug);
-const idx = projects.findIndex((p) => p.slug === project.slug) + 1;
+const cover = workImage(project.image);
 
 const gallery = (project.gallery ?? [])
   .map((g) => ({ ...g, src: workImage(g.image) }))
@@ -19,368 +18,212 @@ const gallery = (project.gallery ?? [])
 const phoneShots = gallery.filter((g) => g.frame === 'phone');
 const wideShots = gallery.filter((g) => g.frame !== 'phone');
 
-const blocks = [
-  { label: 'Problem', body: project.problem },
-  { label: 'Approach', body: project.approach },
-  { label: 'Outcome', body: project.outcome },
+const parts = [
+  { heading: 'The problem', body: project.problem },
+  { heading: 'How it works', body: project.approach },
+  { heading: 'Where it is now', body: project.outcome },
 ];
+const live = liveLink(project);
 ---
 
 <BaseLayout title={project.title} description={project.summary}>
-  <article class="case">
-    <!-- Header -->
-    <header class="case-head wrap">
-      <nav class="case-crumb mono-sm" aria-label="Breadcrumb">
-        <a href="/#work" class="accent">← INDEX</a>
-        <span class="muted">/ WORK / P{String(idx).padStart(2, '0')}</span>
-      </nav>
+  <article>
+    <header class="page grid case-head">
+      <div class="case-intro">
+        <h1 class="case-title">{project.title}</h1>
+        <p class="lead">{project.summary}</p>
+      </div>
 
-      <div class="case-sym mono">{project.symbol}</div>
-      <h1 class="case-title" data-split>{project.title}</h1>
-      <p class="case-summary">{project.summary}</p>
-
-      <!-- Metadata strip -->
-      <dl class="case-meta" data-stagger>
-        <div class="meta-cell">
-          <dt class="mono-sm muted">Year</dt>
-          <dd class="tabular">{project.year}</dd>
+      <dl class="case-facts">
+        <div>
+          <dt class="soft">Year</dt>
+          <dd>{project.year}</dd>
         </div>
-        <div class="meta-cell">
-          <dt class="mono-sm muted">Role</dt>
+        <div>
+          <dt class="soft">Role</dt>
           <dd>{project.role}</dd>
         </div>
-        <div class="meta-cell meta-stack">
-          <dt class="mono-sm muted">Stack</dt>
-          <dd>{project.tech.join(' · ')}</dd>
+        <div>
+          <dt class="soft">Built with</dt>
+          <dd>{project.tech.join(', ')}</dd>
         </div>
-        <div class="meta-cell">
-          <dt class="mono-sm muted">Link</dt>
-          <dd>
-            {
-              project.link ? (
-                <a href={project.link} target="_blank" rel="noopener" class="meta-link">
-                  Live ↗
-                </a>
-              ) : (
-                <span class="muted">—</span>
-              )
-            }
-          </dd>
-        </div>
+        {
+          (live || project.repo) && (
+            <div>
+              <dt class="soft">Links</dt>
+              <dd>
+                <ul class="links">
+                  {live && <li><a href={live}>{hostname(live)}</a></li>}
+                  {project.repo && <li><a href={project.repo}>Source on GitHub</a></li>}
+                </ul>
+              </dd>
+            </div>
+          )
+        }
       </dl>
     </header>
 
-    <!-- Hero cover -->
-    <div class="case-cover wrap" data-reveal>
-      <Cover project={project} sizes="(max-width: 1100px) 92vw, 1040px" eager={true} />
-    </div>
-
-    <!-- Problem / Approach / Outcome -->
-    <div class="case-body wrap">
-      <div class="case-blocks">
-        {
-          blocks.map((b, i) => (
-            <section class="case-block" data-reveal>
-              <h2 class="block-head">
-                <span class="block-idx mono-sm accent">0{i + 1}</span>
-                <span>{b.label}</span>
-              </h2>
-              <p class="block-body">{b.body}</p>
-            </section>
-          ))
-        }
-      </div>
-
-      <aside class="case-side">
-        <div class="case-metrics" data-stagger>
-          {
-            project.metrics.map((m) => (
-              <div class="case-metric">
-                <span class="metric-val tabular">{m.value}</span>
-                <span class="metric-lbl mono-sm muted">{m.label}</span>
-              </div>
-            ))
-          }
-        </div>
-        <div class="case-links">
-          {
-            project.link && (
-              <a href={project.link} target="_blank" rel="noopener" class="btn btn-solid" data-magnetic>
-                Visit live ↗
-              </a>
-            )
-          }
-          {
-            project.repo && (
-              <a href={project.repo} target="_blank" rel="noopener" class="btn" data-magnetic>
-                Source ↗
-              </a>
-            )
-          }
-        </div>
-      </aside>
-    </div>
-
-    <!-- Screens -->
     {
-      gallery.length > 0 && (
-        <section class="case-gallery wrap" aria-labelledby="screens-head">
-          <h2 class="block-head" id="screens-head">
-            <span class="block-idx mono-sm accent">04</span>
-            <span>Screens</span>
-          </h2>
-          {phoneShots.length > 0 && (
-            <div class="gallery-phones" data-stagger>
-              {phoneShots.map((g) => (
-                <figure class="shot shot-phone">
-                  <Image src={g.src!} alt={g.caption} widths={[360, 540, 720]} sizes="(max-width: 720px) 80vw, 320px" class="shot-img" />
-                  <figcaption class="muted">{g.caption}</figcaption>
-                </figure>
-              ))}
-            </div>
-          )}
-          {wideShots.map((g) => (
-            <figure class="shot shot-wide" data-reveal>
-              <Image src={g.src!} alt={g.caption} widths={[720, 1080, 1600]} sizes="(max-width: 1100px) 92vw, 1040px" class="shot-img" />
-              <figcaption class="muted">{g.caption}</figcaption>
-            </figure>
-          ))}
-        </section>
+      cover && (
+        <div class="page case-cover">
+          <Image
+            src={cover}
+            alt={project.imageAlt ?? `Screenshot of ${project.title}.`}
+            width={1800}
+            widths={[720, 1200, 1800, 2400]}
+            sizes="(max-width: 84rem) 92vw, 78rem"
+            class="shot"
+            loading="eager"
+          />
+        </div>
       )
     }
 
-    <!-- Prev / Next ledger nav -->
-    <nav class="case-nav" aria-label="More projects">
-      <a href={`/work/${prev.slug}`} class="case-nav-item case-nav-prev" data-row data-index={projects.findIndex((p) => p.slug === prev.slug)}>
-        <span class="mono-sm muted">← PREV</span>
-        <span class="case-nav-title"><span class="accent">{prev.symbol}</span> {prev.title}</span>
-      </a>
-      <a href={`/work/${next.slug}`} class="case-nav-item case-nav-next" data-row data-index={projects.findIndex((p) => p.slug === next.slug)}>
-        <span class="mono-sm muted">NEXT →</span>
-        <span class="case-nav-title">{next.title} <span class="accent">{next.symbol}</span></span>
-      </a>
-    </nav>
+    <div class="page case-body">
+      {
+        parts.map((part) => (
+          <section class="grid case-part">
+            <h2 class="section-title side">{part.heading}</h2>
+            <p class="main case-text">{part.body}</p>
+          </section>
+        ))
+      }
+    </div>
+
+    {
+      phoneShots.length > 0 && (
+        <div class="page case-phones">
+          {phoneShots.map((g) => (
+            <figure>
+              <Image
+                src={g.src!}
+                alt=""
+                widths={[360, 540, 780]}
+                sizes="(max-width: 48rem) 44vw, 19rem"
+                class="shot"
+              />
+              <figcaption class="small soft">{g.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      wideShots.map((g) => (
+        <figure class="page case-wide">
+          <Image
+            src={g.src!}
+            alt=""
+            width={1800}
+            widths={[720, 1200, 1800]}
+            sizes="(max-width: 84rem) 92vw, 78rem"
+            class="shot"
+          />
+          <figcaption class="small soft">{g.caption}</figcaption>
+        </figure>
+      ))
+    }
   </article>
+
+  <nav class="page grid section case-nav" aria-label="Other projects">
+    <p class="case-nav-prev">
+      <span class="soft">Previous</span>
+      <a href={`/work/${prev.slug}`}>{prev.title}</a>
+    </p>
+    <p class="case-nav-next">
+      <span class="soft">Next</span>
+      <a href={`/work/${next.slug}`}>{next.title}</a>
+    </p>
+  </nav>
 </BaseLayout>
 
 <style>
-  .case {
-    padding-top: calc(var(--bar-h) + clamp(2rem, 6vw, 4rem));
-  }
-  .case-crumb {
-    display: flex;
-    gap: 0.6rem;
-    margin-bottom: clamp(2rem, 6vw, 3.5rem);
-  }
-  .case-sym {
-    display: inline-block;
-    padding: 0.3rem 0.6rem;
-    border: 1px solid var(--rule-strong);
-    border-radius: var(--radius);
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    margin-bottom: 1.25rem;
+  .case-head {
+    margin-top: clamp(2rem, 6vw, 5rem);
+    row-gap: 2.5rem;
+    align-items: start;
   }
   .case-title {
-    font-size: var(--fs-display);
-    font-weight: 680;
-    letter-spacing: -0.04em;
-    line-height: 0.95;
-    text-transform: uppercase;
+    font-size: var(--size-lead);
+    margin-bottom: 0.35em;
   }
-  .case-summary {
-    font-size: var(--fs-body-lg);
-    color: var(--muted);
-    max-width: 48ch;
-    margin-top: 1.25rem;
+  .case-intro .lead {
+    color: var(--ink-soft);
   }
 
-  .case-meta {
+  .case-facts > div {
     display: grid;
-    grid-template-columns: repeat(4, auto);
-    gap: 1px;
-    background: var(--rule);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-top: clamp(2rem, 5vw, 3rem);
-    width: fit-content;
-    max-width: 100%;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    column-gap: var(--gap);
+    padding-block: 0.5rem;
+    border-top: 1px solid var(--line);
   }
-  .meta-cell {
-    background: var(--bg);
-    padding: 1rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+  .case-facts > div:last-child {
+    border-bottom: 1px solid var(--line);
   }
-  .meta-cell dd {
-    font-size: 0.95rem;
-  }
-  .meta-link {
-    color: var(--accent);
-  }
-  :root[data-theme='paper'] .meta-link,
-  :root[data-theme='paper'] .case-crumb .accent {
-    color: var(--accent-text);
+
+  @media (min-width: 60rem) {
+    .case-intro {
+      grid-column: 1 / span 7;
+    }
+    .case-facts {
+      grid-column: 9 / span 4;
+    }
   }
 
   .case-cover {
-    margin-block: clamp(2.5rem, 6vw, 4rem);
-  }
-  .case-cover .cover {
-    aspect-ratio: 16 / 9;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
   }
 
   .case-body {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 300px;
-    gap: clamp(2rem, 6vw, 5rem);
-    padding-bottom: clamp(3rem, 8vw, 6rem);
-    border-bottom: 1px solid var(--rule);
+    margin-top: clamp(3rem, 7vw, 6rem);
   }
-  .case-blocks {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(2rem, 5vw, 3.25rem);
+  .case-part + .case-part {
+    margin-top: clamp(2rem, 4vw, 3.5rem);
   }
-  .block-head {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    font-size: var(--fs-h3);
-    font-weight: 560;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.9rem;
-    padding-bottom: 0.9rem;
-    border-bottom: 1px solid var(--rule);
-  }
-  .block-body {
-    font-size: var(--fs-body-lg);
-    max-width: 60ch;
-    color: var(--fg);
+  .case-text {
+    max-width: 40rem;
+    font-size: var(--size-text);
+    line-height: 1.55;
   }
 
-  .case-side {
-    position: sticky;
-    top: calc(var(--bar-h) + 1.5rem);
-    align-self: start;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  .case-metrics {
+  .case-phones {
     display: grid;
-    gap: 1px;
-    background: var(--rule);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    overflow: hidden;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem var(--gap);
+    margin-top: clamp(3rem, 7vw, 6rem);
   }
-  .case-metric {
-    background: var(--bg);
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+  @media (min-width: 48rem) {
+    .case-phones {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
   }
-  .metric-val {
-    font-size: 1.9rem;
-    font-weight: 620;
-    letter-spacing: -0.03em;
+  .case-wide {
+    margin-top: clamp(3rem, 7vw, 6rem);
   }
-  .case-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .case-gallery {
-    padding-block: clamp(3rem, 8vw, 6rem);
-    border-bottom: 1px solid var(--rule);
-    display: flex;
-    flex-direction: column;
-    gap: clamp(2rem, 5vw, 3rem);
-  }
-  .case-gallery .block-head {
-    margin-bottom: 0;
-  }
-  .gallery-phones {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-    gap: clamp(1.25rem, 3vw, 2rem);
-    max-width: 1040px;
-  }
-  .shot {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  .shot-img {
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    background: var(--bg-raise);
-  }
-  .shot-phone .shot-img {
-    border-radius: calc(var(--radius) * 3);
-  }
-  .shot figcaption {
-    max-width: 70ch;
-    font-size: 0.9rem;
-    line-height: 1.5;
+  figcaption {
+    margin-top: 0.75rem;
+    max-width: 40rem;
   }
 
   .case-nav {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    row-gap: 1rem;
   }
-  .case-nav-item {
-    padding: clamp(2rem, 5vw, 3.5rem) var(--gutter);
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    transition: background 0.3s var(--ease-out);
+  .case-nav p {
+    grid-column: span 6;
   }
-  .case-nav-item:hover {
-    background: var(--panel-hover);
+  .case-nav span {
+    display: block;
+  }
+  .case-nav a {
+    font-size: var(--size-title);
+    font-weight: 650;
+    letter-spacing: -0.015em;
   }
   .case-nav-next {
     text-align: right;
-    align-items: flex-end;
-    border-left: 1px solid var(--rule);
-  }
-  .case-nav-title {
-    font-size: var(--fs-h3);
-    font-weight: 540;
-    letter-spacing: -0.02em;
-  }
-
-  @media (max-width: 880px) {
-    .case-body {
-      grid-template-columns: 1fr;
-    }
-    .case-side {
-      position: static;
-    }
-    .case-metrics {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  @media (max-width: 560px) {
-    .case-meta {
-      grid-template-columns: 1fr 1fr;
-      width: 100%;
-    }
-    .case-nav {
-      grid-template-columns: 1fr;
-    }
-    .case-nav-next {
-      border-left: 0;
-      border-top: 1px solid var(--rule);
-      text-align: left;
-      align-items: flex-start;
-    }
   }
 </style>

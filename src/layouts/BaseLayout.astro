@@ -1,32 +1,25 @@
 ---
-import { ClientRouter } from 'astro:transitions';
 import { profile } from '../lib/profile';
-import TopBar from '../components/TopBar.astro';
-import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 
 export interface Props {
   title?: string;
   description?: string;
   image?: string;
-  noFooter?: boolean;
-  wide?: boolean;
 }
 
-const {
-  title,
-  description = `${profile.name} — ${profile.headline}. ${profile.positioning}`,
-  image = '/og.png',
-  noFooter = false,
-} = Astro.props;
+const { title, description = profile.description, image = '/og.png' } = Astro.props;
 
-const pageTitle = title ? `${title} · ${profile.name}` : `${profile.name} — ${profile.headline}`;
+const isHome = Astro.url.pathname === '/';
+const isAbout = Astro.url.pathname.replace(/\/$/, '') === '/about';
+const pageTitle = title ? `${title} | ${profile.name}` : `${profile.name}, software engineer in Sydney`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -39,9 +32,9 @@ const ogImage = new URL(image, Astro.site).href;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="author" content={profile.name} />
-    <meta name="theme-color" content="#0c0c0b" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)" />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={profile.name} />
     <meta property="og:title" content={pageTitle} />
@@ -49,29 +42,11 @@ const ogImage = new URL(image, Astro.site).href;
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <!-- No-flash theme: run before paint -->
-    <script is:inline>
-      (function () {
-        try {
-          var t = localStorage.getItem('ledger-theme');
-          if (t === 'paper') document.documentElement.setAttribute('data-theme', 'paper');
-        } catch (e) {}
-        try {
-          if (sessionStorage.getItem('ledger-visited') === '1')
-            document.documentElement.setAttribute('data-preloaded', '1');
-        } catch (e) {}
-      })();
-    </script>
-
-    <ClientRouter />
-
-    <!-- JSON-LD -->
     <script
       type="application/ld+json"
       set:html={JSON.stringify({
@@ -90,104 +65,67 @@ const ogImage = new URL(image, Astro.site).href;
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
 
-    <!-- First-visit odometer preloader -->
-    <div class="preloader" data-preloader aria-hidden="true">
-      <div class="preloader-inner">
-        <span class="preloader-mono mono-sm">LEDGER · LOADING</span>
-        <span class="preloader-num tabular" data-preloader-num>000</span>
-      </div>
-      <div class="preloader-bar"><span data-preloader-fill></span></div>
-    </div>
+    <header class="site-head page">
+      {isHome ? <h1 class="site-name">{profile.name}</h1> : <a class="site-name" href="/">{profile.name}</a>}
+      <nav aria-label="Main">
+        <ul class="links">
+          <li><a href="/#work">Work</a></li>
+          <li><a href="/about" aria-current={isAbout ? 'page' : undefined}>About</a></li>
+          <li><a href="/#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
 
-    <!-- Custom cursor -->
-    <div class="cursor-ring" data-cursor-ring></div>
-    <div class="cursor-dot" data-cursor-dot></div>
-
-    <TopBar />
-
-    <main id="main" transition:animate="fade">
+    <main id="main">
       <slot />
     </main>
 
-    {!noFooter && <Footer />}
-
-    <!-- Click-to-copy toast -->
-    <div class="toast mono-sm" data-toast role="status" aria-live="polite">
-      COPIED TO CLIPBOARD <span class="accent">✓</span>
-    </div>
-
-    <script>
-      import '../scripts/main.ts';
-    </script>
+    <footer class="site-foot page small soft">
+      <p>© {year} {profile.name}</p>
+      <p>{profile.location}</p>
+    </footer>
 
     <style>
-      .preloader {
-        position: fixed;
-        inset: 0;
-        z-index: 9000;
-        background: var(--bg);
-        display: grid;
-        place-content: center;
-        gap: 1.2rem;
-        transition: opacity 0.5s var(--ease-out), visibility 0.5s;
-      }
-      .preloader[data-done='true'] {
-        opacity: 0;
-        visibility: hidden;
-      }
-      /* Returning visitor (this session): never flash the loader */
-      :global(:root[data-preloaded]) .preloader {
-        opacity: 0;
-        visibility: hidden;
-        transition: none;
-      }
-      .preloader-inner {
+      .site-head {
         display: flex;
+        flex-wrap: wrap;
         align-items: baseline;
-        gap: 1.2rem;
-        justify-content: center;
+        justify-content: space-between;
+        gap: 0.5rem 2rem;
+        padding-block: clamp(1.25rem, 3vw, 2rem);
       }
-      .preloader-mono {
-        color: var(--muted);
+      .site-name {
+        font-size: var(--size-body);
+        font-weight: 650;
+        letter-spacing: 0;
+        line-height: 1.5;
+        color: var(--ink);
+        text-decoration: none;
       }
-      .preloader-num {
-        font-family: var(--font-display);
-        font-size: clamp(3rem, 12vw, 8rem);
-        font-weight: 680;
-        letter-spacing: -0.04em;
-        line-height: 1;
-        color: var(--fg);
+      a.site-name:hover {
+        text-decoration: underline;
       }
-      .preloader-bar {
-        width: min(60vw, 320px);
-        height: 2px;
-        background: var(--rule);
-        overflow: hidden;
+      /* Navigation is plain text until you point at it, so the header
+         does not compete with the red links in the page below. */
+      .site-head nav a {
+        display: inline-block;
+        padding-block: 0.5rem;
+        color: var(--ink);
+        text-decoration: none;
       }
-      .preloader-bar span {
-        display: block;
-        height: 100%;
-        width: 0%;
-        background: var(--accent);
-        transition: width 0.1s linear;
+      .site-head nav a:hover,
+      .site-head nav a[aria-current='page'] {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
       }
-
-      .toast {
-        position: fixed;
-        left: 50%;
-        bottom: 2rem;
-        transform: translate(-50%, 160%);
-        z-index: 8000;
-        background: var(--fg);
-        color: var(--bg);
-        padding: 0.7rem 1.1rem;
-        border-radius: var(--radius);
-        box-shadow: 0 10px 40px var(--shadow);
-        transition: transform 0.45s var(--ease-expo);
-        pointer-events: none;
-      }
-      .toast[data-show='true'] {
-        transform: translate(-50%, 0);
+      .site-foot {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.25rem 2rem;
+        margin-top: var(--space-section);
+        padding-block: 1.5rem 2.5rem;
+        border-top: 1px solid var(--line);
       }
     </style>
   </body>

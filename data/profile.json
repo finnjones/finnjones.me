@@ -1,16 +1,11 @@
 {
   "name": "Finn Jones",
   "headline": "Associate Software Engineer at Lendi Group",
-  "positioning": "A software engineer who speaks finance.",
-  "subheadline": "Building modern web and software products — currently reading Computer Science & Commerce (Finance) at UNSW.",
   "location": "Sydney, Australia",
   "timezone": "Australia/Sydney",
   "email": "finnwjones@gmail.com",
   "linkedin": "https://www.linkedin.com/in/finn-jones/",
   "github": "https://github.com/finnjones",
-  "status": {
-    "detail": "Engineering @ Lendi Group"
-  },
   "socials": [
     {
       "label": "LinkedIn",
@@ -29,72 +24,8 @@
     }
   ],
   "about": [
-    "I'm an engineer with a dual degree in Computer Science and Commerce (Finance) from UNSW. I pair technical depth with a working understanding of markets and money — which is how I ended up building software in the mortgage and lending space at Lendi Group.",
-    "My path runs from IT support managing thousands of devices, through freelance development for small businesses, to enterprise software engineering. That range means I'm comfortable from low-level infrastructure up to the polished edge users actually touch."
-  ],
-  "metrics": [
-    {
-      "value": 2000,
-      "prefix": "",
-      "suffix": "+",
-      "label": "Devices managed",
-      "mono": "DEV"
-    },
-    {
-      "value": 7,
-      "prefix": "",
-      "suffix": "",
-      "label": "Projects shipped",
-      "mono": "SHIP"
-    },
-    {
-      "value": 0,
-      "text": "CS + Finance",
-      "label": "Dual degree, UNSW",
-      "mono": "EDU"
-    }
-  ],
-  "skills": [
-    {
-      "symbol": "TS",
-      "name": "TypeScript",
-      "trend": "up"
-    },
-    {
-      "symbol": "REACT",
-      "name": "React",
-      "trend": "up"
-    },
-    {
-      "symbol": "NODE",
-      "name": "Node.js",
-      "trend": "up"
-    },
-    {
-      "symbol": "PY",
-      "name": "Python",
-      "trend": "up"
-    },
-    {
-      "symbol": "AWS",
-      "name": "AWS",
-      "trend": "up"
-    },
-    {
-      "symbol": "SQL",
-      "name": "SQL",
-      "trend": "up"
-    },
-    {
-      "symbol": "GIT",
-      "name": "Git",
-      "trend": "up"
-    },
-    {
-      "symbol": "DAML",
-      "name": "DAML / Smart Contracts",
-      "trend": "up"
-    }
+    "I'm an engineer with a dual degree in Computer Science and Commerce (Finance) from UNSW. I pair technical depth with a working understanding of markets and money, which is how I ended up building software for mortgages and lending at Lendi Group.",
+    "I started in IT support, managing thousands of devices, then did freelance development for small businesses, and now work in enterprise software engineering. That range means I'm comfortable anywhere from low-level infrastructure to the interface people use."
   ],
   "capabilities": [
     {
@@ -155,7 +86,7 @@
       "end": "2024",
       "datesPlaceholder": true,
       "highlights": [
-        "Managed 2,000+ devices with JAMF — performance, security, and minimal downtime",
+        "Managed more than 2,000 devices with Jamf, covering performance, security and uptime",
         "Automated device management, cutting manual work and lifting team efficiency",
         "Resolved support tickets fast, keeping staff and students productive",
         "Strong stakeholder management across students, teachers, and parents"
@@ -185,7 +116,6 @@
   "projects": [
     {
       "slug": "aglc4-citation-tool",
-      "symbol": "AFCT",
       "title": "Aforecite",
       "year": "2026",
       "role": "Creator",
@@ -197,38 +127,23 @@
         "LLM extraction",
         "pytest"
       ],
-      "problem": "Australian law students have to format every footnote to the Australian Guide to Legal Citation (4th ed): Ibid, (n x) cross-references, short titles, signals and dozens of rules for cases, legislation and secondary sources. It's slow to do by hand, usually close to a deadline, and generic referencing tools get the details wrong or quietly invent them.",
+      "problem": "Australian law students have to format every footnote to the Australian Guide to Legal Citation (4th ed): Ibid, (n x) cross-references, short titles, signals and dozens of rules for cases, legislation and secondary sources. It's slow to do by hand, usually close to a deadline, and generic referencing tools get the details wrong or make them up.",
       "approach": "Upload a .docx and an AI model reads each footnote, but only to pull out its parts (parties, years, report series, pinpoints). Deterministic Python code, tested against the Guide's own worked examples, rebuilds every citation and decides where Ibid, (n x) and short titles go. The output is checked so nothing is dropped and no number is invented; a footnote it can't fully account for is left as written and marked Check. Medium neutral citations and Act years are also checked offline against an index of published decisions and legislation.",
       "outcome": "Live at aforecite.com.au. Students get a free preview of every flagged footnote, then pay A$1 per essay for the corrected .docx with every change as a Word tracked change, plus an optional AGLC4 bibliography. It's available as a web app, a CLI and an HTTP API.",
-      "metrics": [
-        {
-          "value": "AGLC4",
-          "label": "Rules enforced"
-        },
-        {
-          "value": "700+",
-          "label": "Automated tests"
-        },
-        {
-          "value": "A$1",
-          "label": "Per essay"
-        }
-      ],
       "link": "https://aforecite.com.au",
       "repo": "https://github.com/finnjones/legal-citation-tool",
       "image": "aforecite.png",
-      "cover": "image",
-      "featured": true,
       "gallery": [
         {
           "image": "aforecite-before-after.png",
-          "caption": "Real formatter output: the first citation gets a short title, the next becomes Ibid, and a later one becomes (n 1). Each edit is tagged with the AGLC4 rule behind it."
+          "caption": "Output from the formatter: the first citation gets a short title, the next becomes Ibid, and a later one becomes (n 1). Each edit is tagged with the AGLC4 rule behind it."
         }
-      ]
+      ],
+      "lead": true,
+      "imageAlt": "Aforecite home page: an upload box for a .docx essay beside the heading 'Fix every AGLC4 footnote in your essay, as Word tracked changes'."
     },
     {
       "slug": "transittracker",
-      "symbol": "TRNS",
       "title": "TransitTracker",
       "year": "2026",
       "role": "Creator",
@@ -244,25 +159,9 @@
       "problem": "Commuters open a transport app to answer one question: when do I need to leave? Most apps bury that answer behind searches and taps, and each phone running its own copy of the live feeds wastes data and battery.",
       "approach": "An Android app (iOS to follow) with its screens shared through Compose Multiplatform, and a small Kotlin server on my home server behind a Cloudflare Tunnel. Each night the server builds a compact timetable pack from TfNSW's GTFS data for phones to download. It fetches GTFS-Realtime only when a phone asks, matches live positions to trips, and sends push alerts through Firebase. On the phone, every saved trip shows a large countdown, its platform and live status, with an animated pixel vehicle showing where the service is.",
       "outcome": "Running for me and a few friends through Firebase App Distribution on a free budget: one TfNSW key on the server, no paid hosting. It plans journeys across modes with walking time between changes, saves places and routes, and works from its offline timetable when the network drops.",
-      "metrics": [
-        {
-          "value": "Live",
-          "label": "GTFS-Realtime"
-        },
-        {
-          "value": "KMP",
-          "label": "Shared code"
-        },
-        {
-          "value": "$0",
-          "label": "Hosting"
-        }
-      ],
       "link": null,
       "repo": "https://github.com/finnjones/TransitTracker",
       "image": "transittracker.png",
-      "cover": "image",
-      "featured": true,
       "gallery": [
         {
           "image": "transittracker-home-night.png",
@@ -284,11 +183,12 @@
           "frame": "phone",
           "caption": "A route's full timetable for the day, with live delays shown alongside the timetabled times."
         }
-      ]
+      ],
+      "lead": true,
+      "imageAlt": "Three TransitTracker phone screens in pixel-art style: a live train service, saved trips with countdowns, and journey options."
     },
     {
       "slug": "liftlink",
-      "symbol": "LIFT",
       "title": "LiftLink",
       "year": "2025",
       "role": "Creator",
@@ -304,28 +204,17 @@
       "problem": "Lifters often record one workout twice: on a Garmin watch for heart rate and on Hevy for sets and reps. Both sync to Strava, leaving two half-complete activities that have to be merged and deleted by hand after every session.",
       "approach": "Connect once with Strava OAuth. LiftLink watches for new uploads, pairs a Garmin activity with the Hevy activity recorded at the same time, copies Hevy's title and exercise breakdown into the Garmin activity, then deletes the duplicate. A dashboard shows that monitoring is active and keeps a log of every merge.",
       "outcome": "A set-and-forget service: each workout ends up as one complete Strava activity with heart-rate data and the full set-by-set log, with no manual tidy-up.",
-      "metrics": [
-        {
-          "value": "OAuth",
-          "label": "Strava connect"
-        },
-        {
-          "value": "Auto",
-          "label": "Detect & merge"
-        }
-      ],
       "link": "https://lift-link-five.vercel.app",
       "repo": "https://github.com/finnjones/LiftLink",
       "image": "liftlink.png",
-      "cover": "image",
-      "featured": true
+      "lead": false,
+      "imageAlt": "LiftLink sign-in page with a 'Connect with Strava' button."
     },
     {
       "slug": "votencrypt",
-      "symbol": "VOTE",
       "title": "Votencrypt",
       "year": "2022",
-      "role": "Creator — Major Work",
+      "role": "Creator (Year 12 major work)",
       "summary": "A blockchain voting platform with its election rules written as DAML smart contracts.",
       "tech": [
         "DAML",
@@ -334,27 +223,16 @@
         "Material UI"
       ],
       "problem": "Digital voting has to prove two things at once that usually fight each other: every vote is counted exactly once, and no one can see how an individual voted.",
-      "approach": "A voting platform modelled as DAML smart contracts, so the rules of an election — eligibility, one vote per voter, tallying — are enforced by the ledger itself rather than by a trusted server.",
+      "approach": "A voting platform modelled as DAML smart contracts, so the rules of an election (eligibility, one vote per voter, tallying) are enforced by the ledger itself rather than by a trusted server.",
       "outcome": "A working, verifiable voting system and my Year 12 Software Design & Development major work. It was published at votencrypt.com.",
-      "metrics": [
-        {
-          "value": "DAML",
-          "label": "Contract ledger"
-        },
-        {
-          "value": "1:1",
-          "label": "Vote integrity"
-        }
-      ],
       "link": null,
       "repo": "https://github.com/finnjones/Blockchain-Voting",
       "image": "votencrypt.png",
-      "cover": "image",
-      "featured": true
+      "lead": false,
+      "imageAlt": "Votencrypt landing page with Login and Vote buttons."
     },
     {
       "slug": "achieveit-bookings",
-      "symbol": "BOOK",
       "title": "AchieveIt Bookings",
       "year": "2024",
       "role": "Developer",
@@ -367,25 +245,14 @@
       "problem": "AchieveIt Tutoring arranged sessions through back-and-forth messages, so clients had no single place to see what was on offer, what it cost, or when they could book.",
       "approach": "A Book Online page listing every service by level (HSC & Year 11, IB & Pre-IB, Year 7–10, Year 3–6), each with its length, its price and a Book Now button, so clients could choose a session and book it without messaging back and forth.",
       "outcome": "Took the arranging of each session out of the inbox: clients booked themselves and the business had one clear schedule. The site has since moved to an enrolment enquiry form.",
-      "metrics": [
-        {
-          "value": "Self-serve",
-          "label": "Client booking"
-        },
-        {
-          "value": "5",
-          "label": "Service categories"
-        }
-      ],
       "link": "https://achieveittutor.com",
       "repo": null,
       "image": "achieveit.png",
-      "cover": "image",
-      "featured": true
+      "lead": false,
+      "imageAlt": "AchieveIt 'Our Services' page listing tutoring sessions, each with a length, a price and a Book Now button."
     },
     {
       "slug": "trading-game",
-      "symbol": "TGME",
       "title": "Trading Game",
       "year": "2023",
       "role": "Creator",
@@ -397,31 +264,19 @@
         "yfinance",
         "matplotlib"
       ],
-      "problem": "Learning how markets behave is expensive and slow if the only way to practise is with real money.",
+      "problem": "Learning how markets behave is expensive and slow if the only way to practise is with your own money.",
       "approach": "A Python desktop game: type a ticker and an amount to buy, and it pulls live prices and price history through Yahoo Finance and draws the chart with matplotlib inside a pygame window. Holdings sit in a list beside the chart, a negative amount sells, and your balance and portfolio are saved between sessions.",
       "outcome": "A safe sandbox for building market intuition, and the project where my CS and finance interests first met in code.",
-      "metrics": [
-        {
-          "value": "Live",
-          "label": "Market data"
-        },
-        {
-          "value": "Paper",
-          "label": "Risk-free trades"
-        }
-      ],
       "link": "https://github.com/finnjones/Trading-Game",
       "repo": "https://github.com/finnjones/Trading-Game",
       "image": null,
-      "cover": "chart",
-      "featured": true
+      "lead": false
     },
     {
       "slug": "trigger-outlaws",
-      "symbol": "OTLW",
       "title": "Trigger Outlaws",
       "year": "2024",
-      "role": "Developer — Team of 3",
+      "role": "Developer, team of three",
       "summary": "A top-down, wave-based Wild West shooter built in pygame by a team of three.",
       "tech": [
         "Python",
@@ -431,21 +286,16 @@
       "problem": "A team project to design and ship a complete game: movement, combat, enemy waves, an economy and a world to explore, within a course deadline.",
       "approach": "A tile-based world built in pygame with a minimap, a pointer that leads you to the nearest enemy, health and ammo HUDs, and enemy waves. Coins from kills buy upgrades in the town's armoury and brewery. The three of us split the work across movement and combat, enemies and level design.",
       "outcome": "A finished, playable game, and practice at shipping software as a team under version control.",
-      "metrics": [
-        {
-          "value": "Team",
-          "label": "Built with 3"
-        },
-        {
-          "value": "pygame",
-          "label": "Engine"
-        }
-      ],
       "link": "https://github.com/finnjones/TriggerOutlaws",
       "repo": "https://github.com/finnjones/TriggerOutlaws",
       "image": "triggeroutlaws.png",
-      "cover": "image",
-      "featured": false
+      "lead": false,
+      "imageAlt": "Trigger Outlaws gameplay: a pixel-art desert town seen from above, with a wave counter, minimap, health bar and ammo count."
     }
-  ]
+  ],
+  "intro": [
+    "I'm a software engineer at Lendi Group in Sydney, where I work on mortgage and lending software. I'm also studying Computer Science and Commerce (Finance) at UNSW.",
+    "Outside work I build my own software. The two most recent are Aforecite, which fixes the footnotes in law essays, and TransitTracker, a transport app for Sydney."
+  ],
+  "description": "Finn Jones is a software engineer at Lendi Group in Sydney, studying Computer Science and Commerce (Finance) at UNSW. This site collects the software he has built."
 }

@@ -1,18 +1,263 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import Ticker from '../components/Ticker.astro';
-import WorkIndex from '../components/WorkIndex.astro';
-import Profile from '../components/Profile.astro';
-import Experience from '../components/Experience.astro';
-import Contact from '../components/Contact.astro';
+import { workImage, portraitImage } from '../lib/images';
+import { profile, projects, years, hostname, liveLink } from '../lib/profile';
+
+const withImage = projects.filter((p) => workImage(p.image));
+const lead = withImage.filter((p) => p.lead);
+const rest = withImage.filter((p) => !p.lead);
+const textOnly = projects.filter((p) => !workImage(p.image));
 ---
 
 <BaseLayout>
-  <Hero />
-  <Ticker />
-  <WorkIndex />
-  <Profile />
-  <Experience />
-  <Contact />
+  <section class="page grid intro">
+    <div class="intro-text">
+      {profile.intro.map((para) => <p class="lead">{para}</p>)}
+    </div>
+    <Image
+      src={portraitImage}
+      alt="Finn Jones in sunglasses and a cap, standing at a street market."
+      width={960}
+      widths={[400, 640, 960]}
+      sizes="(max-width: 60rem) 92vw, 22rem"
+      class="shot intro-photo"
+      loading="eager"
+    />
+  </section>
+
+  <section class="page section" id="work">
+    <h2 class="section-title">Work</h2>
+
+    {
+      lead.map((p, i) => (
+        <article class="grid project project-lead">
+          <a class="project-shot" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
+            <Image
+              src={workImage(p.image)!}
+              alt=""
+              width={1800}
+              widths={[720, 1200, 1800, 2400]}
+              sizes="(max-width: 84rem) 92vw, 78rem"
+              class="shot"
+              loading={i === 0 ? 'eager' : 'lazy'}
+            />
+          </a>
+          <header class="project-name">
+            <h3>
+              <a href={`/work/${p.slug}`}>{p.title}</a>
+            </h3>
+            <p class="soft">{p.year}</p>
+          </header>
+          <p class="project-summary">{p.summary}</p>
+          <ul class="links project-links">
+            {liveLink(p) && <li><a href={liveLink(p)}>{hostname(liveLink(p)!)}</a></li>}
+            {p.repo && <li><a href={p.repo}>Source on GitHub</a></li>}
+          </ul>
+        </article>
+      ))
+    }
+
+    <div class="project-pairs">
+      {
+        rest.map((p) => (
+          <article class="project">
+            <a class="project-shot" href={`/work/${p.slug}`} tabindex="-1" aria-hidden="true">
+              <Image
+                src={workImage(p.image)!}
+                alt=""
+                width={1200}
+                widths={[480, 720, 1200]}
+                sizes="(max-width: 48rem) 92vw, 38rem"
+                class="shot"
+              />
+            </a>
+            <header class="project-name">
+              <h3>
+                <a href={`/work/${p.slug}`}>{p.title}</a>
+              </h3>
+              <p class="soft">{p.year}</p>
+            </header>
+            <p class="project-summary">{p.summary}</p>
+            <ul class="links project-links">
+              {liveLink(p) && <li><a href={liveLink(p)}>{hostname(liveLink(p)!)}</a></li>}
+              {p.repo && <li><a href={p.repo}>Source on GitHub</a></li>}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+
+    {
+      textOnly.length > 0 && (
+        <ul class="rows project-rows">
+          {textOnly.map((p) => (
+            <li>
+              <span class="when">{p.year}</span>
+              <span>
+                <a href={`/work/${p.slug}`}>
+                  <strong>{p.title}</strong>
+                </a>
+                <br />
+                {p.summary}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  <section class="page grid section" id="experience">
+    <h2 class="section-title side">Experience</h2>
+    <div class="main">
+      <ul class="rows">
+        {
+          profile.experience.map((e) => (
+            <li>
+              <span class="when">{years(e.start, e.end)}</span>
+              <span>
+                <strong>{e.role}</strong>
+                <br />
+                {e.company}
+              </span>
+            </li>
+          ))
+        }
+        {
+          profile.education.map((e) => (
+            <li>
+              <span class="when">{years(e.start, e.end)}</span>
+              <span>
+                <strong>{e.degree}</strong>
+                <br />
+                {e.institution}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="more"><a href="/about">More about me</a></p>
+    </div>
+  </section>
+
+  <section class="page grid section" id="contact">
+    <h2 class="section-title side">Contact</h2>
+    <div class="main">
+      <p class="lead contact-email"><a href={`mailto:${profile.email}`}>{profile.email}</a></p>
+      <ul class="links">
+        {profile.socials.filter((s) => s.label !== 'Email').map((s) => <li><a href={s.url}>{s.label}</a></li>)}
+      </ul>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  /* ---- Intro: two plain paragraphs and a photograph ---- */
+  .intro {
+    margin-top: clamp(1.5rem, 4vw, 3rem);
+    row-gap: 2rem;
+    align-items: start;
+  }
+  .intro-text .lead + .lead {
+    margin-top: 0.75em;
+  }
+  .intro-photo {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 70% 40%;
+  }
+  @media (min-width: 60rem) {
+    .intro-text {
+      grid-column: 1 / span 8;
+    }
+    .intro-photo {
+      grid-column: 10 / span 3;
+      aspect-ratio: 4 / 5;
+      object-position: 78% 40%;
+      margin-top: 0.4rem;
+    }
+  }
+
+  /* ---- Projects ---- */
+  .project {
+    row-gap: 0;
+  }
+  .project-shot {
+    display: block;
+    margin-bottom: 1.25rem;
+  }
+  .project-name {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .project-name h3 {
+    font-size: var(--size-title);
+  }
+  .project-name h3 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .project-name h3 a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .project-summary {
+    max-width: 34rem;
+  }
+  .project-links {
+    margin-top: 0.75rem;
+  }
+
+  .project-lead {
+    margin-bottom: clamp(3.5rem, 7vw, 6rem);
+  }
+  /* On wide screens a lead project reads across: name, summary, links. */
+  @media (min-width: 60rem) {
+    .project-lead .project-name {
+      grid-column: 1 / span 3;
+      display: block;
+      margin-bottom: 0;
+    }
+    .project-lead .project-summary {
+      grid-column: 4 / span 5;
+    }
+    .project-lead .project-links {
+      grid-column: 10 / span 3;
+      margin-top: 0;
+      flex-direction: column;
+    }
+  }
+
+  /* Paired screenshots share one shape so the text under them lines up. */
+  .project-pairs .shot {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+  }
+  .project-pairs {
+    display: grid;
+    gap: clamp(3rem, 6vw, 4.5rem) var(--gap);
+  }
+  @media (min-width: 48rem) {
+    .project-pairs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .project-rows {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .more {
+    margin-top: 1.5rem;
+  }
+
+  .contact-email {
+    margin-bottom: 1rem;
+    overflow-wrap: anywhere;
+  }
+</style>
